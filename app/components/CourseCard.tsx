@@ -13,7 +13,7 @@ import {
 
 type CourseCardProps = Omit<Course, "id">;
 
-export default function CourseCard({ image, title, description }: CourseCardProps) {
+export default function CourseCard({ image, title, description, prompts }: CourseCardProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -53,10 +53,32 @@ export default function CourseCard({ image, title, description }: CourseCardProp
             </DialogHeader>
           </div>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-6">
           <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400">
-            Descubre más sobre este curso y comienza tu viaje de aprendizaje.
+          In this section, we aim to continuously expand the creative and technical tools available to the team. The goal is to research, test, and document new prompts that improve quality, consistency, and speed across our workflows. At the same time, we develop clear, practical tutorials that help any team member quickly understand and apply the latest techniques. This ongoing exploration ensures that we stay innovative, efficient, and aligned with best practices.
           </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {prompts.map((prompt) => (
+              <div
+                key={prompt.id}
+                className="relative h-32 sm:h-40 rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-102 group"
+              >
+                <Image
+                  src={prompt.image}
+                  alt={prompt.title}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-black/80 group-hover:bg-black/70 transition-colors" />
+                <div className="absolute inset-0 flex items-center justify-center p-4">
+                  <h4 className="text-lg sm:text-xl font-bold text-white text-center">
+                    {prompt.title}
+                  </h4>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </DialogContent>
     </Dialog>

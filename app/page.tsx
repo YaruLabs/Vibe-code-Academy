@@ -14,6 +14,7 @@ export default function Home() {
             image={course.image}
             title={course.title}
             description={course.description}
+            prompts={course.prompts}
           />
         ))}
       </div>
