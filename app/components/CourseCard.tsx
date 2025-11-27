@@ -35,22 +35,25 @@ export default function CourseCard({ image, title, description }: CourseCardProp
           </div>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-[95vw] sm:max-w-[90vw] lg:max-w-[1200px] h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-3xl sm:text-4xl">{title}</DialogTitle>
-          <DialogDescription className="text-lg sm:text-xl pt-4">
-            {description}
-          </DialogDescription>
-        </DialogHeader>
-        <div className="relative w-full h-[400px] sm:h-[500px] lg:h-[600px] rounded-lg overflow-hidden">
+      <DialogContent className="max-w-[95vw] sm:max-w-[90vw] lg:max-w-[1200px] h-[90vh] overflow-y-auto gap-0 p-6">
+        <div className="relative h-[400px] sm:h-[500px] lg:h-[600px] overflow-hidden rounded-lg">
           <Image
             src={image}
             alt={title}
             fill
             className="object-cover"
           />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-transparent" />
+          <div className="absolute top-0 left-0 right-0 p-6 sm:p-8">
+            <DialogHeader>
+              <DialogTitle className="text-3xl sm:text-4xl text-white">{title}</DialogTitle>
+              <DialogDescription className="text-lg sm:text-xl pt-2 text-white/90">
+                {description}
+              </DialogDescription>
+            </DialogHeader>
+          </div>
         </div>
-        <div className="space-y-6">
+        <div className="space-y-4">
           <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400">
             Descubre más sobre este curso y comienza tu viaje de aprendizaje.
           </p>
