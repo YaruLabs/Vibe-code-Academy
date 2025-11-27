@@ -24,10 +24,25 @@ const categoryColors = {
 
 export default function CourseCard({ image, title, description, prompts, category }: CourseCardProps) {
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
       setSelectedPrompt(null);
+    }
+  };
+
+  const handleCopyContent = async () => {
+    if (!selectedPrompt) return;
+
+    try {
+      const response = await fetch(selectedPrompt.mdxPath);
+      const mdxContent = await response.text();
+      await navigator.clipboard.writeText(mdxContent);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy content:', error);
     }
   };
 
@@ -120,8 +135,31 @@ export default function CourseCard({ image, title, description, prompts, categor
             </div>
 
             <div className="flex flex-col lg:flex-row gap-6 flex-1 overflow-hidden">
-              <div className="lg:w-4/5 overflow-y-auto pr-4">
-                <MDXRenderer mdxPath={selectedPrompt.mdxPath} />
+              <div className="lg:w-4/5 overflow-y-auto bg-gray-50 dark:bg-zinc-900 rounded-2xl border-2 border-zinc-200 dark:border-zinc-800 relative">
+                <div className="sticky top-0 right-0 flex justify-end p-4 z-10">
+                  <button
+                    onClick={handleCopyContent}
+                    className="p-2 bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-lg transition-colors shadow-md"
+                    title={copied ? "Copied!" : "Copy content"}
+                  >
+                  {copied ? (
+                    <svg width="20" height="20" viewBox="0 0 16 16" fill="none" className="text-green-600">
+                      <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill="currentColor"/>
+                    </svg>
+                  ) : (
+                    <svg width="20" height="20" viewBox="0 0 16 16" fill="none" className="text-zinc-600 dark:text-zinc-400">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M4 2C3.44772 2 3 2.44772 3 3V11C3 11.5523 3.44772 12 4 12H10C10.5523 12 11 11.5523 11 11V3C11 2.44772 10.5523 2 10 2H4ZM1.5 3C1.5 1.61929 2.61929 0.5 4 0.5H10C11.3807 0.5 12.5 1.61929 12.5 3V11C12.5 12.3807 11.3807 13.5 10 13.5H4C2.61929 13.5 1.5 12.3807 1.5 11V3Z" fill="currentColor"/>
+                      <path d="M5 4.75C5 4.33579 5.33579 4 5.75 4H8.25C8.66421 4 9 4.33579 9 4.75C9 5.16421 8.66421 5.5 8.25 5.5H5.75C5.33579 5.5 5 5.16421 5 4.75Z" fill="currentColor"/>
+                      <path d="M5 7.25C5 6.83579 5.33579 6.5 5.75 6.5H8.25C8.66421 6.5 9 6.83579 9 7.25C9 7.66421 8.66421 8 8.25 8H5.75C5.33579 8 5 7.66421 5 7.25Z" fill="currentColor"/>
+                      <path d="M5.75 9C5.33579 9 5 9.33579 5 9.75C5 10.1642 5.33579 10.5 5.75 10.5H8.25C8.66421 10.5 9 10.1642 9 9.75C9 9.33579 8.66421 9 8.25 9H5.75Z" fill="currentColor"/>
+                      <path d="M13.5 5V13C13.5 14.3807 12.3807 15.5 11 15.5H6V14H11C11.5523 14 12 13.5523 12 13V5H13.5Z" fill="currentColor"/>
+                    </svg>
+                  )}
+                  </button>
+                </div>
+                <div className="px-4 pb-4">
+                  <MDXRenderer mdxPath={selectedPrompt.mdxPath} />
+                </div>
               </div>
 
               <div className="lg:w-1/5 flex flex-col gap-2">
