@@ -15,6 +15,7 @@ export default function Home() {
             title={course.title}
             description={course.description}
             prompts={course.prompts}
+            category={course.category}
           />
         ))}
       </div>
