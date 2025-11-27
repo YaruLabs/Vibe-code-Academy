@@ -24,11 +24,13 @@ const categoryColors = {
 
 export default function CourseCard({ image, title, description, prompts, category }: CourseCardProps) {
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
+  const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
   const [copied, setCopied] = useState(false);
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
       setSelectedPrompt(null);
+      setCurrentPromptIndex(0);
     }
   };
 
@@ -44,6 +46,27 @@ export default function CourseCard({ image, title, description, prompts, categor
     } catch (error) {
       console.error('Failed to copy content:', error);
     }
+  };
+
+  const handleNextPrompt = () => {
+    if (currentPromptIndex < prompts.length - 1) {
+      const nextIndex = currentPromptIndex + 1;
+      setCurrentPromptIndex(nextIndex);
+      setSelectedPrompt(prompts[nextIndex]);
+    }
+  };
+
+  const handlePreviousPrompt = () => {
+    if (currentPromptIndex > 0) {
+      const prevIndex = currentPromptIndex - 1;
+      setCurrentPromptIndex(prevIndex);
+      setSelectedPrompt(prompts[prevIndex]);
+    }
+  };
+
+  const handleSelectPromptCard = (prompt: Prompt, index: number) => {
+    setSelectedPrompt(prompt);
+    setCurrentPromptIndex(index);
   };
 
   return (
@@ -100,10 +123,10 @@ export default function CourseCard({ image, title, description, prompts, categor
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {prompts.map((prompt) => (
+                {prompts.map((prompt, index) => (
                   <div
                     key={prompt.id}
-                    onClick={() => setSelectedPrompt(prompt)}
+                    onClick={() => handleSelectPromptCard(prompt, index)}
                     className="relative h-32 sm:h-40 rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-102 group"
                   >
                     <Image
@@ -177,6 +200,56 @@ export default function CourseCard({ image, title, description, prompts, categor
                   </svg>
                   Export
                 </button>
+
+                {prompts.length > 1 && (
+                  <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">
+                    <div className="flex items-center justify-between gap-2">
+                      <button
+                        onClick={handlePreviousPrompt}
+                        disabled={currentPromptIndex === 0}
+                        className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        title="Previous prompt"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+
+                      <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                        {currentPromptIndex + 1} / {prompts.length}
+                      </span>
+
+                      <button
+                        onClick={handleNextPrompt}
+                        disabled={currentPromptIndex === prompts.length - 1}
+                        className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        title="Next prompt"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                    </div>
+
+                    <div className="mt-3 flex gap-1 justify-center">
+                      {prompts.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => {
+                            setCurrentPromptIndex(index);
+                            setSelectedPrompt(prompts[index]);
+                          }}
+                          className={`h-1.5 rounded-full transition-all ${
+                            index === currentPromptIndex
+                              ? 'w-8 bg-zinc-900 dark:bg-zinc-100'
+                              : 'w-1.5 bg-zinc-300 dark:bg-zinc-600 hover:bg-zinc-400 dark:hover:bg-zinc-500'
+                          }`}
+                          title={`Go to prompt ${index + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
