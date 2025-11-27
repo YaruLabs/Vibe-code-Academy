@@ -54,8 +54,6 @@ export default function CourseCard({ image, title, description, prompts, categor
         {selectedPrompt && (
           <div className="absolute top-0 left-1/2 -translate-x-1/2 z-50">
             <div className={`${categoryColors[category]} text-white px-6 py-2 rounded-bl-xl rounded-br-xl shadow-lg font-semibold text-sm relative`}>
-              <div className="absolute -left-2 top-0 w-2 h-2 bg-black/20 rounded-bl-full" />
-              <div className="absolute -right-2 top-0 w-2 h-2 bg-black/20 rounded-br-full" />
               {selectedPrompt.title}
             </div>
           </div>
