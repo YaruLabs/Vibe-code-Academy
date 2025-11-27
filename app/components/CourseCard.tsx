@@ -111,7 +111,7 @@ export default function CourseCard({ image, title, description, prompts, categor
             <div className="mb-6">
               <button
                 onClick={() => setSelectedPrompt(null)}
-                className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white flex items-center gap-2"
+                className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white flex items-center gap-2 hover:bg-gray-50 rounded-2xl p-2"
               >
                 <span>←</span> Back
               </button>
