@@ -1,8 +1,7 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { Course, Prompt } from "../types/course";
 import MDXRenderer from "./MDXRenderer";
 import {
@@ -24,21 +23,22 @@ const categoryColors = {
 
 export default function CourseCard({ image, title, description, prompts, category }: CourseCardProps) {
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
-  const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [isDialogReady, setIsDialogReady] = useState(false);
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
       setSelectedPrompt(null);
-      setCurrentPromptIndex(0);
+      setCurrentPageIndex(0);
     }
   };
 
   const handleCopyContent = async () => {
-    if (!selectedPrompt) return;
+    if (!selectedPrompt || !selectedPrompt.mdxPages[currentPageIndex]) return;
 
     try {
-      const response = await fetch(selectedPrompt.mdxPath);
+      const response = await fetch(selectedPrompt.mdxPages[currentPageIndex]);
       const mdxContent = await response.text();
       await navigator.clipboard.writeText(mdxContent);
       setCopied(true);
@@ -48,47 +48,64 @@ export default function CourseCard({ image, title, description, prompts, categor
     }
   };
 
-  const handleNextPrompt = () => {
-    if (currentPromptIndex < prompts.length - 1) {
-      const nextIndex = currentPromptIndex + 1;
-      setCurrentPromptIndex(nextIndex);
-      setSelectedPrompt(prompts[nextIndex]);
+  const handleNextPage = () => {
+    if (selectedPrompt && currentPageIndex < selectedPrompt.mdxPages.length - 1) {
+      setCurrentPageIndex(currentPageIndex + 1);
     }
   };
 
-  const handlePreviousPrompt = () => {
-    if (currentPromptIndex > 0) {
-      const prevIndex = currentPromptIndex - 1;
-      setCurrentPromptIndex(prevIndex);
-      setSelectedPrompt(prompts[prevIndex]);
+  const handlePreviousPage = () => {
+    if (currentPageIndex > 0) {
+      setCurrentPageIndex(currentPageIndex - 1);
     }
   };
 
-  const handleSelectPromptCard = (prompt: Prompt, index: number) => {
+  const handleSelectPromptCard = (prompt: Prompt) => {
+    console.log('Selected prompt:', prompt.title, 'Pages:', prompt.mdxPages.length);
     setSelectedPrompt(prompt);
-    setCurrentPromptIndex(index);
+    setCurrentPageIndex(0);
   };
+
+  useEffect(() => {
+    setIsDialogReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (selectedPrompt) {
+      console.log('Selected prompt changed:', selectedPrompt.title);
+      console.log('Total pages:', selectedPrompt.mdxPages.length);
+      console.log('mdxPages array:', selectedPrompt.mdxPages);
+    }
+  }, [selectedPrompt]);
+
+  const courseCardPreview = (
+    <div className="relative rounded-lg shadow-lg overflow-hidden transition-transform hover:scale-101 h-full w-full cursor-pointer">
+      <Image
+        src={image}
+        alt={title}
+        fill
+        className="object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-6">
+        <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 sm:mb-2">
+          {title}
+        </h3>
+        <p className="text-xs sm:text-sm md:text-base text-white/90 line-clamp-2">
+          {description}
+        </p>
+      </div>
+    </div>
+  );
+
+  if (!isDialogReady) {
+    return courseCardPreview;
+  }
 
   return (
     <Dialog onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <div className="relative rounded-lg shadow-lg overflow-hidden transition-transform hover:scale-101 h-full w-full cursor-pointer">
-          <Image
-            src={image}
-            alt={title}
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-6">
-            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 sm:mb-2">
-              {title}
-            </h3>
-            <p className="text-xs sm:text-sm md:text-base text-white/90 line-clamp-2">
-              {description}
-            </p>
-          </div>
-        </div>
+        {courseCardPreview}
       </DialogTrigger>
       <DialogContent className={`max-w-[95vw] sm:max-w-[90vw] lg:max-w-[1200px] h-[90vh] overflow-y-auto flex flex-col gap-0 ${selectedPrompt ? 'p-0' : 'p-6'}`}>
         {selectedPrompt && (
@@ -123,10 +140,10 @@ export default function CourseCard({ image, title, description, prompts, categor
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {prompts.map((prompt, index) => (
+                {prompts.map((prompt) => (
                   <div
                     key={prompt.id}
-                    onClick={() => handleSelectPromptCard(prompt, index)}
+                    onClick={() => handleSelectPromptCard(prompt)}
                     className="relative h-32 sm:h-40 rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-102 group"
                   >
                     <Image
@@ -179,7 +196,7 @@ export default function CourseCard({ image, title, description, prompts, categor
                   )}
                 </button>
                 <div className="px-4 py-2">
-                  <MDXRenderer mdxPath={selectedPrompt.mdxPath} />
+                  <MDXRenderer mdxPath={selectedPrompt.mdxPages[currentPageIndex]} />
                 </div>
               </div>
 
@@ -201,55 +218,50 @@ export default function CourseCard({ image, title, description, prompts, categor
                   Export
                 </button>
 
-                {prompts.length > 1 && (
-                  <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">
-                    <div className="flex items-center justify-between gap-2">
-                      <button
-                        onClick={handlePreviousPrompt}
-                        disabled={currentPromptIndex === 0}
-                        className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                        title="Previous prompt"
-                      >
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                          <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </button>
+                <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">
+                  <div className="flex items-center justify-between gap-2">
+                    <button
+                      onClick={handlePreviousPage}
+                      disabled={currentPageIndex === 0}
+                      className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      title="Previous page"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
 
-                      <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                        {currentPromptIndex + 1} / {prompts.length}
-                      </span>
+                    <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                      {currentPageIndex + 1} / {selectedPrompt.mdxPages.length}
+                    </span>
 
-                      <button
-                        onClick={handleNextPrompt}
-                        disabled={currentPromptIndex === prompts.length - 1}
-                        className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                        title="Next prompt"
-                      >
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                          <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </button>
-                    </div>
-
-                    <div className="mt-3 flex gap-1 justify-center">
-                      {prompts.map((_, index) => (
-                        <button
-                          key={index}
-                          onClick={() => {
-                            setCurrentPromptIndex(index);
-                            setSelectedPrompt(prompts[index]);
-                          }}
-                          className={`h-1.5 rounded-full transition-all ${
-                            index === currentPromptIndex
-                              ? 'w-8 bg-zinc-900 dark:bg-zinc-100'
-                              : 'w-1.5 bg-zinc-300 dark:bg-zinc-600 hover:bg-zinc-400 dark:hover:bg-zinc-500'
-                          }`}
-                          title={`Go to prompt ${index + 1}`}
-                        />
-                      ))}
-                    </div>
+                    <button
+                      onClick={handleNextPage}
+                      disabled={currentPageIndex === selectedPrompt.mdxPages.length - 1}
+                      className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      title="Next page"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
                   </div>
-                )}
+
+                  <div className="mt-3 flex gap-1 justify-center">
+                    {selectedPrompt.mdxPages.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentPageIndex(index)}
+                        className={`h-1.5 rounded-full transition-all ${
+                          index === currentPageIndex
+                            ? 'w-8 bg-zinc-900 dark:bg-zinc-100'
+                            : 'w-1.5 bg-zinc-300 dark:bg-zinc-600 hover:bg-zinc-400 dark:hover:bg-zinc-500'
+                        }`}
+                        title={`Go to page ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

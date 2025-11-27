@@ -2,7 +2,7 @@ export interface Prompt {
   id: number;
   title: string;
   image: string;
-  mdxPath: string;
+  mdxPages: string[];
 }
 
 export interface Course {

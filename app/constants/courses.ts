@@ -12,13 +12,19 @@ export const courses: Course[] = [
         id: 1,
         title: "Smart Contract Security Audit",
         image: "/images/image1.jpg",
-        mdxPath: "/docs/blockchain/smart-contract-security-audit.mdx"
+        mdxPages: [
+          "/docs/blockchain/smart-contract-security-audit/01-overview.mdx",
+          "/docs/blockchain/smart-contract-security-audit/02-common-vulnerabilities.mdx",
+          "/docs/blockchain/smart-contract-security-audit/03-audit-process.mdx"
+        ]
       },
       {
         id: 2,
         title: "DeFi Protocol Development",
         image: "/images/image1.jpg",
-        mdxPath: "/docs/blockchain/defi-protocol-development.mdx"
+        mdxPages: [
+          "/docs/blockchain/defi-protocol-development/01-overview.mdx"
+        ]
       }
     ]
   },
@@ -33,13 +39,17 @@ export const courses: Course[] = [
         id: 1,
         title: "2D Platformer Mechanics",
         image: "/images/image2.png",
-        mdxPath: "/docs/games/2d-platformer-mechanics.mdx"
+        mdxPages: [
+          "/docs/games/2d-platformer-mechanics/01-overview.mdx"
+        ]
       },
       {
         id: 2,
         title: "AI Enemy Behavior System",
         image: "/images/image2.png",
-        mdxPath: "/docs/games/ai-enemy-behavior-system.mdx"
+        mdxPages: [
+          "/docs/games/ai-enemy-behavior-system/01-overview.mdx"
+        ]
       }
     ]
   },
@@ -54,13 +64,17 @@ export const courses: Course[] = [
         id: 1,
         title: "CLI Tool Development",
         image: "/images/image3.jpg",
-        mdxPath: "/docs/software/cli-tool-development.mdx"
+        mdxPages: [
+          "/docs/software/cli-tool-development/01-overview.mdx"
+        ]
       },
       {
         id: 2,
         title: "API Documentation Generator",
         image: "/images/image3.jpg",
-        mdxPath: "/docs/software/api-documentation-generator.mdx"
+        mdxPages: [
+          "/docs/software/api-documentation-generator/01-overview.mdx"
+        ]
       }
     ]
   }
