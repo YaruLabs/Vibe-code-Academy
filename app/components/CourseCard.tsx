@@ -35,8 +35,8 @@ export default function CourseCard({ image, title, description }: CourseCardProp
           </div>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-[95vw] sm:max-w-[90vw] lg:max-w-[1200px] h-[90vh] overflow-y-auto gap-0 p-6">
-        <div className="relative h-[400px] sm:h-[500px] lg:h-[600px] overflow-hidden rounded-lg">
+      <DialogContent className="max-w-[95vw] sm:max-w-[90vw] lg:max-w-[1200px] h-[90vh] overflow-y-auto flex flex-col p-6 gap-0">
+        <div className="relative h-[400px] sm:h-[500px] lg:h-[600px] overflow-hidden rounded-lg mb-6">
           <Image
             src={image}
             alt={title}
