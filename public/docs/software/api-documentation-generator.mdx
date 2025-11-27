@@ -1,0 +1,183 @@
+# API Documentation Generator
+
+You are a **technical documentation expert** specializing in API documentation generation.
+
+## Documentation Generator Requirements
+
+Build an automated API documentation generator that provides comprehensive, interactive documentation.
+
+### Core Features
+
+#### 1. Code Parsing
+
+Extract API information from code:
+
+```typescript
+/**
+ * @api {get} /users/:id Get User
+ * @apiName GetUser
+ * @apiGroup Users
+ *
+ * @apiParam {Number} id User's unique ID
+ *
+ * @apiSuccess {String} name User's name
+ * @apiSuccess {String} email User's email
+ */
+app.get('/users/:id', (req, res) => {
+  // Implementation
+});
+```
+
+#### 2. OpenAPI/Swagger Integration
+
+Generate OpenAPI 3.0 specification:
+
+```yaml
+openapi: 3.0.0
+info:
+  title: My API
+  version: 1.0.0
+paths:
+  /users/{id}:
+    get:
+      summary: Get user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+```
+
+### Interactive Features
+
+#### Live API Testing
+
+```javascript
+// Swagger UI integration
+import SwaggerUI from 'swagger-ui-react';
+
+<SwaggerUI
+  url="/api-spec.json"
+  docExpansion="list"
+  defaultModelsExpandDepth={1}
+/>
+```
+
+Users can:
+- 🧪 **Test endpoints** directly in the browser
+- 🔑 **Add authentication** tokens
+- 👀 **See live responses**
+- 📋 **Copy curl commands**
+
+### Multi-Language Examples
+
+Generate code examples automatically:
+
+````markdown
+### JavaScript
+```javascript
+fetch('/api/users/123')
+  .then(res => res.json())
+  .then(data => console.log(data));
+```
+
+### Python
+```python
+import requests
+response = requests.get('https://api.example.com/users/123')
+user = response.json()
+```
+
+### cURL
+```bash
+curl -X GET https://api.example.com/users/123 \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+````
+
+## Versioning Support
+
+### Changelog Tracking
+
+| Version | Date | Changes |
+|---------|------|---------|
+| 2.0.0 | 2024-01-15 | 🚀 Breaking: New auth system |
+| 1.5.0 | 2023-12-01 | ✨ Added pagination |
+| 1.4.1 | 2023-11-20 | 🐛 Fixed rate limiting |
+
+### Version Selector
+
+```jsx
+<VersionSelect>
+  <option value="v2">v2.0 (Latest)</option>
+  <option value="v1">v1.5 (Stable)</option>
+  <option value="v1.4">v1.4 (Legacy)</option>
+</VersionSelect>
+```
+
+## CI/CD Integration
+
+### GitHub Actions Example
+
+```yaml
+name: Generate API Docs
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Generate docs
+        run: npm run docs:generate
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+```
+
+## Output Formats
+
+Support multiple output types:
+
+- 📄 **Static HTML** - Self-contained site
+- 🌐 **Interactive SPA** - React/Vue app
+- 📖 **Markdown** - For GitHub/GitLab
+- 📋 **PDF** - Printable documentation
+- 🔌 **Postman Collection** - Import into Postman
+
+## Documentation Best Practices
+
+> **Critical**: Documentation should always be in sync with code. Use automated generation to prevent drift.
+
+### Essential Sections
+
+1. **Getting Started** - Quick start guide
+2. **Authentication** - How to authenticate
+3. **Rate Limiting** - Usage limits
+4. **Errors** - Error codes and meanings
+5. **Examples** - Real-world use cases
+6. **Webhooks** - Event notifications
+7. **SDKs** - Client libraries
+
+### Quality Checklist
+
+- ✅ Every endpoint documented
+- ✅ Request/response examples included
+- ✅ Error cases explained
+- ✅ Authentication clearly described
+- ✅ Rate limits specified
+- ✅ Versioning strategy outlined
+- ✅ Changelog maintained

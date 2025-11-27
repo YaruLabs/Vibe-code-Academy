@@ -1,0 +1,58 @@
+# 2D Platformer Mechanics
+
+You are a **game developer** specializing in 2D platformer mechanics and player controls.
+
+## Movement System Requirements
+
+Create a responsive 2D platformer movement system with:
+
+### Core Movement
+- ✅ Smooth character movement
+- ✅ Jumping physics with realistic gravity
+- ✅ Variable jump height based on input duration
+- ✅ Air control and movement inertia
+
+### Advanced Mechanics
+
+#### Coyote Time
+```javascript
+// Allow jumping shortly after leaving platform
+const COYOTE_TIME = 0.1; // seconds
+let coyoteTimer = 0;
+
+function update(deltaTime) {
+  if (!isGrounded) {
+    coyoteTimer += deltaTime;
+  } else {
+    coyoteTimer = 0;
+  }
+
+  canJump = isGrounded || coyoteTimer < COYOTE_TIME;
+}
+```
+
+#### Jump Buffering
+Players can press jump slightly before landing, and it will execute on landing.
+
+### Wall Mechanics
+- 🧗 **Wall sliding** - Slow descent when touching walls
+- 🦘 **Wall jumping** - Launch off walls at an angle
+- 🎯 **Wall grabbing** - Hold onto walls temporarily
+
+### Physics Details
+
+| Property | Value | Description |
+|----------|-------|-------------|
+| Gravity | 9.8 m/s² | Downward acceleration |
+| Max Speed | 5 m/s | Horizontal speed cap |
+| Jump Force | 10 N | Initial jump velocity |
+| Air Control | 0.7x | Movement multiplier in air |
+
+## Implementation Tips
+
+> **Note**: Use a physics-based approach with proper collision detection and response for the most satisfying controls.
+
+### Slope Handling
+- Detect ground normal vector
+- Adjust movement direction to follow slopes
+- Prevent sliding on steep inclines
