@@ -279,14 +279,14 @@ export default function CourseCard({ image, title, description, prompts, categor
                   {/* Category and Difficulty badges */}
                   <div className="flex flex-wrap items-center justify-center gap-3">
                     {/* Category badge */}
-                    <span className={`${categoryAccents[category]} text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform`}>
+                    <span className={`${categoryAccents[category]} text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg transition-transform`}>
                       {category}
                     </span>
 
                     {/* Difficulty badge */}
                     <div className={`relative group`}>
                       <div className={`absolute inset-0 bg-gradient-to-r ${difficultyConfig[selectedPrompt.difficulty].bgGradient} rounded-full blur-md opacity-75 group-hover:opacity-100 transition-opacity ${difficultyConfig[selectedPrompt.difficulty].glowColor}`} />
-                      <span className={`relative flex items-center justify-center gap-2 bg-gradient-to-r ${difficultyConfig[selectedPrompt.difficulty].bgGradient} text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl group-hover:scale-105 transition-transform`}>
+                      <span className={`relative flex items-center justify-center gap-2 bg-gradient-to-r ${difficultyConfig[selectedPrompt.difficulty].bgGradient} text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl transition-transform`}>
                         {difficultyConfig[selectedPrompt.difficulty].label}
                       </span>
                     </div>
