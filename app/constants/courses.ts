@@ -77,7 +77,7 @@ export const courses: Course[] = [
         mdxPages: [
           "/docs/games/2d-custom-game/01-create-private-custom-token.mdx",
           "/docs/games/2d-custom-game/02-setup-game.mdx",
-          "/docs/games/2d-custom-game/03-integration.mdx"
+          "/docs/games/2d-custom-game/03-intregration.mdx"
         ],
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",

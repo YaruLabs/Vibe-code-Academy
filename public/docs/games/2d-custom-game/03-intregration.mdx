@@ -1,345 +1,271 @@
-# 💰 Phase 3: The Reward System
+# 🆔 Phase 3: Identity Verification (Registration)
 
-We have the game. We have the privacy keys. Now, let's turn those points into **Real Private Tokens**.
+We are now entering the advanced logic. We will integrate **`coti-ethers`** to handle authenticated, encrypted transactions using the `CotiEthersSigner`.
 
-This is the most complex part because we must mix **Public Transactions** (Minting) with **Private Data** (Decrypting Balances).
+This step adds a **Registration Panel** to your dApp. Users can play freely, but must register to mint their rewards.
 
+Replace the current address for your smart contract address.
 ---
 
-## ⚡ ACTION: GENERATE THE CLAIM LOGIC
+## ⚡ ACTION: IMPLEMENT REGISTRATION FLOW
 
-Copy the instructions below. This prompt is engineered to force the AI to use the correct `signer.setAesKey()` method, preventing the common "CotiWallet" errors.
+**Mission:** Go to the **COTI MCP Interface**. Copy the prompt below.
 
 <div style={{
-  background: 'linear-gradient(135deg, #10b981, #059669)',
-  padding: '2px',
-  borderRadius: '12px',
-  margin: '25px 0',
-  boxShadow: '0 0 30px rgba(16, 185, 129, 0.2)'
+  background: 'linear-gradient(135deg, #14b8a6, #0ea5e9)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 50px -10px rgba(14, 165, 233, 0.4)'
 }}>
   <div style={{
-    background: '#020617',
-    borderRadius: '11px',
-    padding: '24px',
+    background: '#0f172a',
+    borderRadius: '13px',
     color: '#e2e8f0',
-    position: 'relative',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
   }}>
     
-    {/* Header del Prompt */}
+    {/* Header Bar */}
     <div style={{
-      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px',
-      borderBottom: '1px solid #1e293b', paddingBottom: '12px'
+      background: 'rgba(255, 255, 255, 0.03)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
     }}>
-      <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-         <span style={{fontSize: '1.2rem'}}>💎</span>
-         <span style={{color: '#34d399', fontWeight: 'bold', letterSpacing: '0.5px'}}>CLAIM_PROTOCOL.txt</span>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#2dd4bf', borderRadius:'50%', 
+            boxShadow:'0 0 12px #2dd4bf'
+        }}></div>
+        <span style={{color: '#f0f9ff', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.5px'}}>
+          USER_REGISTRY.prompt
+        </span>
       </div>
+
       <button 
         style={{
-            background: '#1e293b', border: '1px solid #334155', color: '#cbd5e1',
-            padding: '6px 12px', borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer',
-            fontWeight: 'bold', fontFamily: 'monospace'
+            background: 'linear-gradient(90deg, #0ea5e9, #2563eb)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            display: 'flex', alignItems: 'center', gap: '8px',
+            transition: 'transform 0.1s',
+            boxShadow: '0 4px 12px rgba(14, 165, 233, 0.3)'
         }}
+        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
         onClick={() => {
-            const promptText = document.getElementById('claim-prompt').innerText;
+            const promptText = document.getElementById('registry-prompt').innerText;
             navigator.clipboard.writeText(promptText);
-            alert("Prompt Copied! Paste this into v0.dev 🚀");
+            alert("Registry Prompt Copied! Don't forget to set your Address! 📝");
         }}
       >
-        COPY TO CLIPBOARD
+        <span>⚡ COPY PROMPT</span>
       </button>
     </div>
-    
-    {/* Contenido del Prompt (Hidden ID for copying) */}
-    <div id="claim-prompt" style={{
-      fontSize: '0.85rem', 
-      lineHeight: '1.5', 
-      fontFamily: 'Menlo, Monaco, monospace',
-      color: '#94a3b8',
-      maxHeight: '300px',
-      overflowY: 'auto',
-      whiteSpace: 'pre-wrap'
+
+    {/* Scrollable Content Area */}
+    <div id="registry-prompt" style={{
+      padding: '24px',
+      maxHeight: '400px', 
+      overflowY: 'auto',  
+      whiteSpace: 'pre-wrap', 
+      fontSize: '0.85rem',
+      lineHeight: '1.5',
+      color: '#cbd5e1'
     }}>
-You must implement a CLAIM feature for a PRIVATE ERC20 token deployed in COTI V2.
-Follow ALL instructions EXACTLY.
-Do NOT improvise.
-Do NOT invent encrypted formats.
-Do NOT call functions that do not exist in the ABI.
+{`You must extend the existing React + TypeScript + Ethers v6 + COTI SDK application with a new “User Registration Flow” using coti-ethers. Registration is optional for playing, but mandatory for minting. Maintain all existing logic (wallet connection, onboarding, AESKey, game). Do not modify those parts.
 
-GENERAL ARCHITECTURE RULES
+You MUST install and import coti-ethers:
 
-You MUST use ethers v6 for provider + connected signer:
-const provider = new BrowserProvider(window.ethereum);
-const signer = await provider.getSigner();
+npm install @coti-io/coti-ethers
 
-You MUST use @coti-io/coti-ethers ONLY to:
-- enable AES-based encryption/decryption on the signer
-- work with the encrypted types used by the private ERC20 (ctUint64, itUint64, etc.)
+import { CotiEthersSigner } from "@coti-io/coti-ethers";
 
 IMPORTANT:
-The @coti-io/coti-ethers module DOES NOT export CotiWallet.
-You MUST NOT import CotiWallet from @coti-io/coti-ethers.
+The signer used for registration and mint MUST be the signer enhanced with AESKey through coti-ethers, not a derived wallet and not a plain ethers signer.
 
-Instead, you MUST use the signer returned by provider.getSigner() and inject the AES key into it using the API provided by coti-ethers (for example await signer.setAesKey(aesKey)), exactly like in the onboarding flow.
-
-Example pattern (this is REQUIRED):
+Use this pattern:
 const provider = new BrowserProvider(window.ethereum);
-const signer: any = await provider.getSigner();
+const baseSigner = await provider.getSigner();
+const signer = new CotiEthersSigner(baseSigner, aesKey);
 
-// AES key was derived during onboarding and is stored in state:
-if (!aesKey) throw new Error("AES key is missing");
+You MUST always pass the coti-ethers signer when calling contract functions that require authenticated user actions.
 
-await signer.setAesKey(aesKey); // this is how the AES key is injected into the signer
+———————————————————————————————————————
+CONTRACT ABI (USE EXACTLY AS PROVIDED)
+———————————————————————————————————————
+[
+  { "type": "constructor", "inputs":[{"name":"tokenName","type":"string"},{"name":"tokenSymbol","type":"string"},{"name":"tokenDecimals","type":"uint8"}], "stateMutability":"nonpayable" },
+  { "type":"function","name":"requestRegistration","inputs":[],"outputs":[],"stateMutability":"nonpayable" },
+  { "type":"function","name":"isRegistered","inputs":[{"name":"account","type":"address"}],"outputs":[{"name":"","type":"bool"}],"stateMutability":"view" },
+  { "type":"function","name":"mint","inputs":[{"name":"to","type":"address"},{"name":"amount","type":"uint256"}],"outputs":[],"stateMutability":"nonpayable" },
+  { "type":"function","name":"burn","inputs":[{"name":"amount","type":"uint256"}],"outputs":[],"stateMutability":"nonpayable" },
+  { "type":"function","name":"transfer","inputs":[{"name":"to","type":"address"},{"name":"amount","type":"uint256"}],"outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable" },
+  { "type":"function","name":"transferFrom","inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"amount","type":"uint256"}],"outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable" },
+  { "type":"function","name":"approve","inputs":[{"name":"spender","type":"address"},{"name":"amount","type":"uint256"}],"outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable" },
+  { "type":"function","name":"allowance","inputs":[{"name":"owner","type":"address"},{"name":"spender","type":"address"}],"outputs":[{"name":"","type":"uint256"}],"stateMutability":"view" },
+  { "type":"function","name":"balanceOf","inputs":[{"name":"account","type":"address"}],"outputs":[{"name":"","type":"uint256"}],"stateMutability":"view" },
+  { "type":"function","name":"totalSupply","inputs":[],"outputs":[{"name":"","type":"uint256"}],"stateMutability":"view" },
+  { "type":"function","name":"name","inputs":[],"outputs":[{"name":"","type":"string"}],"stateMutability":"view" },
+  { "type":"function","name":"symbol","inputs":[],"outputs":[{"name":"","type":"string"}],"stateMutability":"view" },
+  { "type":"function","name":"decimals","inputs":[],"outputs":[{"name":"","type":"uint8"}],"stateMutability":"view" },
+  { "type":"function","name":"owner","inputs":[],"outputs":[{"name":"","type":"address"}],"stateMutability":"view" },
+  { "type":"event","name":"Transfer","inputs":[{"name":"from","type":"address","indexed":true},{"name":"to","type":"address","indexed":true},{"name":"value","type":"uint256"}] },
+  { "type":"event","name":"Approval","inputs":[{"name":"owner","type":"address","indexed":true},{"name":"spender","type":"address","indexed":true},{"name":"value","type":"uint256"}] },
+  { "type":"event","name":"RegistrationRequested","inputs":[{"name":"user","type":"address","indexed":true}] },
+  { "type":"event","name":"RegistrationApproved","inputs":[{"name":"user","type":"address","indexed":true}] },
+  { "type":"error","name":"Unauthorized","inputs":[] },
+  { "type":"error","name":"InvalidAddress","inputs":[] },
+  { "type":"error","name":"InsufficientBalance","inputs":[] },
+  { "type":"error","name":"InsufficientAllowance","inputs":[] },
+  { "type":"error","name":"NotRegistered","inputs":[] },
+  { "type":"error","name":"AlreadyRegistered","inputs":[] }
+]
 
-// from this point on, `signer` is the AES-aware signer you must use
-const contract = new Contract(PRIVATE_ERC20_ADDRESS, PRIVATE_ERC20_ABI, signer);
+———————————————————————————————————————
+NEW FEATURE: USER REGISTRATION FLOW
+———————————————————————————————————————
 
-After onboarding, the frontend already has:
-- userKey
-- aesKey
+UI/UX Requirements (Expert-Level)
+1. Add a new dedicated panel below Onboarding called “User Access”.
+2. Inside this panel show:
+   - Registration Status indicator (stylish, modern, color-coded)
+   - “Register” button
+   - “Mint / Claim Points” button (locked until registration)
 
-After aesKey exists, you MUST:
-1. Get the signer with provider.getSigner()
-2. Call await signer.setAesKey(aesKey) (or the equivalent method provided by coti-ethers)
-3. Store that signer in React state (for example, aesSigner or privateSigner)
-4. Use this AES-enabled signer for ALL private operations
+3. Registration Status UX:
+   Before checking:
+      Status: Unknown
+      Color: neutral grey
+   If not registered:
+      Status: Not Registered
+      Color: soft red
+   If registered:
+      Status: Registered
+      Color: green
+   Must auto-refresh on:
+      - Wallet changes
+      - After registration tx
+      - On page reload (if wallet connected)
 
-DO NOT:
-- Do NOT use a derived Wallet with userKey.privateKey
-- Do NOT create your own wallet wrapper
-- Do NOT use any non-existing exports like CotiWallet from @coti-io/coti-ethers
+4. The “Register” button:
+   - Enabled only when:
+        walletConnected === true
+        onboardingComplete === true
+        aesKey !== null
+   - Shows loading animation during tx.
+   - After success:
+        Update status, show “Registered”.
 
-CONTRACT INFORMATION
-Use this contract address:
-0xdfBC6Cc12e597Bf37Db61202A9b6238020CbC3a9
+5. Important UX rule:
+   Registration is OPTIONAL for playing the game.
+   Registration is REQUIRED for minting.
 
-Use THIS ABI EXACTLY (do not modify or use a different one):
-{
-  "abi": [
-    {
-      "inputs": [
-        {"internalType": "string","name": "name_","type": "string"},
-        {"internalType": "string","name": "symbol_","type": "string"}
-      ],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {"inputs":[{"internalType":"address","name":"approver","type":"address"}],
-     "name":"ERC20InvalidApprover","type":"error"},
-    {"inputs":[{"internalType":"address","name":"receiver","type":"address"}],
-     "name":"ERC20InvalidReceiver","type":"error"},
-    {"inputs":[{"internalType":"address","name":"sender","type":"address"}],
-     "name":"ERC20InvalidSender","type":"error"},
-    {"inputs":[{"internalType":"address","name":"spender","type":"address"}],
-     "name":"ERC20InvalidSpender","type":"error"},
-    {
-      "anonymous": false,
-      "inputs": [
-        {"indexed": true,"internalType": "address","name": "owner","type": "address"},
-        {"indexed": true,"internalType": "address","name": "spender","type": "address"},
-        {"indexed": false,"internalType": "ctUint64","name": "ownerValue","type": "uint256"},
-        {"indexed": false,"internalType": "ctUint64","name": "spenderValue","type": "uint256"}
-      ],
-      "name": "Approval",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {"indexed": true,"internalType": "address","name": "from","type": "address"},
-        {"indexed": true,"internalType": "address","name": "to","type": "address"},
-        {"indexed": false,"internalType": "ctUint64","name": "senderValue","type": "uint256"},
-        {"indexed": false,"internalType": "ctUint64","name": "receiverValue","type": "uint256"}
-      ],
-      "name": "Transfer",
-      "type": "event"
-    },
-    {
-      "inputs":[{"internalType":"address","name":"account","type":"address"}],
-      "name":"accountEncryptionAddress",
-      "outputs":[{"internalType":"address","name":"","type":"address"}],
-      "stateMutability":"view","type":"function"
-    },
-    {
-      "inputs":[{"internalType":"address","name":"account","type":"address"},
-                {"internalType":"bool","name":"isSpender","type":"bool"}],
-      "name":"allowance",
-      "outputs":[{"internalType":"gtUint64","name":"","type":"uint256"}],
-      "stateMutability":"nonpayable",
-      "type":"function"
-    },
-    {
-      "inputs":[{"internalType":"address","name":"owner","type":"address"},
-                {"internalType":"address","name":"spender","type":"address"}],
-      "name":"allowance",
-      "outputs":[{"components":[
-                    {"internalType":"ctUint64","name":"ciphertext","type":"uint256"},
-                    {"internalType":"ctUint64","name":"ownerCiphertext","type":"uint256"},
-                    {"internalType":"ctUint64","name":"spenderCiphertext","type":"uint256"}
-                 ],
-                 "internalType":"struct IPrivateERC20.Allowance",
-                 "name":"",
-                 "type":"tuple"}],
-      "stateMutability":"view",
-      "type":"function"
-    },
-    {
-      "inputs":[{"internalType":"address","name":"spender","type":"address"},
-                {"internalType":"gtUint64","name":"value","type":"uint256"}],
-      "name":"approve",
-      "outputs":[{"internalType":"bool","name":"","type":"bool"}],
-      "stateMutability":"nonpayable",
-      "type":"function"
-    },
-    {
-      "inputs":[{"internalType":"address","name":"spender","type":"address"},
-                {"components":[
-                  {"internalType":"ctUint64","name":"ciphertext","type":"uint256"},
-                  {"internalType":"bytes","name":"signature","type":"bytes"}
-                ],
-                "internalType":"struct itUint64",
-                "name":"value",
-                "type":"tuple"}],
-      "name":"approve",
-      "outputs":[{"internalType":"bool","name":"","type":"bool"}],
-      "stateMutability":"nonpayable",
-      "type":"function"
-    },
-    {
-      "inputs":[{"internalType":"address","name":"account","type":"address"}],
-      "name":"balanceOf",
-      "outputs":[{"internalType":"ctUint64","name":"","type":"uint256"}],
-      "stateMutability":"view",
-      "type":"function"
-    },
-    {
-      "inputs":[{"internalType":"address","name":"account","type":"address"},
-                {"internalType":"uint64","name":"amount","type":"uint64"}],
-      "name":"burn",
-      "outputs":[],
-      "stateMutability":"nonpayable",
-      "type":"function"
-    },
-    {
-      "inputs":[{"internalType":"address","name":"account","type":"address"},
-                {"internalType":"uint64","name":"amount","type":"uint64"}],
-      "name":"mint",
-      "outputs":[],
-      "stateMutability":"nonpayable",
-      "type":"function"
-    },
-    {
-      "inputs":[],
-      "name":"decimals",
-      "outputs":[{"internalType":"uint8","name":"","type":"uint8"}],
-      "stateMutability":"view",
-      "type":"function"
-    },
-    {
-      "inputs":[],
-      "name":"name",
-      "outputs":[{"internalType":"string","name":"","type":"string"}],
-      "stateMutability":"view",
-      "type":"function"
-    },
-    {
-      "inputs":[],
-      "name":"symbol",
-      "outputs":[{"internalType":"string","name":"","type":"string"}],
-      "stateMutability":"view",
-      "type":"function"
-    },
-    {
-      "inputs":[],
-      "name":"totalSupply",
-      "outputs":[{"internalType":"uint256","name":"","type":"uint256"}],
-      "stateMutability":"view",
-      "type":"function"
-    }
-  ]
-}
+———————————————————————————————————————
+REGISTRATION LOGIC (MANDATORY IMPLEMENTATION)
+———————————————————————————————————————
 
-THE CRITICAL REALITY ABOUT THIS ABI
-✔ mint(address,uint64) is PUBLIC and NOT encrypted.
-You MUST call mint like this (using the AES-enabled signer you got from provider.getSigner() + setAesKey):
+You MUST use coti-ethers to wrap the signer:
+
+const provider = new BrowserProvider(window.ethereum);
+const baseSigner = await provider.getSigner();
+const signer = new CotiEthersSigner(baseSigner, aesKey);
+
+You MUST use this signer for:
+
+- requestRegistration()
+- isRegistered()
+- mint()
+
+NEVER call contract.write functions using the raw ethers signer.
+NEVER call using a derived wallet.
+NEVER use a private key locally.
+
+———————————————————————————————————————
+FUNCTIONAL REQUIREMENTS
+———————————————————————————————————————
+
+1. Checking if user is registered:
+const status = await contract.isRegistered(userAddress);
+
+2. Registering user:
+const tx = await contract.connect(signer).requestRegistration();
+await tx.wait();
+
+3. Unlocking Minting:
+The Mint button must be hidden or disabled until:
+isRegistered === true
+
+4. Mint Function:
+After user is registered:
+Execute:
+
 const tx = await contract.connect(signer).mint(userAddress, BigInt(amount));
 await tx.wait();
 
-✔ transfer and balanceOf ARE encrypted.
-So you MUST use:
-const encrypted = await signer.encryptValue(amount, contractAddress, selector);
-await contract.transfer(to, encrypted);
+5. UI state to maintain:
+isRegistered
+isRegistering (loading)
+mintStatus
+registrationStatusMessage
 
-and:
-const ctValue = await contract.balanceOf(userAddress);
-const decrypted = await signer.decryptValue(ctValue);
+6. Logging (required):
+“Checking registration…”
+“Registration transaction sent: (hash)”
+“Registration complete.”
+“User is registered.”
+“Minting using amount: X”
+“Mint transaction hash: …”
+“Mint complete.”
 
+———————————————————————————————————————
+OUTPUT REQUIREMENTS
+———————————————————————————————————————
 
-CLAIM FEATURE REQUIREMENTS
-Implement a “Claim” button that:
-1. Only shows if:
-   - walletConnected === true
-   - onboardingComplete === true
-   - aesKey exists
-   - AES-enabled signer (with setAesKey already called) exists
+Your response MUST contain ONLY:
 
-2. When clicked:
-   - Convert userPoints to a uint64 amount
-   - DO NOT encrypt it (mint is not encrypted)
-   - Call:
-     const tx = await contract.connect(signer).mint(userAddress, amount);
-     await tx.wait();
+1. The React + TypeScript code implementing:
+   - The “User Access” panel
+   - Registration button
+   - Registration status display
+   - Mint button (locked until registered)
+   - coti-ethers signer integration
 
-3. After mint:
-   - Read private balance:
-     const ctBal = await contract.balanceOf(userAddress);
-     const balance = await signer.decryptValue(ctBal);
-   - Show updated balance.
-   - Show tx.hash.
-   - Log:
-     - encryption (if used anywhere else)
-     - mint call
-     - receipt
-     - decrypted balance
+2. MUST NOT modify:
+   - Wallet connection logic
+   - Onboarding logic
+   - AESKey generation logic
+   - Game logic
+   - Network switching logic
 
-LOGGING REQUIREMENTS
-You MUST log:
-- “AESKey loaded”
-- “Getting signer from provider…”
-- “Injecting AES key into signer via setAesKey…”
-- “Signer is now AES-enabled”
-- “Reading user points: X”
-- “Calling mint(uint64)…”
-- “Tx hash: …”
-- “Decrypting balance…”
-- “New balance: …”
-- Any errors
-
-OUTPUT FORMAT
-Your answer MUST contain ONLY:
-- Full React + TypeScript code that:
-  - loads AESKey
-  - gets signer = await provider.getSigner()
-  - calls await signer.setAesKey(aesKey)
-  - displays the Claim button
-  - executes mint correctly (no encryption for mint)
-  - decrypts balance using signer.decryptValue
-  - logs everything
-No extra text.
-English only.
+3. UI must be minimal, modern, and clean.
+4. English only.
+5. No emojis.
+6. No extra explanation.
+`}
     </div>
 
-    {/* Footer decorativo */}
+    {/* Visual Footer */}
     <div style={{
-        marginTop: '20px', 
-        borderTop: '1px solid #1e293b', 
-        paddingTop: '10px',
-        textAlign: 'center',
-        fontSize: '0.75rem',
-        color: '#64748b'
+        background: '#020617',
+        borderTop: '1px solid #1e293b',
+        padding: '8px 20px',
+        display: 'flex', justifyContent: 'flex-end',
+        alignItems: 'center', gap: '10px'
     }}>
-        COTI V2 PRIVATE PROTOCOL • END-TO-END ENCRYPTION ENABLED
+        <div style={{width:'8px', height:'8px', background:'#2dd4bf', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
+        <span style={{fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'sans-serif', fontWeight: 'bold'}}>
+          SCROLL TO VIEW FULL SPECIFICATION ↕
+        </span>
     </div>
 
   </div>
