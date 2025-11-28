@@ -51,6 +51,25 @@ const aiAgentMap: Record<string, { name: string; icon: string }> = {
   openai: { name: "OpenAI", icon: "/icons/ai/openai.svg" },
 };
 
+const extractTitleFromMdxPath = (path: string): string => {
+  // Extract filename from path: "/docs/.../.../01-overview.mdx" -> "01-overview.mdx"
+  const filename = path.split('/').pop() || '';
+
+  // Remove extension: "01-overview.mdx" -> "01-overview"
+  const nameWithoutExt = filename.replace('.mdx', '');
+
+  // Remove number prefix: "01-overview" -> "overview"
+  const nameWithoutNumber = nameWithoutExt.replace(/^\d+-/, '');
+
+  // Replace hyphens with spaces and capitalize: "overview" -> "Overview"
+  const words = nameWithoutNumber.split('-');
+  const capitalized = words.map(word =>
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join(' ');
+
+  return capitalized;
+};
+
 export default function CourseCard({ image, title, description, prompts, category }: CourseCardProps) {
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
@@ -232,8 +251,16 @@ export default function CourseCard({ image, title, description, prompts, categor
                   </p>
 
                   {/* Agenda cards */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                    {selectedPrompt.welcome.agenda.map((item, index) => (
+                  <div className={`grid gap-4 pt-4 ${
+                    selectedPrompt.mdxPages.length === 1
+                      ? 'grid-cols-1 max-w-2xl mx-auto'
+                      : selectedPrompt.mdxPages.length === 2
+                      ? 'grid-cols-1 sm:grid-cols-2'
+                      : selectedPrompt.mdxPages.length === 3
+                      ? 'grid-cols-1 sm:grid-cols-3'
+                      : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+                  }`}>
+                    {selectedPrompt.mdxPages.map((mdxPath, index) => (
                       <div
                         key={index}
                         className={`group bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm rounded-2xl p-5 border-2 ${categoryBorders[category]} hover:border-opacity-60 transition-all duration-300 hover:scale-105 hover:shadow-xl`}
@@ -243,7 +270,7 @@ export default function CourseCard({ image, title, description, prompts, categor
                             {index + 1}
                           </div>
                           <p className="text-zinc-800 dark:text-zinc-200 font-medium pt-2 leading-relaxed">
-                            {item}
+                            {extractTitleFromMdxPath(mdxPath)}
                           </p>
                         </div>
                       </div>

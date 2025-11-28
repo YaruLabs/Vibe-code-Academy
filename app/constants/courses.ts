@@ -20,13 +20,7 @@ export const courses: Course[] = [
         recommendedAI: ["claude", "openai"],
         welcome: {
           title: "Welcome to Smart Contract Security Audit",
-          description: "Learn how to identify and prevent common vulnerabilities in smart contracts to build secure decentralized applications.",
-          agenda: [
-            "Understanding common smart contract vulnerabilities",
-            "Security audit methodology and best practices",
-            "Tools and techniques for security testing",
-            "Real-world case studies and examples"
-          ]
+          description: "Learn how to identify and prevent common vulnerabilities in smart contracts to build secure decentralized applications."
         }
       },
       {
@@ -39,13 +33,7 @@ export const courses: Course[] = [
         recommendedAI: ["claude", "gemini", "openai"],
         welcome: {
           title: "Welcome to DeFi Protocol Development",
-          description: "Master the fundamentals of building decentralized finance protocols from scratch.",
-          agenda: [
-            "DeFi architecture and design patterns",
-            "Liquidity pools and AMM mechanisms",
-            "Yield farming strategies",
-            "Testing and deployment best practices"
-          ]
+          description: "Master the fundamentals of building decentralized finance protocols from scratch."
         }
       }
     ]
@@ -67,13 +55,7 @@ export const courses: Course[] = [
         recommendedAI: ["claude", "gemini"],
         welcome: {
           title: "Welcome to 2D Platformer Mechanics",
-          description: "Build engaging 2D platformer games with smooth physics and responsive controls.",
-          agenda: [
-            "Character movement and physics",
-            "Jump mechanics and air control",
-            "Collision detection and response",
-            "Level design principles"
-          ]
+          description: "Build engaging 2D platformer games with smooth physics and responsive controls."
         }
       },
       {
@@ -86,13 +68,7 @@ export const courses: Course[] = [
         recommendedAI: ["gemini", "openai"],
         welcome: {
           title: "Welcome to AI Enemy Behavior System",
-          description: "Create intelligent and challenging enemy AI for your games using behavior trees and state machines.",
-          agenda: [
-            "Behavior tree fundamentals",
-            "State machine patterns",
-            "Pathfinding and navigation",
-            "AI perception and decision making"
-          ]
+          description: "Create intelligent and challenging enemy AI for your games using behavior trees and state machines."
         }
       }
     ]
@@ -114,13 +90,7 @@ export const courses: Course[] = [
         recommendedAI: ["claude"],
         welcome: {
           title: "Welcome to CLI Tool Development",
-          description: "Build powerful and user-friendly command-line tools that developers love to use.",
-          agenda: [
-            "CLI architecture and design patterns",
-            "Argument parsing and validation",
-            "Interactive prompts and progress indicators",
-            "Testing and distribution strategies"
-          ]
+          description: "Build powerful and user-friendly command-line tools that developers love to use."
         }
       },
       {
@@ -133,13 +103,7 @@ export const courses: Course[] = [
         recommendedAI: ["openai", "gemini"],
         welcome: {
           title: "Welcome to API Documentation Generator",
-          description: "Automate API documentation generation from code annotations and OpenAPI specifications.",
-          agenda: [
-            "OpenAPI specification and standards",
-            "Code annotation parsing",
-            "Documentation generation pipelines",
-            "Interactive API explorers"
-          ]
+          description: "Automate API documentation generation from code annotations and OpenAPI specifications."
         }
       }
     ]

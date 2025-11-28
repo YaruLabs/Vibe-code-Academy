@@ -7,7 +7,6 @@ export interface Prompt {
   welcome: {
     title: string;
     description: string;
-    agenda: string[];
   };
 }
 
