@@ -20,7 +20,7 @@ export const courses: Course[] = [
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
         demoUrl: "https://coti.io",
-        recommendedAI: ["claude", "openai"],
+        recommendedAI: ["claude", "openai", "cotiMcp"],
         difficulty: "advance",
         welcome: {
           title: "Welcome to Smart Contract Security Audit",
@@ -37,7 +37,7 @@ export const courses: Course[] = [
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
         demoUrl: "https://coti.io",
-        recommendedAI: ["claude", "gemini", "openai"],
+        recommendedAI: ["claude", "gemini", "openai", "cotiMcp"],
         difficulty: "advance",
         welcome: {
           title: "Welcome to DeFi Protocol Development",
