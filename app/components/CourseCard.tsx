@@ -434,6 +434,33 @@ export default function CourseCard({ image, title, description, prompts, categor
                   </div>
                 </div>
 
+                {selectedPrompt?.demoUrl && (
+                  <a
+                    href={selectedPrompt.demoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`group relative px-4 py-3 text-left bg-gradient-to-r ${categoryColors[category]} hover:opacity-90 rounded-lg transition-all text-white font-bold flex items-center gap-3 shadow-lg hover:shadow-xl overflow-hidden`}
+                  >
+                    {/* Animated shimmer effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+
+                    {/* Play icon */}
+                    <div className="relative z-10 flex-shrink-0">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="drop-shadow-sm">
+                        <path d="M8 5.14v14l11-7-11-7z" fill="currentColor"/>
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.3"/>
+                      </svg>
+                    </div>
+
+                    <span className="relative z-10 flex items-center gap-2">
+                      View Demo
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="group-hover:translate-x-1 transition-transform">
+                        <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </span>
+                  </a>
+                )}
+
                 {selectedPrompt?.tutorialUrl && (
                   <a
                     href={selectedPrompt.tutorialUrl}

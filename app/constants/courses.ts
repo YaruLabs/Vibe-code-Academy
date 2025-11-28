@@ -19,6 +19,7 @@ export const courses: Course[] = [
         ],
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
+        demoUrl: "https://coti.io",
         recommendedAI: ["claude", "openai"],
         difficulty: "advance",
         welcome: {
@@ -35,6 +36,7 @@ export const courses: Course[] = [
         ],
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
+        demoUrl: "https://coti.io",
         recommendedAI: ["claude", "gemini", "openai"],
         difficulty: "advance",
         welcome: {
@@ -60,6 +62,7 @@ export const courses: Course[] = [
         ],
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
+        demoUrl: "https://coti.io",
         recommendedAI: ["claude", "gemini"],
         difficulty: "beginner",
         welcome: {
@@ -76,6 +79,7 @@ export const courses: Course[] = [
         ],
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
+        demoUrl: "https://coti.io",
         recommendedAI: ["gemini", "openai"],
         difficulty: "advance",
         welcome: {
@@ -101,6 +105,7 @@ export const courses: Course[] = [
         ],
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
+        demoUrl: "https://coti.io",
         recommendedAI: ["claude"],
         difficulty: "absolute-beginner",
         welcome: {
@@ -117,6 +122,7 @@ export const courses: Course[] = [
         ],
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
+        demoUrl: "https://coti.io",
         recommendedAI: ["openai", "gemini"],
         difficulty: "beginner",
         welcome: {

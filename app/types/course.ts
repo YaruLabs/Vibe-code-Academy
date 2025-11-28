@@ -3,8 +3,9 @@ export interface Prompt {
   title: string;
   image: string;
   mdxPages: string[];
-  tutorialUrl: string;
-  repositoryUrl: string;
+  tutorialUrl?: string;
+  repositoryUrl?: string;
+  demoUrl?: string;
   recommendedAI: string[];
   difficulty: "absolute-beginner" | "beginner" | "advance";
   welcome: {
