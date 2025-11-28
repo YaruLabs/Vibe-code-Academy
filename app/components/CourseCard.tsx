@@ -80,7 +80,8 @@ const aiAgentMap: Record<string, { name: string; icon: string; url: string }> = 
   claude: { name: "Claude", icon: "/icons/ai/claude.png", url: "https://claude.ai" },
   gemini: { name: "Gemini", icon: "/icons/ai/gemini.png", url: "https://aistudio.google.com/apps" },
   openai: { name: "ChatGPT", icon: "/icons/ai/openai.svg", url: "https://chatgpt.com" },
-  cotiMcp: { name: "COTI MCP", icon: "/icons/ai/coti.png", url: "https://smithery.ai/server/@davibauer/coti-mcp" }
+  cotiMcp: { name: "COTI MCP", icon: "/icons/ai/coti.png", url: "https://smithery.ai/server/@davibauer/coti-mcp" },
+  v0: { name: "V0", icon: "/icons/ai/v0.png", url: "https://v0.dev" }
 };
 
 const extractTitleFromMdxPath = (path: string): string => {

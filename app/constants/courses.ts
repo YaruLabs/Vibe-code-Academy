@@ -60,10 +60,10 @@ export const courses: Course[] = [
         mdxPages: [
           "/docs/games/2d-platformer-mechanics/01-create-private-token.mdx"
         ],
-        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        tutorialUrl: "https://www.youtube.com/watch?v=WZZiXNV6AqQ",
         repositoryUrl: "https://github.com/coti-io",
         demoUrl: "https://coti.io",
-        recommendedAI: ["cotiMcp", "claude", "gemini"],
+        recommendedAI: ["cotiMcp", "v0"],
         difficulty: "absolute-beginner",
         welcome: {
           title: "Welcome to 2D Platformer Mechanics",
