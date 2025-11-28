@@ -66,8 +66,8 @@ export const courses: Course[] = [
         recommendedAI: ["cotiMcp", "v0"],
         difficulty: "absolute-beginner",
         welcome: {
-          title: "Welcome to 2D Platformer Mechanics",
-          description: "Build engaging 2D platformer games with smooth physics and responsive controls."
+          title: "Build a basic 2D Game",
+          description: "Create a simple 2D action game that integrates on-chain rewards, where every jump, coin pickup, and level completion can trigger secure smart contract interactions."
         }
       },
       {
@@ -85,8 +85,8 @@ export const courses: Course[] = [
         recommendedAI: ["cotiMcp", "v0"],
         difficulty: "beginner",
         welcome: {
-          title: "Welcome to AI Enemy Behavior System",
-          description: "Create intelligent and challenging enemy AI for your games using behavior trees and state machines."
+          title: "Building a Basic 2D Game with Custom Smart Contracts",
+          description: "Learn how to build a basic 2D game from scratch and seamlessly connect it to your own custom smart contracts."
         }
       },
       {
@@ -104,8 +104,8 @@ export const courses: Course[] = [
         recommendedAI: ["cotiMcp", "v0"],
         difficulty: "advance",
         welcome: {
-          title: "Welcome to 3D Custom Game",
-          description: "Build immersive 3D gaming experiences with advanced rendering and interactive mechanics."
+          title: "Begin Your Journey Inside Your Custom 3D World",
+          description: "Create Immersive 3D Games with Advanced Rendering and Interaction"
         }
       }
     ]
