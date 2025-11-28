@@ -58,7 +58,8 @@ export const courses: Course[] = [
         title: "Game + Private Tokens",
         image: "/images/image2.png",
         mdxPages: [
-          "/docs/games/2d-platformer-mechanics/01-create-private-token.mdx"
+          "/docs/games/2d-platformer-mechanics/01-create-private-token.mdx",
+          "/docs/games/2d-platformer-mechanics/02-setup-game.mdx"
         ],
         tutorialUrl: "https://www.youtube.com/watch?v=WZZiXNV6AqQ",
         repositoryUrl: "https://github.com/coti-io",

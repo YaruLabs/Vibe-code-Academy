@@ -1,0 +1,352 @@
+# 🎮 Project: The Privacy Gateway (v2)
+
+We are about to build a complete **dApp from scratch**. This updated blueprint ensures we avoid common "Insufficient Funds" errors by strictly using the correct wallet architecture.
+
+---
+
+## 💠 PHASE 1: THE REFINED BLUEPRINT
+
+To generate the perfect code structure, we need to feed the AI a highly specific set of instructions. This prompt covers **Wallet Connection**, **Gas Safety**, **RSA Key Generation**, and **Game Logic**.
+
+<div style={{
+  background: '#0B0F19',
+  borderRadius: '16px',
+  border: '1px solid #1E293B',
+  boxShadow: '0 0 50px -10px rgba(6, 182, 212, 0.15)',
+  overflow: 'hidden',
+  margin: '30px 0',
+  fontFamily: '"Inter", system-ui, sans-serif'
+}}>
+  
+  {/* Header Bar */}
+  <div style={{
+    background: 'rgba(255, 255, 255, 0.03)',
+    borderBottom: '1px solid #1E293B',
+    padding: '16px 24px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backdropFilter: 'blur(10px)'
+  }}>
+    <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+      <div style={{
+        width: '10px', height: '10px', borderRadius: '50%', 
+        background: '#06b6d4', boxShadow: '0 0 10px #06b6d4'
+      }}></div>
+      <span style={{
+        color: '#E2E8F0', fontWeight: '600', fontSize: '0.9rem', letterSpacing: '0.5px'
+      }}>MASTER_PROMPT_V2.txt</span>
+    </div>
+    <div style={{display: 'flex', gap: '8px'}}>
+        <span style={{
+        background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', fontSize: '0.7rem', 
+        padding: '4px 8px', borderRadius: '4px', border: '1px solid rgba(239, 68, 68, 0.3)', fontWeight: 'bold'
+        }}>GAS OPTIMIZED</span>
+        <span style={{
+        background: 'rgba(16, 185, 129, 0.2)', color: '#34d399', fontSize: '0.7rem', 
+        padding: '4px 8px', borderRadius: '4px', border: '1px solid rgba(16, 185, 129, 0.3)', fontWeight: 'bold'
+        }}>PRODUCTION READY</span>
+    </div>
+  </div>
+
+  {/* Content Area */}
+  <div style={{
+    padding: '24px',
+    background: 'linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 0.5) 100%)'
+  }}>
+    <div style={{
+      position: 'relative',
+      paddingLeft: '20px',
+      borderLeft: '2px solid #06b6d4'
+    }}>
+      <div style={{
+        color: '#94A3B8', fontSize: '1rem', lineHeight: '1.7', margin: 0, whiteSpace: 'pre-wrap'
+      }}>
+        <span style={{color: '#22d3ee'}}>Purpose:</span> Create a React + TypeScript implementation with Wallet connection, Automatic COTI Testnet switching, and Real SDK AESKey derivation...
+      </div>
+      
+      <div style={{
+          marginTop: '15px', 
+          background: 'rgba(239, 68, 68, 0.1)', 
+          borderLeft: '3px solid #ef4444', 
+          padding: '10px', 
+          borderRadius: '0 4px 4px 0'
+      }}>
+        <strong style={{color: '#f87171', display: 'block', marginBottom: '4px'}}>CRITICAL NEW RULE:</strong>
+        <span style={{color: '#cbd5e1', fontSize: '0.9rem'}}>All blockchain transactions MUST use the real connected signer. Never use derived wallets to send transactions.</span>
+      </div>
+
+      <div style={{margin: '20px 0', height: '1px', background: '#1E293B'}}></div>
+
+      {/* The Actual Prompt Content */}
+      <div style={{
+        background: '#020617',
+        borderRadius: '8px',
+        padding: '16px',
+        border: '1px dashed #334155',
+        color: '#CBD5E1',
+        fontSize: '0.85rem',
+        fontFamily: 'monospace',
+        maxHeight: '420px',
+        overflowY: 'auto',
+        whiteSpace: 'pre-wrap'
+      }}>
+        <pre id="masterPromptText" style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{`Purpose: Create a React + TypeScript implementation with:
+
+Wallet connection
+
+Automatic COTI Testnet switching
+
+Onboarding via COTI onboarding contract
+
+AESKey derivation using real COTI SDK
+
+Native COTI balance fetching
+
+2D game locked until onboarding success
+
+Strict rule: All blockchain transactions MUST use the real connected signer
+
+Never use derived wallets to send transactions
+
+No fake AESKey
+
+No architecture imposed
+
+CRITICAL NEW RULE (Preventing Gas Errors)
+You MUST follow this instruction:
+
+All blockchain transactions must be executed using the real connected signer obtained from window.ethereum (via provider.getSigner() or new BrowserProvider(...).getSigner()).
+
+Do NOT use wallets derived from signatures
+
+Do NOT use RSA-generated keys as wallets
+
+Do NOT use recoverUserKey output as a wallet
+
+Do NOT construct a new Wallet(privateKey, provider) for sending transactions
+
+The only wallet allowed to send transactions is the actual connected wallet that the user controls and that has funds.
+
+This prevents the error:
+
+insufficient funds for intrinsic transaction cost
+
+
+because onboarding requires gas, and only the connected signer has funds.
+
+All contract writes must use:
+
+const provider = new ethers.BrowserProvider(window.ethereum);
+const signer = await provider.getSigner();
+
+const contract = new Contract(ONBOARD_CONTRACT_ADDRESS, ABI, signer);
+await contract.onboardAccount(...);
+
+
+Never any other signer.
+
+1. React + TypeScript + Ethers + COTI SDK + Onboarding + AESKey + Balance + Game Lock
+STEP 1 — Wallet Connection
+
+Produce a minimal React UI with:
+
+A centered Connect Wallet button
+
+Uses ethers v6
+
+Switches or adds COTI Testnet
+
+After success:
+
+Show wallet address
+
+Show native COTI balance
+
+Show Onboard button
+
+Use these network parameters:
+
+Network name: COTI Testnet
+RPC URL: https://testnet.coti.io/rpc
+WS URL: wss://testnet.coti.io/ws
+Chain ID: 7082400 (hex: 0x6c11a0)
+Currency symbol: COTI
+Explorer: https://testnet.cotiscan.io
+Status: https://uptime.coti.io
+
+STEP 2 — Onboarding
+
+The Onboard button must run this function EXACTLY, using ONLY the real connected signer:
+
+async function onboard(wallet: Wallet) {
+    const accountOnboardContract = new Contract(
+        ONBOARD_CONTRACT_ADDRESS,
+        JSON.stringify(ONBOARD_CONTRACT_ABI),
+        wallet
+    );
+
+    const rsaKeyPair = generateRSAKeyPair();
+
+    const signedEK = sign(keccak256(rsaKeyPair.publicKey), wallet.privateKey);
+
+    const receipt = await (
+        await accountOnboardContract.onboardAccount(
+            rsaKeyPair.publicKey,
+            signedEK,
+            { gasLimit: 15000000 }
+        )
+    ).wait();
+
+    const decodedLog = accountOnboardContract.interface.parseLog(receipt.logs[0]);
+
+    return recoverUserKey(
+        rsaKeyPair.privateKey,
+        decodedLog!.args.userKey1.substring(2),
+        decodedLog!.args.userKey2.substring(2)
+    );
+}
+
+
+Important:
+The parameter wallet passed into onboard(wallet) must be the real connected signer, not a derived wallet.
+
+Use this corrected address:
+
+0x536A67f0cc46513E7d27a370ed1aF9FDcC7A5095
+
+
+Use the ABI exactly as previously shown.
+
+STEP 3 — AESKey Extraction
+
+Requirements:
+
+Use the SDK to derive the AESKey from the userKey returned by onboarding
+
+No mock values
+
+No placeholder AESKey
+
+Store AESKey in state
+
+Display AESKey
+
+Your implementation must derive the AESKey through real COTI SDK logic (decrypt, build inputs, etc.).
+
+STEP 4 — COTI Native Balance
+
+After wallet connection:
+
+Use provider.getBalance(address)
+
+Display native COTI balance
+
+Optionally refresh after onboarding
+
+STEP 5 — Game Locking Logic
+
+The 2D game must NOT initialize until:
+
+Wallet connected
+
+Onboarding completed
+
+AESKey derived
+
+No errors
+
+Implement the guard:
+
+if (!walletConnected || !onboardingComplete || !aesKey) {
+    return <div>Please complete onboarding before accessing the game.</div>;
+}
+
+2. Simple 2D Game (React + TypeScript)
+
+After the wallet/onboarding/AESKey section, produce a separate section with:
+
+A small 2D interactive game
+
+Canvas or DOM
+
+Very simple, visually pleasant
+
+React + TS only
+
+No dependencies
+
+The game must only render if onboarding is complete & AESKey exists
+
+Examples allowed:
+
+Character collecting orbs
+
+Blob avoiding falling blocks
+
+Bouncing ball with keyboard control
+
+Creature following mouse
+
+Must be readable and production-safe.
+
+3. Output Format
+
+Your response must contain:
+
+Section 1: Wallet + Onboarding + AESKey + Balance + Game Lock Code
+
+Section 2: 2D Game Code
+
+All in English.
+No emojis.
+Minimal inline CSS.
+No unnecessary explanations.`}</pre>
+      </div>
+    </div>
+
+    {/* Action Footer */}
+    <div style={{marginTop: '24px', display: 'flex', justifyContent: 'flex-end'}}>
+      <button 
+        style={{
+          background: 'linear-gradient(135deg, #0891b2 0%, #2563eb 100%)',
+          border: 'none',
+          borderRadius: '8px',
+          padding: '12px 24px',
+          color: 'white',
+          fontWeight: '600',
+          cursor: 'pointer',
+          boxShadow: '0 4px 15px rgba(8, 145, 178, 0.4)',
+          transition: 'all 0.2s',
+          display: 'flex', alignItems: 'center', gap: '8px'
+        }}
+        onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(8, 145, 178, 0.6)';
+        }}
+        onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 4px 15px rgba(8, 145, 178, 0.4)';
+        }}
+        onClick={(e) => {
+            const promptNode = document.getElementById('masterPromptText');
+            const promptText = promptNode?.textContent?.trim() ?? '';
+            if (!promptText) return;
+            navigator.clipboard.writeText(promptText);
+            const label = e.currentTarget.querySelector('span');
+            if (label) {
+              const originalText = label.textContent;
+              label.textContent = 'Copied';
+              setTimeout(() => {
+                if (label) {
+                  label.textContent = originalText || 'Copy';
+                }
+              }, 2000);
+            }
+        }}
+      >
+        <span>Copy</span>
+      </button>
+    </div>
+  </div>
+</div>
