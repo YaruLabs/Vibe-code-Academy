@@ -202,7 +202,7 @@ export default function CourseCard({ image, title, description, prompts, categor
         )}
         {!selectedPrompt ? (
           <>
-            <div className="relative h-[400px] sm:h-[500px] lg:h-[600px] overflow-hidden rounded-lg mb-6">
+            <div className="relative flex-shrink-0 h-[300px] sm:h-[350px] lg:h-[400px] overflow-hidden rounded-lg mb-6">
               <Image
                 src={image}
                 alt={title}
@@ -219,7 +219,7 @@ export default function CourseCard({ image, title, description, prompts, categor
                 </DialogHeader>
               </div>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-6 overflow-y-auto flex-1">
               <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400">
               In this section, we aim to continuously expand the creative and technical tools available to the team. The goal is to research, test, and document new prompts that improve quality, consistency, and speed across our workflows. At the same time, we develop clear, practical tutorials that help any team member quickly understand and apply the latest techniques. This ongoing exploration ensures that we stay innovative, efficient, and aligned with best practices.
               </p>

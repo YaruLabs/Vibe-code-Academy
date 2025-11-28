@@ -88,6 +88,23 @@ export const courses: Course[] = [
           title: "Welcome to AI Enemy Behavior System",
           description: "Create intelligent and challenging enemy AI for your games using behavior trees and state machines."
         }
+      },
+      {
+        id: 3,
+        title: "3D Custom Game",
+        image: "/images/image2.png",
+        mdxPages: [
+          "/docs/games/3d-custom-game/01-overview.mdx"
+        ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io",
+        demoUrl: "https://coti.io",
+        recommendedAI: ["claude", "v0"],
+        difficulty: "advance",
+        welcome: {
+          title: "Welcome to 3D Custom Game",
+          description: "Build immersive 3D gaming experiences with advanced rendering and interactive mechanics."
+        }
       }
     ]
   },
