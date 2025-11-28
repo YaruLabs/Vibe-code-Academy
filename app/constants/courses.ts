@@ -62,7 +62,7 @@ export const courses: Course[] = [
         ],
         tutorialUrl: "https://www.youtube.com/watch?v=WZZiXNV6AqQ",
         repositoryUrl: "https://github.com/coti-io",
-        demoUrl: "https://coti.io",
+        demoUrl: "https://v0-game-2-d-v2.vercel.app/",
         recommendedAI: ["cotiMcp", "v0"],
         difficulty: "absolute-beginner",
         welcome: {
