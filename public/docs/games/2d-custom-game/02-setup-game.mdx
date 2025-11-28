@@ -1,116 +1,99 @@
-# 🎮 Project: The Privacy Gateway (v2)
+# 🕹️ Project: The Privacy Arcade (Full Stack)
 
-We are about to build a complete **dApp from scratch**. This updated blueprint ensures we avoid common "Insufficient Funds" errors by strictly using the correct wallet architecture.
+This is the final boss. We are generating the complete flow: **Wallet Connection**, **Gas-Safe Onboarding**, **AES Encryption**, and a **Full-Screen Interactive Game**.
 
 ---
 
-## 💠 PHASE 1: THE REFINED BLUEPRINT
+## ⚡ ACTION: BUILD THE FULL EXPERIENCE
 
-To generate the perfect code structure, we need to feed the AI a highly specific set of instructions. This prompt covers **Wallet Connection**, **Gas Safety**, **RSA Key Generation**, and **Game Logic**.
+**Mission:** Go to the **COTI MCP Interface**. Copy the prompt inside the terminal below and paste it into the chat.
 
 <div style={{
-  background: '#0B0F19',
+  background: 'linear-gradient(135deg, #4f46e5, #f472b6, #8b5cf6)',
+  padding: '3px',
   borderRadius: '16px',
-  border: '1px solid #1E293B',
-  boxShadow: '0 0 50px -10px rgba(6, 182, 212, 0.15)',
-  overflow: 'hidden',
   margin: '30px 0',
-  fontFamily: '"Inter", system-ui, sans-serif'
+  boxShadow: '0 0 50px -10px rgba(79, 70, 229, 0.4)'
 }}>
-  
-  {/* Header Bar */}
   <div style={{
-    background: 'rgba(255, 255, 255, 0.03)',
-    borderBottom: '1px solid #1E293B',
-    padding: '16px 24px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backdropFilter: 'blur(10px)'
+    background: '#0f172a',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
   }}>
-    <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-      <div style={{
-        width: '10px', height: '10px', borderRadius: '50%', 
-        background: '#06b6d4', boxShadow: '0 0 10px #06b6d4'
-      }}></div>
-      <span style={{
-        color: '#E2E8F0', fontWeight: '600', fontSize: '0.9rem', letterSpacing: '0.5px'
-      }}>MASTER_PROMPT_V2.txt</span>
-    </div>
-    <div style={{display: 'flex', gap: '8px'}}>
-        <span style={{
-        background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', fontSize: '0.7rem', 
-        padding: '4px 8px', borderRadius: '4px', border: '1px solid rgba(239, 68, 68, 0.3)', fontWeight: 'bold'
-        }}>GAS OPTIMIZED</span>
-        <span style={{
-        background: 'rgba(16, 185, 129, 0.2)', color: '#34d399', fontSize: '0.7rem', 
-        padding: '4px 8px', borderRadius: '4px', border: '1px solid rgba(16, 185, 129, 0.3)', fontWeight: 'bold'
-        }}>PRODUCTION READY</span>
-    </div>
-  </div>
-
-  {/* Content Area */}
-  <div style={{
-    padding: '24px',
-    background: 'linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 0.5) 100%)'
-  }}>
+    
+    {/* Header Bar */}
     <div style={{
-      position: 'relative',
-      paddingLeft: '20px',
-      borderLeft: '2px solid #06b6d4'
+      background: 'rgba(255, 255, 255, 0.03)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
     }}>
-      <div style={{
-        color: '#94A3B8', fontSize: '1rem', lineHeight: '1.7', margin: 0, whiteSpace: 'pre-wrap'
-      }}>
-        <span style={{color: '#22d3ee'}}>Purpose:</span> Create a React + TypeScript implementation with Wallet connection, Automatic COTI Testnet switching, and Real SDK AESKey derivation...
-      </div>
-      
-      <div style={{
-          marginTop: '15px', 
-          background: 'rgba(239, 68, 68, 0.1)', 
-          borderLeft: '3px solid #ef4444', 
-          padding: '10px', 
-          borderRadius: '0 4px 4px 0'
-      }}>
-        <strong style={{color: '#f87171', display: 'block', marginBottom: '4px'}}>CRITICAL NEW RULE:</strong>
-        <span style={{color: '#cbd5e1', fontSize: '0.9rem'}}>All blockchain transactions MUST use the real connected signer. Never use derived wallets to send transactions.</span>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#22d3ee', borderRadius:'50%', 
+            boxShadow:'0 0 12px #22d3ee'
+        }}></div>
+        <span style={{color: '#e2e8f0', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.5px'}}>
+          ARCADE_CORE_V1.prompt
+        </span>
+        <span style={{
+            background: 'rgba(244, 114, 182, 0.2)', color: '#f472b6', fontSize: '0.65rem', 
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(244, 114, 182, 0.3)'
+        }}>FULL SCREEN</span>
       </div>
 
-      <div style={{margin: '20px 0', height: '1px', background: '#1E293B'}}></div>
+      <button 
+        style={{
+            background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            display: 'flex', alignItems: 'center', gap: '8px',
+            transition: 'transform 0.1s',
+            boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)'
+        }}
+        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+        onClick={() => {
+            const promptText = document.getElementById('arcade-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("System Prompt Copied! Ready to Deploy 👾");
+        }}
+      >
+        <span>⚡ COPY SYSTEM PROMPT</span>
+      </button>
+    </div>
 
-      {/* The Actual Prompt Content */}
-      <div style={{
-        background: '#020617',
-        borderRadius: '8px',
-        padding: '16px',
-        border: '1px dashed #334155',
-        color: '#CBD5E1',
-        fontSize: '0.85rem',
-        fontFamily: 'monospace',
-        maxHeight: '420px',
-        overflowY: 'auto',
-        whiteSpace: 'pre-wrap'
-      }}>
-        <pre id="masterPromptText" style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{`Purpose: Create a React + TypeScript implementation with:
+    {/* Scrollable Content Area - FIX: Wrapped in backticks */}
+    <div id="arcade-prompt" style={{
+      padding: '24px',
+      maxHeight: '400px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.5',
+      color: '#cbd5e1'
+    }}>
+{`Purpose: Create a React + TypeScript implementation with:
 
 Wallet connection
-
 Automatic COTI Testnet switching
-
 Onboarding via COTI onboarding contract
-
 AESKey derivation using real COTI SDK
-
 Native COTI balance fetching
-
 2D game locked until onboarding success
-
 Strict rule: All blockchain transactions MUST use the real connected signer
-
 Never use derived wallets to send transactions
-
 No fake AESKey
-
 No architecture imposed
 
 CRITICAL NEW RULE (Preventing Gas Errors)
@@ -119,19 +102,14 @@ You MUST follow this instruction:
 All blockchain transactions must be executed using the real connected signer obtained from window.ethereum (via provider.getSigner() or new BrowserProvider(...).getSigner()).
 
 Do NOT use wallets derived from signatures
-
 Do NOT use RSA-generated keys as wallets
-
 Do NOT use recoverUserKey output as a wallet
-
 Do NOT construct a new Wallet(privateKey, provider) for sending transactions
 
 The only wallet allowed to send transactions is the actual connected wallet that the user controls and that has funds.
 
 This prevents the error:
-
 insufficient funds for intrinsic transaction cost
-
 
 because onboarding requires gas, and only the connected signer has funds.
 
@@ -143,26 +121,21 @@ const signer = await provider.getSigner();
 const contract = new Contract(ONBOARD_CONTRACT_ADDRESS, ABI, signer);
 await contract.onboardAccount(...);
 
-
 Never any other signer.
 
 1. React + TypeScript + Ethers + COTI SDK + Onboarding + AESKey + Balance + Game Lock
+
 STEP 1 — Wallet Connection
 
 Produce a minimal React UI with:
 
 A centered Connect Wallet button
-
 Uses ethers v6
-
 Switches or adds COTI Testnet
 
 After success:
-
 Show wallet address
-
 Show native COTI balance
-
 Show Onboard button
 
 Use these network parameters:
@@ -207,29 +180,21 @@ async function onboard(wallet: Wallet) {
     );
 }
 
-
 Important:
 The parameter wallet passed into onboard(wallet) must be the real connected signer, not a derived wallet.
 
 Use this corrected address:
-
 0x536A67f0cc46513E7d27a370ed1aF9FDcC7A5095
-
 
 Use the ABI exactly as previously shown.
 
 STEP 3 — AESKey Extraction
 
 Requirements:
-
 Use the SDK to derive the AESKey from the userKey returned by onboarding
-
 No mock values
-
 No placeholder AESKey
-
 Store AESKey in state
-
 Display AESKey
 
 Your implementation must derive the AESKey through real COTI SDK logic (decrypt, build inputs, etc.).
@@ -237,23 +202,16 @@ Your implementation must derive the AESKey through real COTI SDK logic (decrypt,
 STEP 4 — COTI Native Balance
 
 After wallet connection:
-
 Use provider.getBalance(address)
-
 Display native COTI balance
-
 Optionally refresh after onboarding
 
 STEP 5 — Game Locking Logic
 
 The 2D game must NOT initialize until:
-
 Wallet connected
-
 Onboarding completed
-
 AESKey derived
-
 No errors
 
 Implement the guard:
@@ -262,91 +220,67 @@ if (!walletConnected || !onboardingComplete || !aesKey) {
     return <div>Please complete onboarding before accessing the game.</div>;
 }
 
-2. Simple 2D Game (React + TypeScript)
+2. Full-Screen 2D Game (React + TypeScript)
 
-After the wallet/onboarding/AESKey section, produce a separate section with:
+After the wallet/onboarding/AESKey section, produce a separate section with a different 2D game:
 
-A small 2D interactive game
+- The game MUST run in a dedicated “Game Screen” that takes the full browser viewport (100vw x 100vh).
+- Use React state to switch between the “Onboarding Screen” and the “Game Screen”, e.g.:
 
-Canvas or DOM
+  const [currentScreen, setCurrentScreen] = useState<"onboarding" | "game">("onboarding");
 
-Very simple, visually pleasant
+- After onboarding + AESKey success, show a button like “Start Game” that calls:
 
-React + TS only
+  setCurrentScreen("game");
 
-No dependencies
+- The game itself must:
 
-The game must only render if onboarding is complete & AESKey exists
+  - Be 2D and interactive
+  - Use a <canvas> or DOM elements
+  - Run full-screen (no visible scrollbars, game area covers whole window)
+  - Use requestAnimationFrame for animation
+  - Be implemented in React + TypeScript only (no external game engines or libraries)
+  - Be visually simple but pleasant
 
-Examples allowed:
+- Game concept (different from the previous examples):
 
-Character collecting orbs
+  Implement a “top-down dodge & collect” game:
 
-Blob avoiding falling blocks
+  - The player is a small square or circle controlled with arrow keys or WASD.
+  - Colorful orbs spawn at random positions and drift downward.
+  - Red obstacles (e.g., squares) also fall from the top.
+  - The player gains points when collecting orbs.
+  - The player must avoid colliding with red obstacles.
+  - When a collision with an obstacle occurs, show a “Game Over” overlay and a “Restart” button that resets the game state.
 
-Bouncing ball with keyboard control
-
-Creature following mouse
-
-Must be readable and production-safe.
+- The game MUST only render and update if onboarding is complete and AESKey exists (the guard from STEP 5 must still apply at the app level).
 
 3. Output Format
 
 Your response must contain:
 
 Section 1: Wallet + Onboarding + AESKey + Balance + Game Lock Code
-
-Section 2: 2D Game Code
+Section 2: Full-screen 2D Game Code based on the “dodge & collect” concept, using a second screen/view
 
 All in English.
 No emojis.
 Minimal inline CSS.
-No unnecessary explanations.`}</pre>
-      </div>
+No unnecessary explanations.`}
     </div>
 
-    {/* Action Footer */}
-    <div style={{marginTop: '24px', display: 'flex', justifyContent: 'flex-end'}}>
-      <button 
-        style={{
-          background: 'linear-gradient(135deg, #0891b2 0%, #2563eb 100%)',
-          border: 'none',
-          borderRadius: '8px',
-          padding: '12px 24px',
-          color: 'white',
-          fontWeight: '600',
-          cursor: 'pointer',
-          boxShadow: '0 4px 15px rgba(8, 145, 178, 0.4)',
-          transition: 'all 0.2s',
-          display: 'flex', alignItems: 'center', gap: '8px'
-        }}
-        onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 6px 20px rgba(8, 145, 178, 0.6)';
-        }}
-        onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 4px 15px rgba(8, 145, 178, 0.4)';
-        }}
-        onClick={(e) => {
-            const promptNode = document.getElementById('masterPromptText');
-            const promptText = promptNode?.textContent?.trim() ?? '';
-            if (!promptText) return;
-            navigator.clipboard.writeText(promptText);
-            const label = e.currentTarget.querySelector('span');
-            if (label) {
-              const originalText = label.textContent;
-              label.textContent = 'Copied';
-              setTimeout(() => {
-                if (label) {
-                  label.textContent = originalText || 'Copy';
-                }
-              }, 2000);
-            }
-        }}
-      >
-        <span>Copy</span>
-      </button>
+    {/* Visual Footer */}
+    <div style={{
+        background: '#020617',
+        borderTop: '1px solid #1e293b',
+        padding: '8px 20px',
+        display: 'flex', justifyContent: 'flex-end',
+        alignItems: 'center', gap: '10px'
+    }}>
+        <div style={{width:'8px', height:'8px', background:'#22d3ee', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
+        <span style={{fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'sans-serif', fontWeight: 'bold'}}>
+          SCROLL TO VIEW FULL SPECIFICATION ↕
+        </span>
     </div>
+
   </div>
 </div>

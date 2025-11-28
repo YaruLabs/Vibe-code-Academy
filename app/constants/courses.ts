@@ -95,7 +95,8 @@ export const courses: Course[] = [
         image: "/images/image2.png",
         mdxPages: [
           "/docs/games/3d-custom-game/01-create-smart-contract.mdx",
-          "/docs/games/3d-custom-game/02-setup-game.mdx"
+          "/docs/games/3d-custom-game/02-setup-game.mdx",
+          "/docs/games/3d-custom-game/03-integration.mdx"
         ],
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
