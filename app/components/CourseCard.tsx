@@ -46,6 +46,36 @@ const categoryTextAccents = {
   software: "text-orange-500",
 };
 
+const difficultyConfig = {
+  "absolute-beginner": {
+    label: "Absolute Beginner",
+    icon: "",
+    bgColor: "bg-emerald-500",
+    bgGradient: "from-emerald-500 to-green-600",
+    borderColor: "border-emerald-400",
+    textColor: "text-emerald-600",
+    glowColor: "shadow-emerald-500/50"
+  },
+  "beginner": {
+    label: "Beginner",
+    icon: "",
+    bgColor: "bg-sky-500",
+    bgGradient: "from-sky-500 to-blue-600",
+    borderColor: "border-sky-400",
+    textColor: "text-sky-600",
+    glowColor: "shadow-sky-500/50"
+  },
+  "advance": {
+    label: "Advanced",
+    icon: "",
+    bgColor: "bg-purple-500",
+    bgGradient: "from-purple-500 to-violet-600",
+    borderColor: "border-purple-400",
+    textColor: "text-purple-600",
+    glowColor: "shadow-purple-500/50"
+  }
+};
+
 const aiAgentMap: Record<string, { name: string; icon: string; url: string }> = {
   claude: { name: "Claude", icon: "/icons/ai/claude.png", url: "https://claude.ai" },
   gemini: { name: "Gemini", icon: "/icons/ai/gemini.png", url: "https://aistudio.google.com/apps" },
@@ -206,6 +236,17 @@ export default function CourseCard({ image, title, description, prompts, categor
                       className="object-cover"
                     />
                     <div className="absolute inset-0 bg-black/80 group-hover:bg-black/70 transition-colors" />
+
+                    {/* Difficulty badge */}
+                    <div className="absolute top-3 right-3 z-10">
+                      <div className={`relative`}>
+                        <div className={`absolute inset-0 bg-gradient-to-r ${difficultyConfig[prompt.difficulty].bgGradient} rounded-full blur opacity-75`} />
+                        <span className={`relative flex items-center justify-center gap-1.5 bg-gradient-to-r ${difficultyConfig[prompt.difficulty].bgGradient} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg`}>
+                          {difficultyConfig[prompt.difficulty].label}
+                        </span>
+                      </div>
+                    </div>
+
                     <div className="absolute inset-0 flex items-center justify-center p-4">
                       <h4 className="text-lg sm:text-xl font-bold text-white text-center">
                         {prompt.title}
@@ -235,11 +276,20 @@ export default function CourseCard({ image, title, description, prompts, categor
 
               <div className="flex-1 flex flex-col items-center justify-center max-w-4xl mx-auto px-4 w-full">
                 <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                  {/* Category badge */}
-                  <div className="flex justify-center">
-                    <span className={`${categoryAccents[category]} text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg`}>
+                  {/* Category and Difficulty badges */}
+                  <div className="flex flex-wrap items-center justify-center gap-3">
+                    {/* Category badge */}
+                    <span className={`${categoryAccents[category]} text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg hover:scale-105 transition-transform`}>
                       {category}
                     </span>
+
+                    {/* Difficulty badge */}
+                    <div className={`relative group`}>
+                      <div className={`absolute inset-0 bg-gradient-to-r ${difficultyConfig[selectedPrompt.difficulty].bgGradient} rounded-full blur-md opacity-75 group-hover:opacity-100 transition-opacity ${difficultyConfig[selectedPrompt.difficulty].glowColor}`} />
+                      <span className={`relative flex items-center justify-center gap-2 bg-gradient-to-r ${difficultyConfig[selectedPrompt.difficulty].bgGradient} text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl group-hover:scale-105 transition-transform`}>
+                        {difficultyConfig[selectedPrompt.difficulty].label}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Title with gradient text */}

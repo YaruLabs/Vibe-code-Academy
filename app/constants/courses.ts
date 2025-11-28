@@ -20,6 +20,7 @@ export const courses: Course[] = [
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
         recommendedAI: ["claude", "openai"],
+        difficulty: "advance",
         welcome: {
           title: "Welcome to Smart Contract Security Audit",
           description: "Learn how to identify and prevent common vulnerabilities in smart contracts to build secure decentralized applications."
@@ -35,6 +36,7 @@ export const courses: Course[] = [
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
         recommendedAI: ["claude", "gemini", "openai"],
+        difficulty: "advance",
         welcome: {
           title: "Welcome to DeFi Protocol Development",
           description: "Master the fundamentals of building decentralized finance protocols from scratch."
@@ -59,6 +61,7 @@ export const courses: Course[] = [
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
         recommendedAI: ["claude", "gemini"],
+        difficulty: "beginner",
         welcome: {
           title: "Welcome to 2D Platformer Mechanics",
           description: "Build engaging 2D platformer games with smooth physics and responsive controls."
@@ -74,6 +77,7 @@ export const courses: Course[] = [
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
         recommendedAI: ["gemini", "openai"],
+        difficulty: "advance",
         welcome: {
           title: "Welcome to AI Enemy Behavior System",
           description: "Create intelligent and challenging enemy AI for your games using behavior trees and state machines."
@@ -98,6 +102,7 @@ export const courses: Course[] = [
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
         recommendedAI: ["claude"],
+        difficulty: "absolute-beginner",
         welcome: {
           title: "Welcome to CLI Tool Development",
           description: "Build powerful and user-friendly command-line tools that developers love to use."
@@ -113,6 +118,7 @@ export const courses: Course[] = [
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
         recommendedAI: ["openai", "gemini"],
+        difficulty: "beginner",
         welcome: {
           title: "Welcome to API Documentation Generator",
           description: "Automate API documentation generation from code annotations and OpenAPI specifications."

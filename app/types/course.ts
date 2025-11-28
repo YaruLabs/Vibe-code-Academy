@@ -6,6 +6,7 @@ export interface Prompt {
   tutorialUrl: string;
   repositoryUrl: string;
   recommendedAI: string[];
+  difficulty: "absolute-beginner" | "beginner" | "advance";
   welcome: {
     title: string;
     description: string;
