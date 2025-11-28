@@ -46,10 +46,10 @@ const categoryTextAccents = {
   software: "text-orange-500",
 };
 
-const aiAgentMap: Record<string, { name: string; icon: string }> = {
-  claude: { name: "Claude", icon: "/icons/ai/claude.png" },
-  gemini: { name: "Gemini", icon: "/icons/ai/gemini.png" },
-  openai: { name: "OpenAI", icon: "/icons/ai/openai.svg" },
+const aiAgentMap: Record<string, { name: string; icon: string; url: string }> = {
+  claude: { name: "Claude", icon: "/icons/ai/claude.png", url: "https://claude.ai" },
+  gemini: { name: "Gemini", icon: "/icons/ai/gemini.png", url: "https://aistudio.google.com/apps" },
+  openai: { name: "ChatGPT", icon: "/icons/ai/openai.svg", url: "https://chatgpt.com" },
 };
 
 const extractTitleFromMdxPath = (path: string): string => {
@@ -359,8 +359,15 @@ export default function CourseCard({ image, title, description, prompts, categor
                   <div className="flex items-center gap-2">
                     {selectedPrompt.recommendedAI.map((aiKey) => {
                       const agent = aiAgentMap[aiKey];
+                      if (!agent) return null;
                       return (
-                        <div key={aiKey} className="relative group">
+                        <a
+                          key={aiKey}
+                          href={agent.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="relative group"
+                        >
                           <Image
                             src={agent.icon}
                             alt={agent.name}
@@ -371,7 +378,7 @@ export default function CourseCard({ image, title, description, prompts, categor
                           <span className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                             {agent.name}
                           </span>
-                        </div>
+                        </a>
                       );
                     })}
                   </div>
