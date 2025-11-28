@@ -1,0 +1,346 @@
+# 💰 Phase 3: The Reward System
+
+We have the game. We have the privacy keys. Now, let's turn those points into **Real Private Tokens**.
+
+This is the most complex part because we must mix **Public Transactions** (Minting) with **Private Data** (Decrypting Balances).
+
+---
+
+## ⚡ ACTION: GENERATE THE CLAIM LOGIC
+
+Copy the instructions below. This prompt is engineered to force the AI to use the correct `signer.setAesKey()` method, preventing the common "CotiWallet" errors.
+
+<div style={{
+  background: 'linear-gradient(135deg, #10b981, #059669)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '25px 0',
+  boxShadow: '0 0 30px rgba(16, 185, 129, 0.2)'
+}}>
+  <div style={{
+    background: '#020617',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative',
+    overflow: 'hidden'
+  }}>
+    
+    {/* Header del Prompt */}
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px',
+      borderBottom: '1px solid #1e293b', paddingBottom: '12px'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+         <span style={{fontSize: '1.2rem'}}>💎</span>
+         <span style={{color: '#34d399', fontWeight: 'bold', letterSpacing: '0.5px'}}>CLAIM_PROTOCOL.txt</span>
+      </div>
+      <button 
+        style={{
+            background: '#1e293b', border: '1px solid #334155', color: '#cbd5e1',
+            padding: '6px 12px', borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer',
+            fontWeight: 'bold', fontFamily: 'monospace'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('claim-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Prompt Copied! Paste this into v0.dev 🚀");
+        }}
+      >
+        COPY TO CLIPBOARD
+      </button>
+    </div>
+    
+    {/* Contenido del Prompt (Hidden ID for copying) */}
+    <div id="claim-prompt" style={{
+      fontSize: '0.85rem', 
+      lineHeight: '1.5', 
+      fontFamily: 'Menlo, Monaco, monospace',
+      color: '#94a3b8',
+      maxHeight: '300px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap'
+    }}>
+You must implement a CLAIM feature for a PRIVATE ERC20 token deployed in COTI V2.
+Follow ALL instructions EXACTLY.
+Do NOT improvise.
+Do NOT invent encrypted formats.
+Do NOT call functions that do not exist in the ABI.
+
+GENERAL ARCHITECTURE RULES
+
+You MUST use ethers v6 for provider + connected signer:
+const provider = new BrowserProvider(window.ethereum);
+const signer = await provider.getSigner();
+
+You MUST use @coti-io/coti-ethers ONLY to:
+- enable AES-based encryption/decryption on the signer
+- work with the encrypted types used by the private ERC20 (ctUint64, itUint64, etc.)
+
+IMPORTANT:
+The @coti-io/coti-ethers module DOES NOT export CotiWallet.
+You MUST NOT import CotiWallet from @coti-io/coti-ethers.
+
+Instead, you MUST use the signer returned by provider.getSigner() and inject the AES key into it using the API provided by coti-ethers (for example await signer.setAesKey(aesKey)), exactly like in the onboarding flow.
+
+Example pattern (this is REQUIRED):
+const provider = new BrowserProvider(window.ethereum);
+const signer: any = await provider.getSigner();
+
+// AES key was derived during onboarding and is stored in state:
+if (!aesKey) throw new Error("AES key is missing");
+
+await signer.setAesKey(aesKey); // this is how the AES key is injected into the signer
+
+// from this point on, `signer` is the AES-aware signer you must use
+const contract = new Contract(PRIVATE_ERC20_ADDRESS, PRIVATE_ERC20_ABI, signer);
+
+After onboarding, the frontend already has:
+- userKey
+- aesKey
+
+After aesKey exists, you MUST:
+1. Get the signer with provider.getSigner()
+2. Call await signer.setAesKey(aesKey) (or the equivalent method provided by coti-ethers)
+3. Store that signer in React state (for example, aesSigner or privateSigner)
+4. Use this AES-enabled signer for ALL private operations
+
+DO NOT:
+- Do NOT use a derived Wallet with userKey.privateKey
+- Do NOT create your own wallet wrapper
+- Do NOT use any non-existing exports like CotiWallet from @coti-io/coti-ethers
+
+CONTRACT INFORMATION
+Use this contract address:
+0xdfBC6Cc12e597Bf37Db61202A9b6238020CbC3a9
+
+Use THIS ABI EXACTLY (do not modify or use a different one):
+{
+  "abi": [
+    {
+      "inputs": [
+        {"internalType": "string","name": "name_","type": "string"},
+        {"internalType": "string","name": "symbol_","type": "string"}
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {"inputs":[{"internalType":"address","name":"approver","type":"address"}],
+     "name":"ERC20InvalidApprover","type":"error"},
+    {"inputs":[{"internalType":"address","name":"receiver","type":"address"}],
+     "name":"ERC20InvalidReceiver","type":"error"},
+    {"inputs":[{"internalType":"address","name":"sender","type":"address"}],
+     "name":"ERC20InvalidSender","type":"error"},
+    {"inputs":[{"internalType":"address","name":"spender","type":"address"}],
+     "name":"ERC20InvalidSpender","type":"error"},
+    {
+      "anonymous": false,
+      "inputs": [
+        {"indexed": true,"internalType": "address","name": "owner","type": "address"},
+        {"indexed": true,"internalType": "address","name": "spender","type": "address"},
+        {"indexed": false,"internalType": "ctUint64","name": "ownerValue","type": "uint256"},
+        {"indexed": false,"internalType": "ctUint64","name": "spenderValue","type": "uint256"}
+      ],
+      "name": "Approval",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {"indexed": true,"internalType": "address","name": "from","type": "address"},
+        {"indexed": true,"internalType": "address","name": "to","type": "address"},
+        {"indexed": false,"internalType": "ctUint64","name": "senderValue","type": "uint256"},
+        {"indexed": false,"internalType": "ctUint64","name": "receiverValue","type": "uint256"}
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "inputs":[{"internalType":"address","name":"account","type":"address"}],
+      "name":"accountEncryptionAddress",
+      "outputs":[{"internalType":"address","name":"","type":"address"}],
+      "stateMutability":"view","type":"function"
+    },
+    {
+      "inputs":[{"internalType":"address","name":"account","type":"address"},
+                {"internalType":"bool","name":"isSpender","type":"bool"}],
+      "name":"allowance",
+      "outputs":[{"internalType":"gtUint64","name":"","type":"uint256"}],
+      "stateMutability":"nonpayable",
+      "type":"function"
+    },
+    {
+      "inputs":[{"internalType":"address","name":"owner","type":"address"},
+                {"internalType":"address","name":"spender","type":"address"}],
+      "name":"allowance",
+      "outputs":[{"components":[
+                    {"internalType":"ctUint64","name":"ciphertext","type":"uint256"},
+                    {"internalType":"ctUint64","name":"ownerCiphertext","type":"uint256"},
+                    {"internalType":"ctUint64","name":"spenderCiphertext","type":"uint256"}
+                 ],
+                 "internalType":"struct IPrivateERC20.Allowance",
+                 "name":"",
+                 "type":"tuple"}],
+      "stateMutability":"view",
+      "type":"function"
+    },
+    {
+      "inputs":[{"internalType":"address","name":"spender","type":"address"},
+                {"internalType":"gtUint64","name":"value","type":"uint256"}],
+      "name":"approve",
+      "outputs":[{"internalType":"bool","name":"","type":"bool"}],
+      "stateMutability":"nonpayable",
+      "type":"function"
+    },
+    {
+      "inputs":[{"internalType":"address","name":"spender","type":"address"},
+                {"components":[
+                  {"internalType":"ctUint64","name":"ciphertext","type":"uint256"},
+                  {"internalType":"bytes","name":"signature","type":"bytes"}
+                ],
+                "internalType":"struct itUint64",
+                "name":"value",
+                "type":"tuple"}],
+      "name":"approve",
+      "outputs":[{"internalType":"bool","name":"","type":"bool"}],
+      "stateMutability":"nonpayable",
+      "type":"function"
+    },
+    {
+      "inputs":[{"internalType":"address","name":"account","type":"address"}],
+      "name":"balanceOf",
+      "outputs":[{"internalType":"ctUint64","name":"","type":"uint256"}],
+      "stateMutability":"view",
+      "type":"function"
+    },
+    {
+      "inputs":[{"internalType":"address","name":"account","type":"address"},
+                {"internalType":"uint64","name":"amount","type":"uint64"}],
+      "name":"burn",
+      "outputs":[],
+      "stateMutability":"nonpayable",
+      "type":"function"
+    },
+    {
+      "inputs":[{"internalType":"address","name":"account","type":"address"},
+                {"internalType":"uint64","name":"amount","type":"uint64"}],
+      "name":"mint",
+      "outputs":[],
+      "stateMutability":"nonpayable",
+      "type":"function"
+    },
+    {
+      "inputs":[],
+      "name":"decimals",
+      "outputs":[{"internalType":"uint8","name":"","type":"uint8"}],
+      "stateMutability":"view",
+      "type":"function"
+    },
+    {
+      "inputs":[],
+      "name":"name",
+      "outputs":[{"internalType":"string","name":"","type":"string"}],
+      "stateMutability":"view",
+      "type":"function"
+    },
+    {
+      "inputs":[],
+      "name":"symbol",
+      "outputs":[{"internalType":"string","name":"","type":"string"}],
+      "stateMutability":"view",
+      "type":"function"
+    },
+    {
+      "inputs":[],
+      "name":"totalSupply",
+      "outputs":[{"internalType":"uint256","name":"","type":"uint256"}],
+      "stateMutability":"view",
+      "type":"function"
+    }
+  ]
+}
+
+THE CRITICAL REALITY ABOUT THIS ABI
+✔ mint(address,uint64) is PUBLIC and NOT encrypted.
+You MUST call mint like this (using the AES-enabled signer you got from provider.getSigner() + setAesKey):
+const tx = await contract.connect(signer).mint(userAddress, BigInt(amount));
+await tx.wait();
+
+✔ transfer and balanceOf ARE encrypted.
+So you MUST use:
+const encrypted = await signer.encryptValue(amount, contractAddress, selector);
+await contract.transfer(to, encrypted);
+
+and:
+const ctValue = await contract.balanceOf(userAddress);
+const decrypted = await signer.decryptValue(ctValue);
+
+
+CLAIM FEATURE REQUIREMENTS
+Implement a “Claim” button that:
+1. Only shows if:
+   - walletConnected === true
+   - onboardingComplete === true
+   - aesKey exists
+   - AES-enabled signer (with setAesKey already called) exists
+
+2. When clicked:
+   - Convert userPoints to a uint64 amount
+   - DO NOT encrypt it (mint is not encrypted)
+   - Call:
+     const tx = await contract.connect(signer).mint(userAddress, amount);
+     await tx.wait();
+
+3. After mint:
+   - Read private balance:
+     const ctBal = await contract.balanceOf(userAddress);
+     const balance = await signer.decryptValue(ctBal);
+   - Show updated balance.
+   - Show tx.hash.
+   - Log:
+     - encryption (if used anywhere else)
+     - mint call
+     - receipt
+     - decrypted balance
+
+LOGGING REQUIREMENTS
+You MUST log:
+- “AESKey loaded”
+- “Getting signer from provider…”
+- “Injecting AES key into signer via setAesKey…”
+- “Signer is now AES-enabled”
+- “Reading user points: X”
+- “Calling mint(uint64)…”
+- “Tx hash: …”
+- “Decrypting balance…”
+- “New balance: …”
+- Any errors
+
+OUTPUT FORMAT
+Your answer MUST contain ONLY:
+- Full React + TypeScript code that:
+  - loads AESKey
+  - gets signer = await provider.getSigner()
+  - calls await signer.setAesKey(aesKey)
+  - displays the Claim button
+  - executes mint correctly (no encryption for mint)
+  - decrypts balance using signer.decryptValue
+  - logs everything
+No extra text.
+English only.
+    </div>
+
+    {/* Footer decorativo */}
+    <div style={{
+        marginTop: '20px', 
+        borderTop: '1px solid #1e293b', 
+        paddingTop: '10px',
+        textAlign: 'center',
+        fontSize: '0.75rem',
+        color: '#64748b'
+    }}>
+        COTI V2 PRIVATE PROTOCOL • END-TO-END ENCRYPTION ENABLED
+    </div>
+
+  </div>
+</div>

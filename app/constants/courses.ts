@@ -57,7 +57,8 @@ export const courses: Course[] = [
         image: "/images/image2.png",
         mdxPages: [
           "/docs/games/2d-platformer-mechanics/01-create-private-token.mdx",
-          "/docs/games/2d-platformer-mechanics/02-setup-game.mdx"
+          "/docs/games/2d-platformer-mechanics/02-setup-game.mdx",
+          "/docs/games/2d-platformer-mechanics/03-integration.mdx"
         ],
         tutorialUrl: "https://www.youtube.com/watch?v=WZZiXNV6AqQ",
         repositoryUrl: "https://github.com/coti-io",
@@ -71,16 +72,18 @@ export const courses: Course[] = [
       },
       {
         id: 2,
-        title: "AI Enemy Behavior System",
+        title: "Game + Custom Private Token",
         image: "/images/image2.png",
         mdxPages: [
-          "/docs/games/ai-enemy-behavior-system/01-overview.mdx"
+          "/docs/games/2d-custom-game/01-create-private-custom-token.mdx",
+          "/docs/games/2d-custom-game/02-setup-game.mdx",
+          "/docs/games/2d-custom-game/03-integration.mdx"
         ],
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
         demoUrl: "https://coti.io",
         recommendedAI: ["gemini", "openai"],
-        difficulty: "advance",
+        difficulty: "beginner",
         welcome: {
           title: "Welcome to AI Enemy Behavior System",
           description: "Create intelligent and challenging enemy AI for your games using behavior trees and state machines."
