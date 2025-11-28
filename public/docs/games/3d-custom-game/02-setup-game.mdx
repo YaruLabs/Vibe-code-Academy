@@ -1,21 +1,21 @@
-# 🏙️ Project: The 3D Metropolis (Full Stack)
+# 🏗️ Project: The Isometric Core (Architecture First)
 
-This is the next level. We are going beyond 2D. We will generate a **3D City Builder** that lives on the blockchain.
+We are building the foundation. This is a pure **Three.js Game Engine**, but architected specifically to be wrapped by **React 18 / Next.js 15** in the future.
 
-This prompt constructs a dApp with **Military-Grade Onboarding** (Gas-Safe) and a **Three.js Economy Game** that unlocks only after verification.
+This prompt enforces **Clean Architecture**: separation of Rendering (Three.js), Game Logic, and UI, ensuring seamless integration with **COTI V2** hooks later.
 
 ---
 
-## ⚡ ACTION: CONSTRUCT THE CITY
+## ⚡ ACTION: GENERATE THE ENGINE
 
 **Mission:** Go to the **COTI MCP Interface**. Copy the prompt inside the terminal below and paste it into the chat.
 
 <div style={{
-  background: 'linear-gradient(135deg, #06b6d4, #3b82f6, #6366f1)',
+  background: 'linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef)',
   padding: '3px',
   borderRadius: '16px',
   margin: '30px 0',
-  boxShadow: '0 0 60px -15px rgba(6, 182, 212, 0.5)'
+  boxShadow: '0 0 60px -15px rgba(99, 102, 241, 0.5)'
 }}>
   <div style={{
     background: '#0f172a',
@@ -37,21 +37,21 @@ This prompt constructs a dApp with **Military-Grade Onboarding** (Gas-Safe) and 
     }}>
       <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
         <div style={{
-            width:'12px', height:'12px', background:'#22d3ee', borderRadius:'50%', 
-            boxShadow:'0 0 12px #22d3ee'
+            width:'12px', height:'12px', background:'#a855f7', borderRadius:'50%', 
+            boxShadow:'0 0 12px #a855f7'
         }}></div>
         <span style={{color: '#e2e8f0', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.5px'}}>
-          CITY_BUILDER_V1.prompt
+          ISOMETRIC_ENGINE_ARCHITECT.prompt
         </span>
         <span style={{
-            background: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa', fontSize: '0.65rem', 
-            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(59, 130, 246, 0.3)'
-        }}>3D ENGINE</span>
+            background: 'rgba(217, 70, 239, 0.2)', color: '#f0abfc', fontSize: '0.65rem', 
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(217, 70, 239, 0.3)'
+        }}>REACT-READY</span>
       </div>
 
       <button 
         style={{
-            background: 'linear-gradient(90deg, #0891b2, #2563eb)',
+            background: 'linear-gradient(90deg, #6366f1, #a855f7)',
             border: 'none',
             color: 'white',
             padding: '8px 16px',
@@ -61,152 +61,150 @@ This prompt constructs a dApp with **Military-Grade Onboarding** (Gas-Safe) and 
             fontWeight: 'bold',
             display: 'flex', alignItems: 'center', gap: '8px',
             transition: 'transform 0.1s',
-            boxShadow: '0 4px 12px rgba(8, 145, 178, 0.3)'
+            boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)'
         }}
         onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
         onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
         onClick={() => {
-            const promptText = document.getElementById('city-prompt').innerText;
+            const promptText = document.getElementById('engine-prompt').innerText;
             navigator.clipboard.writeText(promptText);
-            alert("Blueprint Copied! Ready to Build 🏗️");
+            alert("Architecture Blueprint Copied! 🏛️");
         }}
       >
-        <span>⚡ COPY BLUEPRINT</span>
+        <span>⚡ COPY ARCHITECTURE PROMPT</span>
       </button>
     </div>
 
     {/* Scrollable Content Area */}
-    <div id="city-prompt" style={{
+    <div id="engine-prompt" style={{
       padding: '24px',
-      maxHeight: '400px',
+      maxHeight: '450px',
       overflowY: 'auto',
       whiteSpace: 'pre-wrap',
       fontSize: '0.85rem',
       lineHeight: '1.5',
       color: '#cbd5e1'
     }}>
-{`Purpose: Create a React + TypeScript implementation with:
+{`I want Gemini to generate a complete 3D game project in Three.js with an isometric view similar to Age of Empires or League of Legends.
+The project should not include blockchain integration at this stage, but it must include clearly defined extension points (hooks) where COTI smart contracts, tokens, and wallet connection flows can be added later.
 
-Wallet connection
-Automatic COTI Testnet switching
-Onboarding via COTI onboarding contract
-AESKey derivation using real COTI SDK
-Native COTI balance fetching
-3D City Building Game locked until onboarding success
+The architecture must also be prepared for a future migration to React 18 or Next.js 15, ensuring compatibility with modern Web3 libraries such as RainbowKit, Wagmi, Viem, and React Query. This implies:
+- Clean module boundaries
+- UI logic decoupled from rendering
+- A folder structure that allows a future React frontend to wrap or mount the 3D canvas
+- Clear extension points for wallet gating and dApp logic
+- No React code today, only the architecture that supports an eventual migration
 
-Strict rule: All blockchain transactions MUST use the real connected signer
-Never use derived wallets to send transactions
-No fake AESKey
-No architecture imposed
+🧠 Role & Behavior
+Act as a senior expert in 3D game development and software architecture, specializing in:
+- Three.js
+- Modular engines
+- Large-scale front-end systems
+- React/Next.js migrations
+- Clean separation of concerns
 
-====================================================================
-DEPENDENCIES (MANDATORY)
-====================================================================
+Follow all instructions strictly. Do not ask for confirmation.
 
-You MUST use and import:
-- ethers (v6)
-- @coti-io/coti-sdk-typescript
-- three
-- @react-three/fiber (for the 3D game)
-- @react-three/drei (for camera controls/helpers)
+📥 Input (Context & Constraints)
+I want a 3D prototype game with the following features:
 
-====================================================================
-CRITICAL RULES (Signer & Gas Safety)
-====================================================================
+🌍 World
+- Large terrain (~5000×5000)
+- Procedurally placed decorative objects (trees, rocks, chests)
+- Lighting: AmbientLight, DirectionalLight
+- Optional basic minimap (simple canvas)
 
-1. All blockchain transactions MUST use the real connected signer obtained from window.ethereum.
-   const provider = new BrowserProvider(window.ethereum);
-   const signer = await provider.getSigner();
+🧍 Player
+- Simple model (capsule or low-poly primitive)
+- Point-and-click movement
+- Path navigation toward clicked point
+- Smooth isometric camera (~45°) following the player
+- Placeholder animations (idle / walking)
 
-2. Never use Wallet(privateKey, provider) for transactions.
-3. The onboarding function MUST NOT try to access .privateKey from the MetaMask signer.
-4. Instead of signing with a private key, use signer.signMessage() to sign the encryption key hash.
+📦 Chests
+- Randomly positioned on the terrain
+- Detect player proximity
+- Click to open
+- Trigger a small animation (rotation or scale bounce)
+- Display message: "In a future version, this chest will grant real tokens."
 
-====================================================================
-STEP 1: ONBOARDING & WALLET (Page 1)
-====================================================================
+🔗 Blockchain Hooks (Future Integration with COTI)
+Inside a folder named /future-blockchain-hooks/, generate empty placeholder functions:
+- connectToCOTIPlaceholder()
+- requestTokenRewardPlaceholder()
+- getBalancePlaceholder()
 
-Create a full-screen "Gateway" component.
-- Connect Wallet Button (Center).
-- Switch to COTI Testnet automatically.
-- Show "Onboard" button after connection.
+Each must contain: // TODO: integrate real logic with COTI smart contract
 
-Use this EXACT updated function for onboarding (Metamask Compatible):
+🧱 Future-Proof Architecture Requirement (VERY IMPORTANT)
+The project must be structured so that it can later be wrapped inside React 18 or Next.js 15 without refactoring the game engine.
+You must design folder layout and module boundaries so that:
+1. All 3D engine logic lives inside /src/game/ and is UI-agnostic.
+2. The rendering loop and scene setup can be mounted via a future React <Canvas /> wrapper.
+3. UI is isolated inside /src/ui/ to allow replacement by React components.
+4. The blockchain hooks folder mirrors typical RainbowKit + Wagmi + Viem dApp structure.
+5. The initialization function (e.g., initGame()) can be invoked conditionally by a future wallet-gated layer.
+6. Include comments explaining where React 18 / Next.js 15 could later plug in.
 
-async function onboard(signer: any) {
-    const contract = new Contract(
-        '0x60eA13A5f263f77f7a2832cfEeF1729B1688477c', // Onboard Contract
-        ONBOARD_ABI, // Use standard ABI provided below
-        signer
-    );
+No React code should be generated today, but the Vanilla JS must be structure as classes/modules.
 
-    const rsa = generateRSAKeyPair();
-    // FIX: Use signMessage instead of privateKey access
-    const ekHash = keccak256(rsa.publicKey);
-    const signedEK = await signer.signMessage(getBytes(ekHash));
+🧩 UI Requirements
+Minimal HTML/CSS UI:
+- Placeholder balance: "Balance: 0 (placeholder)"
+- Notifications (chest opened, movement, etc.)
+- Simple overlay panels with clean CSS
 
-    const tx = await contract.onboardAccount(rsa.publicKey, signedEK, { gasLimit: 15000000 });
-    const receipt = await tx.wait();
-    const log = contract.interface.parseLog(receipt.logs[0]);
+📤 Expected Output
+Gemini must generate:
 
-    return recoverUserKey(rsa.privateKey, log.args.userKey1.substring(2), log.args.userKey2.substring(2));
-}
+A. Full Project Structure
+- Folder tree
+- File names
 
-ONBOARD_ABI:
-[
-  { "anonymous": false, "inputs": [ { "indexed": true, "internalType": "address", "name": "_from", "type": "address" }, { "indexed": false, "internalType": "bytes", "name": "userKey1", "type": "bytes" }, { "indexed": false, "internalType": "bytes", "name": "userKey2", "type": "bytes" } ], "name": "AccountOnboarded", "type": "event" },
-  { "inputs": [ { "internalType": "bytes", "name": "publicKey", "type": "bytes" }, { "internalType": "bytes", "name": "signedEK", "type": "bytes" } ], "name": "onboardAccount", "outputs": [], "stateMutability": "nonpayable", "type": "function" }
-]
+B. Complete Codebase
+Must include:
+- index.html
+- main.js
+- Organized modules:
+  - /src/game/ (Engine, Renderer, Loop)
+  - /src/world/ (Terrain, Props)
+  - /src/entities/ (Player, Chests)
+  - /src/ui/ (Overlay, HUD)
+  - /future-blockchain-hooks/
 
-Requirements:
-- Store AESKey in state.
-- If (walletConnected && onboardingComplete && aesKey), show a big button: "ENTER METROPOLIS".
+With:
+- Procedural terrain + objects
+- Camera system
+- Movement system (Raycasting)
+- Chest interactions
+- UI overlay
+- Clear extension points for future blockchain integration
+- Full comments throughout the code
 
-====================================================================
-STEP 2: 3D CITY BUILDER (Page 2)
-====================================================================
+C. Execution Guide
+Include:
+- How to run the project (local server, etc.)
+- File responsibilities
+- Where React 18 or Next.js 15 can be integrated later
 
-Create a full-screen 3D Game using @react-three/fiber.
-Only render this if the user has passed Step 1.
+🚫 Do NOT
+- Generate real blockchain logic
+- Generate smart contracts
+- Add React, Next.js, or external libraries (just Vanilla Three.js)
+- Add Web3 libraries
+- Ask questions
 
-Game Concept:
-- View: Isometric Camera (OrbitControls).
-- Map: A large flat grid (PlaneGeometry) representing land.
-- Logic:
-  - Player has "Capital" (Start: 1000).
-  - Player earns "Income" every 3 seconds based on buildings placed.
-  - UI Overlay: HTML/CSS absolute overlay showing Capital ($) and Build Buttons.
-
-Building Types:
-1. House (Blue Box) -> Cost: 100, Income: +5/tick.
-2. Factory (Gray Box, taller) -> Cost: 500, Income: +30/tick.
-3. Commercial (Purple Box) -> Cost: 300, Income: +15/tick.
-
-Interactions:
-- User selects a building type from the UI.
-- User clicks on the ground plane.
-- Calculate grid position (snap to grid, e.g., Math.round).
-- If enough capital:
-  - Deduct cost.
-  - Place the 3D mesh at that position.
-  - Increase income rate.
-
-Visuals:
-- Use simple colored BoxGeometries.
-- Use a directional light + ambient light so shadows exist.
-- Show a simple ground grid helper (<gridHelper />).
-
-====================================================================
-OUTPUT FORMAT
-====================================================================
-
-Provide:
-Section 1: The React Code for Wallet/Onboarding (The "Gateway").
-Section 2: The React Code for the 3D Game (The "CityBuilder").
-
-All code must be React + TypeScript.
-No explanations.
-Minimal CSS.`}
+✔️ Internal Checklist (Validate Before Answering)
+The answer must satisfy:
+- Complete valid code
+- Architecture supports future React 18 / Next.js 15 migration
+- Blockchain hooks exist and are empty
+- Isometric camera works
+- Player movement works
+- Chests are interactive
+- Full file structure included
+- No missing imports
+- No real Web3 logic`}
     </div>
 
     {/* Visual Footer */}
@@ -217,9 +215,9 @@ Minimal CSS.`}
         display: 'flex', justifyContent: 'flex-end',
         alignItems: 'center', gap: '10px'
     }}>
-        <div style={{width:'8px', height:'8px', background:'#22d3ee', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
+        <div style={{width:'8px', height:'8px', background:'#a855f7', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
         <span style={{fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'sans-serif', fontWeight: 'bold'}}>
-          SCROLL TO VIEW FULL SPECIFICATION ↕
+          SCROLL TO VIEW ARCHITECTURE SPECS ↕
         </span>
     </div>
 

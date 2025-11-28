@@ -1,22 +1,21 @@
-# 🆔 Phase 3: Identity Verification (Registration)
+# 💰 Phase 5: The Economic Gatekeeper
 
-We are now entering the advanced logic. We will integrate **`coti-ethers`** to handle authenticated, encrypted transactions using the `CotiEthersSigner`.
+We are adding a layer of "Skin in the Game". It's not enough to just connect a wallet; the user must hold actual **COTI** to play.
 
-This step adds a **Registration Panel** to your dApp. Users can play freely, but must register to mint their rewards.
+This prompt instructs the AI to use the specialized **`coti-ethers`** provider to avoid common ENS errors and strictly enforce a minimum balance.
 
-Replace the current address for your smart contract address.
 ---
 
-## ⚡ ACTION: IMPLEMENT REGISTRATION FLOW
+## ⚡ ACTION: IMPLEMENT BALANCE GATING
 
-**Mission:** Go to the **COTI MCP Interface**. Copy the prompt below.
+**Mission:** Go to the **COTI MCP Interface**. Copy the prompt inside the terminal below and paste it into the chat.
 
 <div style={{
-  background: 'linear-gradient(135deg, #14b8a6, #0ea5e9)',
+  background: 'linear-gradient(135deg, #059669, #fbbf24)',
   padding: '3px',
   borderRadius: '16px',
   margin: '30px 0',
-  boxShadow: '0 0 50px -10px rgba(14, 165, 233, 0.4)'
+  boxShadow: '0 0 50px -10px rgba(16, 185, 129, 0.4)'
 }}>
   <div style={{
     background: '#0f172a',
@@ -38,17 +37,21 @@ Replace the current address for your smart contract address.
     }}>
       <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
         <div style={{
-            width:'12px', height:'12px', background:'#2dd4bf', borderRadius:'50%', 
-            boxShadow:'0 0 12px #2dd4bf'
+            width:'12px', height:'12px', background:'#fbbf24', borderRadius:'50%', 
+            boxShadow:'0 0 12px #fbbf24'
         }}></div>
-        <span style={{color: '#f0f9ff', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.5px'}}>
-          USER_REGISTRY.prompt
+        <span style={{color: '#fcd34d', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.5px'}}>
+          BALANCE_CHECKER.ts
         </span>
+        <span style={{
+            background: 'rgba(5, 150, 105, 0.3)', color: '#6ee7b7', fontSize: '0.65rem', 
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(5, 150, 105, 0.4)'
+        }}>COTI-ETHERS</span>
       </div>
 
       <button 
         style={{
-            background: 'linear-gradient(90deg, #0ea5e9, #2563eb)',
+            background: 'linear-gradient(90deg, #059669, #d97706)',
             border: 'none',
             color: 'white',
             padding: '8px 16px',
@@ -58,200 +61,115 @@ Replace the current address for your smart contract address.
             fontWeight: 'bold',
             display: 'flex', alignItems: 'center', gap: '8px',
             transition: 'transform 0.1s',
-            boxShadow: '0 4px 12px rgba(14, 165, 233, 0.3)'
+            boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)'
         }}
         onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
         onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
         onClick={() => {
-            const promptText = document.getElementById('registry-prompt').innerText;
+            const promptText = document.getElementById('balance-prompt').innerText;
             navigator.clipboard.writeText(promptText);
-            alert("Registry Prompt Copied! Don't forget to set your Address! 📝");
+            alert("Financial Logic Copied! 🤑");
         }}
       >
-        <span>⚡ COPY PROMPT</span>
+        <span>⚡ COPY LOGIC</span>
       </button>
     </div>
 
     {/* Scrollable Content Area */}
-    <div id="registry-prompt" style={{
+    <div id="balance-prompt" style={{
       padding: '24px',
-      maxHeight: '400px', 
-      overflowY: 'auto',  
-      whiteSpace: 'pre-wrap', 
+      maxHeight: '450px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
       fontSize: '0.85rem',
       lineHeight: '1.5',
       color: '#cbd5e1'
     }}>
-{`You must extend the existing React + TypeScript + Ethers v6 + COTI SDK application with a new “User Registration Flow” using coti-ethers. Registration is optional for playing, but mandatory for minting. Maintain all existing logic (wallet connection, onboarding, AESKey, game). Do not modify those parts.
+{`Your task is to generate React + TypeScript code that reads the user’s native COTI balance using the coti-ethers library, and enforces a minimum balance of 1 COTI before allowing the existing game to start. The implementation MUST follow these exact rules:
 
-You MUST install and import coti-ethers:
+====================================================================
+REQUIREMENTS
+====================================================================
 
-npm install @coti-io/coti-ethers
+1. Use the coti-ethers library for all balance operations.  
+   You MUST import and use the BrowserProvider from coti-ethers:
 
-import { CotiEthersSigner } from "@coti-io/coti-ethers";
+   import { BrowserProvider } from "@coti-io/coti-ethers";
 
-IMPORTANT:
-The signer used for registration and mint MUST be the signer enhanced with AESKey through coti-ethers, not a derived wallet and not a plain ethers signer.
+   Do NOT use ethers.js built-in providers for balance retrieval.
 
-Use this pattern:
-const provider = new BrowserProvider(window.ethereum);
-const baseSigner = await provider.getSigner();
-const signer = new CotiEthersSigner(baseSigner, aesKey);
+2. Always initialize the provider like this to avoid ENS-related errors:
 
-You MUST always pass the coti-ethers signer when calling contract functions that require authenticated user actions.
+   const provider = new BrowserProvider(window.ethereum, {
+     name: "coti-testnet",
+     chainId: 7082400
+   });
 
-———————————————————————————————————————
-CONTRACT ABI (USE EXACTLY AS PROVIDED)
-———————————————————————————————————————
-[
-  { "type": "constructor", "inputs":[{"name":"tokenName","type":"string"},{"name":"tokenSymbol","type":"string"},{"name":"tokenDecimals","type":"uint8"}], "stateMutability":"nonpayable" },
-  { "type":"function","name":"requestRegistration","inputs":[],"outputs":[],"stateMutability":"nonpayable" },
-  { "type":"function","name":"isRegistered","inputs":[{"name":"account","type":"address"}],"outputs":[{"name":"","type":"bool"}],"stateMutability":"view" },
-  { "type":"function","name":"mint","inputs":[{"name":"to","type":"address"},{"name":"amount","type":"uint256"}],"outputs":[],"stateMutability":"nonpayable" },
-  { "type":"function","name":"burn","inputs":[{"name":"amount","type":"uint256"}],"outputs":[],"stateMutability":"nonpayable" },
-  { "type":"function","name":"transfer","inputs":[{"name":"to","type":"address"},{"name":"amount","type":"uint256"}],"outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable" },
-  { "type":"function","name":"transferFrom","inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"amount","type":"uint256"}],"outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable" },
-  { "type":"function","name":"approve","inputs":[{"name":"spender","type":"address"},{"name":"amount","type":"uint256"}],"outputs":[{"name":"","type":"bool"}],"stateMutability":"nonpayable" },
-  { "type":"function","name":"allowance","inputs":[{"name":"owner","type":"address"},{"name":"spender","type":"address"}],"outputs":[{"name":"","type":"uint256"}],"stateMutability":"view" },
-  { "type":"function","name":"balanceOf","inputs":[{"name":"account","type":"address"}],"outputs":[{"name":"","type":"uint256"}],"stateMutability":"view" },
-  { "type":"function","name":"totalSupply","inputs":[],"outputs":[{"name":"","type":"uint256"}],"stateMutability":"view" },
-  { "type":"function","name":"name","inputs":[],"outputs":[{"name":"","type":"string"}],"stateMutability":"view" },
-  { "type":"function","name":"symbol","inputs":[],"outputs":[{"name":"","type":"string"}],"stateMutability":"view" },
-  { "type":"function","name":"decimals","inputs":[],"outputs":[{"name":"","type":"uint8"}],"stateMutability":"view" },
-  { "type":"function","name":"owner","inputs":[],"outputs":[{"name":"","type":"address"}],"stateMutability":"view" },
-  { "type":"event","name":"Transfer","inputs":[{"name":"from","type":"address","indexed":true},{"name":"to","type":"address","indexed":true},{"name":"value","type":"uint256"}] },
-  { "type":"event","name":"Approval","inputs":[{"name":"owner","type":"address","indexed":true},{"name":"spender","type":"address","indexed":true},{"name":"value","type":"uint256"}] },
-  { "type":"event","name":"RegistrationRequested","inputs":[{"name":"user","type":"address","indexed":true}] },
-  { "type":"event","name":"RegistrationApproved","inputs":[{"name":"user","type":"address","indexed":true}] },
-  { "type":"error","name":"Unauthorized","inputs":[] },
-  { "type":"error","name":"InvalidAddress","inputs":[] },
-  { "type":"error","name":"InsufficientBalance","inputs":[] },
-  { "type":"error","name":"InsufficientAllowance","inputs":[] },
-  { "type":"error","name":"NotRegistered","inputs":[] },
-  { "type":"error","name":"AlreadyRegistered","inputs":[] }
-]
+3. Automatically switch the user's wallet to the COTI Testnet before any reads:
 
-———————————————————————————————————————
-NEW FEATURE: USER REGISTRATION FLOW
-———————————————————————————————————————
+   chainId: "0x6c11a0"
+   rpcUrl: "https://testnet.coti.io/rpc"
+   currency symbol: "COTI"
 
-UI/UX Requirements (Expert-Level)
-1. Add a new dedicated panel below Onboarding called “User Access”.
-2. Inside this panel show:
-   - Registration Status indicator (stylish, modern, color-coded)
-   - “Register” button
-   - “Mint / Claim Points” button (locked until registration)
+   If the network is missing, add it using wallet_addEthereumChain.
 
-3. Registration Status UX:
-   Before checking:
-      Status: Unknown
-      Color: neutral grey
-   If not registered:
-      Status: Not Registered
-      Color: soft red
-   If registered:
-      Status: Registered
-      Color: green
-   Must auto-refresh on:
-      - Wallet changes
-      - After registration tx
-      - On page reload (if wallet connected)
+4. After switching networks, obtain the signer:
 
-4. The “Register” button:
-   - Enabled only when:
-        walletConnected === true
-        onboardingComplete === true
-        aesKey !== null
-   - Shows loading animation during tx.
-   - After success:
-        Update status, show “Registered”.
+   const signer = await provider.getSigner();
+   const userAddress = await signer.getAddress();
 
-5. Important UX rule:
-   Registration is OPTIONAL for playing the game.
-   Registration is REQUIRED for minting.
+5. Read the user's native COTI balance:
 
-———————————————————————————————————————
-REGISTRATION LOGIC (MANDATORY IMPLEMENTATION)
-———————————————————————————————————————
+   const rawBalance = await provider.getBalance(userAddress);
 
-You MUST use coti-ethers to wrap the signer:
+   Convert it safely to a human-readable number:
 
-const provider = new BrowserProvider(window.ethereum);
-const baseSigner = await provider.getSigner();
-const signer = new CotiEthersSigner(baseSigner, aesKey);
+   const balance = Number(rawBalance) / 1e18;
 
-You MUST use this signer for:
+6. Enforce a hard requirement:
+   
+   The game MUST NOT initialize unless:
 
-- requestRegistration()
-- isRegistered()
-- mint()
+   balance >= 1.0
 
-NEVER call contract.write functions using the raw ethers signer.
-NEVER call using a derived wallet.
-NEVER use a private key locally.
+   If the balance is below 1 COTI:
+   - show a UI message "Insufficient COTI balance: at least 1 COTI required."
+   - do NOT allow the game to start
+   - provide a retry button that re-checks balance
 
-———————————————————————————————————————
-FUNCTIONAL REQUIREMENTS
-———————————————————————————————————————
+7. When the user has >= 1 COTI:
+   - unlock the "Start Game" button
+   - return a boolean flag like: { allowed: true, balance }
 
-1. Checking if user is registered:
-const status = await contract.isRegistered(userAddress);
+8. Follow best practices:
+   - Use async/await throughout
+   - Always wrap network operations in try/catch
+   - Never assume the provider exists; check window.ethereum first
+   - Display loading states and error messages to the user
+   - Do not mix ethers.js v6 providers with coti-ethers providers
+   - Do not use deprecated or private APIs
 
-2. Registering user:
-const tx = await contract.connect(signer).requestRegistration();
-await tx.wait();
+====================================================================
+OUTPUT FORMAT
+====================================================================
 
-3. Unlocking Minting:
-The Mint button must be hidden or disabled until:
-isRegistered === true
+Your response must contain:
 
-4. Mint Function:
-After user is registered:
-Execute:
+SECTION 1 — The complete React hook or utility function that:
+- switches network
+- initializes BrowserProvider
+- reads COTI balance
+- enforces the >= 1 COTI rule
+- returns a structured object containing { balance, allowed, error }
 
-const tx = await contract.connect(signer).mint(userAddress, BigInt(amount));
-await tx.wait();
+SECTION 2 — Example React component snippet showing:
+- UI state for balance loading / errors
+- a disabled “Start Game” button when balance < 1 COTI
+- an enabled “Start Game” button when balance >= 1 COTI
 
-5. UI state to maintain:
-isRegistered
-isRegistering (loading)
-mintStatus
-registrationStatusMessage
-
-6. Logging (required):
-“Checking registration…”
-“Registration transaction sent: (hash)”
-“Registration complete.”
-“User is registered.”
-“Minting using amount: X”
-“Mint transaction hash: …”
-“Mint complete.”
-
-———————————————————————————————————————
-OUTPUT REQUIREMENTS
-———————————————————————————————————————
-
-Your response MUST contain ONLY:
-
-1. The React + TypeScript code implementing:
-   - The “User Access” panel
-   - Registration button
-   - Registration status display
-   - Mint button (locked until registered)
-   - coti-ethers signer integration
-
-2. MUST NOT modify:
-   - Wallet connection logic
-   - Onboarding logic
-   - AESKey generation logic
-   - Game logic
-   - Network switching logic
-
-3. UI must be minimal, modern, and clean.
-4. English only.
-5. No emojis.
-6. No extra explanation.
-`}
+No extra commentary.  
+No emojis.  
+Clean, production-ready code only.`}
     </div>
 
     {/* Visual Footer */}
@@ -262,7 +180,7 @@ Your response MUST contain ONLY:
         display: 'flex', justifyContent: 'flex-end',
         alignItems: 'center', gap: '10px'
     }}>
-        <div style={{width:'8px', height:'8px', background:'#2dd4bf', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
+        <div style={{width:'8px', height:'8px', background:'#fbbf24', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
         <span style={{fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'sans-serif', fontWeight: 'bold'}}>
           SCROLL TO VIEW FULL SPECIFICATION ↕
         </span>
