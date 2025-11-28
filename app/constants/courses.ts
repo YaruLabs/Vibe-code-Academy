@@ -17,6 +17,8 @@ export const courses: Course[] = [
           "/docs/blockchain/smart-contract-security-audit/02-common-vulnerabilities.mdx",
           "/docs/blockchain/smart-contract-security-audit/03-audit-process.mdx"
         ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io",
         recommendedAI: ["claude", "openai"],
         welcome: {
           title: "Welcome to Smart Contract Security Audit",
@@ -30,6 +32,8 @@ export const courses: Course[] = [
         mdxPages: [
           "/docs/blockchain/defi-protocol-development/01-overview.mdx"
         ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io",
         recommendedAI: ["claude", "gemini", "openai"],
         welcome: {
           title: "Welcome to DeFi Protocol Development",
@@ -52,6 +56,8 @@ export const courses: Course[] = [
         mdxPages: [
           "/docs/games/2d-platformer-mechanics/01-overview.mdx"
         ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io",
         recommendedAI: ["claude", "gemini"],
         welcome: {
           title: "Welcome to 2D Platformer Mechanics",
@@ -65,6 +71,8 @@ export const courses: Course[] = [
         mdxPages: [
           "/docs/games/ai-enemy-behavior-system/01-overview.mdx"
         ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io",
         recommendedAI: ["gemini", "openai"],
         welcome: {
           title: "Welcome to AI Enemy Behavior System",
@@ -87,6 +95,8 @@ export const courses: Course[] = [
         mdxPages: [
           "/docs/software/cli-tool-development/01-overview.mdx"
         ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io",
         recommendedAI: ["claude"],
         welcome: {
           title: "Welcome to CLI Tool Development",
@@ -100,6 +110,8 @@ export const courses: Course[] = [
         mdxPages: [
           "/docs/software/api-documentation-generator/01-overview.mdx"
         ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io",
         recommendedAI: ["openai", "gemini"],
         welcome: {
           title: "Welcome to API Documentation Generator",

@@ -3,6 +3,8 @@ export interface Prompt {
   title: string;
   image: string;
   mdxPages: string[];
+  tutorialUrl: string;
+  repositoryUrl: string;
   recommendedAI: string[];
   welcome: {
     title: string;
