@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { usePromptExporter } from "../hooks/usePromptExporter";
 
 type CourseCardProps = Omit<Course, "id">;
 
@@ -76,6 +77,7 @@ export default function CourseCard({ image, title, description, prompts, categor
   const [copied, setCopied] = useState(false);
   const [isDialogReady, setIsDialogReady] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
+  const { exportPrompt, isExporting, exportStatus } = usePromptExporter();
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -383,13 +385,62 @@ export default function CourseCard({ image, title, description, prompts, categor
                   <svg width="20" height="20" viewBox="0 0 16 16" fill="none" className="flex-shrink-0">
                     <path fillRule="evenodd" clipRule="evenodd" d="M8 0C3.58 0 0 3.57879 0 7.99729C0 11.5361 2.29 14.5251 5.47 15.5847C5.87 15.6547 6.02 15.4148 6.02 15.2049C6.02 15.0149 6.01 14.3851 6.01 13.7154C4 14.0852 3.48 13.2255 3.32 12.7757C3.23 12.5458 2.84 11.836 2.5 11.6461C2.22 11.4961 1.82 11.1262 2.49 11.1162C3.12 11.1062 3.57 11.696 3.72 11.936C4.44 13.1455 5.59 12.8057 6.05 12.5957C6.12 12.0759 6.33 11.726 6.56 11.5261C4.78 11.3262 2.92 10.6364 2.92 7.57743C2.92 6.70773 3.23 5.98797 3.74 5.42816C3.66 5.22823 3.38 4.40851 3.82 3.30888C3.82 3.30888 4.49 3.09895 6.02 4.1286C6.66 3.94866 7.34 3.85869 8.02 3.85869C8.7 3.85869 9.38 3.94866 10.02 4.1286C11.55 3.08895 12.22 3.30888 12.22 3.30888C12.66 4.40851 12.38 5.22823 12.3 5.42816C12.81 5.98797 13.12 6.69773 13.12 7.57743C13.12 10.6464 11.25 11.3262 9.47 11.5261C9.76 11.776 10.01 12.2558 10.01 13.0056C10.01 14.0752 10 14.9349 10 15.2049C10 15.4148 10.15 15.6647 10.55 15.5847C12.1381 15.0488 13.5182 14.0284 14.4958 12.6673C15.4735 11.3062 15.9996 9.67293 16 7.99729C16 3.57879 12.42 0 8 0Z" fill="currentColor"/>
                   </svg>
-                  Repositorio
+                  Repository
                 </button>
-                <button className="px-4 py-3 text-left bg-white dark:bg-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-700 rounded-lg transition-colors text-zinc-900 dark:text-white font-medium flex items-center gap-3 border-2 border-zinc-200 dark:border-zinc-700">
-                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none" className="flex-shrink-0">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M8.75 1V1.75V8.68934L10.7197 6.71967L11.25 6.18934L12.3107 7.25L11.7803 7.78033L8.70711 10.8536C8.31658 11.2441 7.68342 11.2441 7.29289 10.8536L4.21967 7.78033L3.68934 7.25L4.75 6.18934L5.28033 6.71967L7.25 8.68934V1.75V1H8.75ZM13.5 9.25V13.5H2.5V9.25V8.5H1V9.25V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V9.25V8.5H13.5V9.25Z" fill="currentColor"/>
-                  </svg>
-                  Export
+                <button
+                  onClick={() => exportPrompt(selectedPrompt)}
+                  disabled={isExporting}
+                  className="px-4 py-3 text-left bg-white dark:bg-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-700 rounded-lg transition-colors text-zinc-900 dark:text-white font-medium flex items-center gap-3 border-2 border-zinc-200 dark:border-zinc-700 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {exportStatus === "loading" ? (
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className="animate-spin text-zinc-600 dark:text-zinc-300"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                      />
+                    </svg>
+                  ) : exportStatus === "success" ? (
+                    <svg width="20" height="20" viewBox="0 0 16 16" fill="none" className="text-green-500">
+                      <path d="M6.5 11.5L3.5 8.5L4.91421 7.08579L6.5 8.67157L11.0858 4.08579L12.5 5.5L6.5 11.5Z" fill="currentColor" />
+                    </svg>
+                  ) : exportStatus === "error" ? (
+                    <svg width="20" height="20" viewBox="0 0 16 16" fill="none" className="text-red-500">
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M8 1.33301L1.33301 14.6663H14.6663L8 1.33301ZM7.33301 6.66634H8.66634V10.6663H7.33301V6.66634ZM8.66634 12.6663H7.33301V11.333H8.66634V12.6663Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  ) : (
+                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" className="flex-shrink-0">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M8.75 1V1.75V8.68934L10.7197 6.71967L11.25 6.18934L12.3107 7.25L11.7803 7.78033L8.70711 10.8536C8.31658 11.2441 7.68342 11.2441 7.29289 10.8536L4.21967 7.78033L3.68934 7.25L4.75 6.18934L5.28033 6.71967L7.25 8.68934V1.75V1H8.75ZM13.5 9.25V13.5H2.5V9.25V8.5H1V9.25V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V9.25V8.5H13.5V9.25Z" fill="currentColor"/>
+                    </svg>
+                  )}
+                  <span>
+                    {exportStatus === "loading"
+                      ? "Exporting..."
+                      : exportStatus === "success"
+                      ? "Exported!"
+                      : exportStatus === "error"
+                      ? "Retry export"
+                      : "Export"}
+                  </span>
                 </button>
 
                 <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">
