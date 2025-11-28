@@ -1,0 +1,227 @@
+# 🏙️ Project: The 3D Metropolis (Full Stack)
+
+This is the next level. We are going beyond 2D. We will generate a **3D City Builder** that lives on the blockchain.
+
+This prompt constructs a dApp with **Military-Grade Onboarding** (Gas-Safe) and a **Three.js Economy Game** that unlocks only after verification.
+
+---
+
+## ⚡ ACTION: CONSTRUCT THE CITY
+
+**Mission:** Go to the **COTI MCP Interface**. Copy the prompt inside the terminal below and paste it into the chat.
+
+<div style={{
+  background: 'linear-gradient(135deg, #06b6d4, #3b82f6, #6366f1)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 60px -15px rgba(6, 182, 212, 0.5)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+    
+    {/* Header Bar */}
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.03)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#22d3ee', borderRadius:'50%', 
+            boxShadow:'0 0 12px #22d3ee'
+        }}></div>
+        <span style={{color: '#e2e8f0', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.5px'}}>
+          CITY_BUILDER_V1.prompt
+        </span>
+        <span style={{
+            background: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa', fontSize: '0.65rem', 
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(59, 130, 246, 0.3)'
+        }}>3D ENGINE</span>
+      </div>
+
+      <button 
+        style={{
+            background: 'linear-gradient(90deg, #0891b2, #2563eb)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            display: 'flex', alignItems: 'center', gap: '8px',
+            transition: 'transform 0.1s',
+            boxShadow: '0 4px 12px rgba(8, 145, 178, 0.3)'
+        }}
+        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+        onClick={() => {
+            const promptText = document.getElementById('city-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Blueprint Copied! Ready to Build 🏗️");
+        }}
+      >
+        <span>⚡ COPY BLUEPRINT</span>
+      </button>
+    </div>
+
+    {/* Scrollable Content Area */}
+    <div id="city-prompt" style={{
+      padding: '24px',
+      maxHeight: '400px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.5',
+      color: '#cbd5e1'
+    }}>
+{`Purpose: Create a React + TypeScript implementation with:
+
+Wallet connection
+Automatic COTI Testnet switching
+Onboarding via COTI onboarding contract
+AESKey derivation using real COTI SDK
+Native COTI balance fetching
+3D City Building Game locked until onboarding success
+
+Strict rule: All blockchain transactions MUST use the real connected signer
+Never use derived wallets to send transactions
+No fake AESKey
+No architecture imposed
+
+====================================================================
+DEPENDENCIES (MANDATORY)
+====================================================================
+
+You MUST use and import:
+- ethers (v6)
+- @coti-io/coti-sdk-typescript
+- three
+- @react-three/fiber (for the 3D game)
+- @react-three/drei (for camera controls/helpers)
+
+====================================================================
+CRITICAL RULES (Signer & Gas Safety)
+====================================================================
+
+1. All blockchain transactions MUST use the real connected signer obtained from window.ethereum.
+   const provider = new BrowserProvider(window.ethereum);
+   const signer = await provider.getSigner();
+
+2. Never use Wallet(privateKey, provider) for transactions.
+3. The onboarding function MUST NOT try to access .privateKey from the MetaMask signer.
+4. Instead of signing with a private key, use signer.signMessage() to sign the encryption key hash.
+
+====================================================================
+STEP 1: ONBOARDING & WALLET (Page 1)
+====================================================================
+
+Create a full-screen "Gateway" component.
+- Connect Wallet Button (Center).
+- Switch to COTI Testnet automatically.
+- Show "Onboard" button after connection.
+
+Use this EXACT updated function for onboarding (Metamask Compatible):
+
+async function onboard(signer: any) {
+    const contract = new Contract(
+        '0x60eA13A5f263f77f7a2832cfEeF1729B1688477c', // Onboard Contract
+        ONBOARD_ABI, // Use standard ABI provided below
+        signer
+    );
+
+    const rsa = generateRSAKeyPair();
+    // FIX: Use signMessage instead of privateKey access
+    const ekHash = keccak256(rsa.publicKey);
+    const signedEK = await signer.signMessage(getBytes(ekHash));
+
+    const tx = await contract.onboardAccount(rsa.publicKey, signedEK, { gasLimit: 15000000 });
+    const receipt = await tx.wait();
+    const log = contract.interface.parseLog(receipt.logs[0]);
+
+    return recoverUserKey(rsa.privateKey, log.args.userKey1.substring(2), log.args.userKey2.substring(2));
+}
+
+ONBOARD_ABI:
+[
+  { "anonymous": false, "inputs": [ { "indexed": true, "internalType": "address", "name": "_from", "type": "address" }, { "indexed": false, "internalType": "bytes", "name": "userKey1", "type": "bytes" }, { "indexed": false, "internalType": "bytes", "name": "userKey2", "type": "bytes" } ], "name": "AccountOnboarded", "type": "event" },
+  { "inputs": [ { "internalType": "bytes", "name": "publicKey", "type": "bytes" }, { "internalType": "bytes", "name": "signedEK", "type": "bytes" } ], "name": "onboardAccount", "outputs": [], "stateMutability": "nonpayable", "type": "function" }
+]
+
+Requirements:
+- Store AESKey in state.
+- If (walletConnected && onboardingComplete && aesKey), show a big button: "ENTER METROPOLIS".
+
+====================================================================
+STEP 2: 3D CITY BUILDER (Page 2)
+====================================================================
+
+Create a full-screen 3D Game using @react-three/fiber.
+Only render this if the user has passed Step 1.
+
+Game Concept:
+- View: Isometric Camera (OrbitControls).
+- Map: A large flat grid (PlaneGeometry) representing land.
+- Logic:
+  - Player has "Capital" (Start: 1000).
+  - Player earns "Income" every 3 seconds based on buildings placed.
+  - UI Overlay: HTML/CSS absolute overlay showing Capital ($) and Build Buttons.
+
+Building Types:
+1. House (Blue Box) -> Cost: 100, Income: +5/tick.
+2. Factory (Gray Box, taller) -> Cost: 500, Income: +30/tick.
+3. Commercial (Purple Box) -> Cost: 300, Income: +15/tick.
+
+Interactions:
+- User selects a building type from the UI.
+- User clicks on the ground plane.
+- Calculate grid position (snap to grid, e.g., Math.round).
+- If enough capital:
+  - Deduct cost.
+  - Place the 3D mesh at that position.
+  - Increase income rate.
+
+Visuals:
+- Use simple colored BoxGeometries.
+- Use a directional light + ambient light so shadows exist.
+- Show a simple ground grid helper (<gridHelper />).
+
+====================================================================
+OUTPUT FORMAT
+====================================================================
+
+Provide:
+Section 1: The React Code for Wallet/Onboarding (The "Gateway").
+Section 2: The React Code for the 3D Game (The "CityBuilder").
+
+All code must be React + TypeScript.
+No explanations.
+Minimal CSS.`}
+    </div>
+
+    {/* Visual Footer */}
+    <div style={{
+        background: '#020617',
+        borderTop: '1px solid #1e293b',
+        padding: '8px 20px',
+        display: 'flex', justifyContent: 'flex-end',
+        alignItems: 'center', gap: '10px'
+    }}>
+        <div style={{width:'8px', height:'8px', background:'#22d3ee', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
+        <span style={{fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'sans-serif', fontWeight: 'bold'}}>
+          SCROLL TO VIEW FULL SPECIFICATION ↕
+        </span>
+    </div>
+
+  </div>
+</div>
