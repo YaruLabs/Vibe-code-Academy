@@ -16,7 +16,8 @@ export const courses: Course[] = [
           "/docs/blockchain/smart-contract-security-audit/01-overview.mdx",
           "/docs/blockchain/smart-contract-security-audit/02-common-vulnerabilities.mdx",
           "/docs/blockchain/smart-contract-security-audit/03-audit-process.mdx"
-        ]
+        ],
+        recommendedAI: ["claude", "openai"]
       },
       {
         id: 2,
@@ -24,7 +25,8 @@ export const courses: Course[] = [
         image: "/images/image1.jpg",
         mdxPages: [
           "/docs/blockchain/defi-protocol-development/01-overview.mdx"
-        ]
+        ],
+        recommendedAI: ["claude", "gemini", "openai"]
       }
     ]
   },
@@ -41,7 +43,8 @@ export const courses: Course[] = [
         image: "/images/image2.png",
         mdxPages: [
           "/docs/games/2d-platformer-mechanics/01-overview.mdx"
-        ]
+        ],
+        recommendedAI: ["claude", "gemini"]
       },
       {
         id: 2,
@@ -49,7 +52,8 @@ export const courses: Course[] = [
         image: "/images/image2.png",
         mdxPages: [
           "/docs/games/ai-enemy-behavior-system/01-overview.mdx"
-        ]
+        ],
+        recommendedAI: ["gemini", "openai"]
       }
     ]
   },
@@ -66,7 +70,8 @@ export const courses: Course[] = [
         image: "/images/image3.jpg",
         mdxPages: [
           "/docs/software/cli-tool-development/01-overview.mdx"
-        ]
+        ],
+        recommendedAI: ["claude"]
       },
       {
         id: 2,
@@ -74,7 +79,8 @@ export const courses: Course[] = [
         image: "/images/image3.jpg",
         mdxPages: [
           "/docs/software/api-documentation-generator/01-overview.mdx"
-        ]
+        ],
+        recommendedAI: ["openai", "gemini"]
       }
     ]
   }

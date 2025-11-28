@@ -21,6 +21,12 @@ const categoryColors = {
   software: "bg-orange-500",
 };
 
+const aiAgentMap: Record<string, { name: string; icon: string }> = {
+  claude: { name: "Claude", icon: "/icons/ai/claude.png" },
+  gemini: { name: "Gemini", icon: "/icons/ai/gemini.png" },
+  openai: { name: "OpenAI", icon: "/icons/ai/openai.svg" },
+};
+
 export default function CourseCard({ image, title, description, prompts, category }: CourseCardProps) {
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
@@ -201,6 +207,29 @@ export default function CourseCard({ image, title, description, prompts, categor
               </div>
 
               <div className="lg:w-1/5 flex flex-col gap-2">
+                <div className="px-4 py-3 bg-zinc-100 dark:bg-zinc-800 rounded-lg">
+                  <p className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 mb-2">Recommended AI</p>
+                  <div className="flex items-center gap-2">
+                    {selectedPrompt.recommendedAI.map((aiKey) => {
+                      const agent = aiAgentMap[aiKey];
+                      return (
+                        <div key={aiKey} className="relative group">
+                          <Image
+                            src={agent.icon}
+                            alt={agent.name}
+                            width={32}
+                            height={32}
+                            className="rounded-full border-2 border-zinc-200 dark:border-zinc-700"
+                          />
+                          <span className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                            {agent.name}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <button className="px-4 py-3 text-left bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-lg transition-colors text-zinc-900 dark:text-white font-medium flex items-center gap-3">
                   <Image src="/icons/youtube.webp" alt="YouTube" width={20} height={20} className="flex-shrink-0" />
                   Tutorial

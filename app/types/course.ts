@@ -3,6 +3,7 @@ export interface Prompt {
   title: string;
   image: string;
   mdxPages: string[];
+  recommendedAI: string[];
 }
 
 export interface Course {
