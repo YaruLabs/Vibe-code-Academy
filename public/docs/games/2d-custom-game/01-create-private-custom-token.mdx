@@ -2,7 +2,7 @@
 
 We are stepping up the game. Standard tokens are public, but we want **Controlled Access**.
 
-We will tell the Assistant to create a token where **only registered users** can receive funds, and this registration list is kept **completely private** on-chain.
+We will tell the Assistant to create a token where **only registered users** can receive funds, and the deployment is handled via a **fresh wallet** to ensure clean separation.
 
 ---
 
@@ -57,14 +57,17 @@ We will tell the Assistant to create a token where **only registered users** can
         onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
         onClick={() => {
             const textToCopy = `Deploy a new standard private ERC20 token contract on the COTI blockchain.
-This creates a new private token with the specified name, symbol, and decimals.
+This deployment must use a newly generated wallet, which I will fund with COTI for gas.
+The system must create this new wallet before deployment and use it as the signer for the entire deployment process.
+Return the generated wallet address so I can fund it before execution.
+
 In addition to the standard private ERC20 behavior, the smart contract must include a private registration mechanism for mint authorization:
 
 The contract must maintain a private list of registered user addresses.
 
-A public function must allow any caller to request registration, but the registration itself must be stored privately using the COTI private state architecture.
+A public function must allow any caller to request registration, but the registration data must be stored privately using COTI’s private state architecture.
 
-The mint function must only allow minting tokens to addresses that are already registered in this private list.
+The mint function must only mint tokens to addresses that are already registered in this private list.
 
 Any attempt to mint to an unregistered address must revert.
 
@@ -88,14 +91,17 @@ Return the deployed contract address upon successful deployment.`;
       color: '#cbd5e1'
     }}>
       Deploy a new standard private ERC20 token contract on the COTI blockchain.<br/>
-      This creates a new private token with the specified name, symbol, and decimals.<br/>
+      <span style={{color: '#e879f9'}}>This deployment must use a newly generated wallet, which I will fund with COTI for gas.</span><br/>
+      The system must create this new wallet before deployment and use it as the signer for the entire deployment process.<br/>
+      Return the generated wallet address so I can fund it before execution.<br/><br/>
+
       In addition to the standard private ERC20 behavior, the smart contract must include a private registration mechanism for mint authorization:<br/><br/>
       
-      <span style={{color: '#e879f9'}}>1. The contract must maintain a private list of registered user addresses.</span><br/><br/>
+      1. The contract must maintain a private list of registered user addresses.<br/><br/>
       
-      2. A public function must allow any caller to request registration, but the registration itself must be stored privately using the COTI private state architecture.<br/><br/>
+      2. A public function must allow any caller to request registration, but the registration data must be stored privately using COTI’s private state architecture.<br/><br/>
       
-      <span style={{color: '#e879f9'}}>3. The mint function must only allow minting tokens to addresses that are already registered in this private list.</span><br/><br/>
+      3. The mint function must only mint tokens to addresses that are already registered in this private list.<br/><br/>
       
       4. Any attempt to mint to an unregistered address must revert.<br/><br/>
       
