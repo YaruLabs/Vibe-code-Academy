@@ -55,16 +55,16 @@ export const courses: Course[] = [
     prompts: [
       {
         id: 1,
-        title: "2D Platformer Mechanics",
+        title: "Game + Private Tokens",
         image: "/images/image2.png",
         mdxPages: [
-          "/docs/games/2d-platformer-mechanics/01-overview.mdx"
+          "/docs/games/2d-platformer-mechanics/01-create-private-token.mdx"
         ],
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
         demoUrl: "https://coti.io",
-        recommendedAI: ["claude", "gemini"],
-        difficulty: "beginner",
+        recommendedAI: ["cotiMcp", "claude", "gemini"],
+        difficulty: "absolute-beginner",
         welcome: {
           title: "Welcome to 2D Platformer Mechanics",
           description: "Build engaging 2D platformer games with smooth physics and responsive controls."
