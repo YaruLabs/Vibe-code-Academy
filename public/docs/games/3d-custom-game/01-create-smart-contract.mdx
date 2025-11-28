@@ -1,0 +1,135 @@
+
+# 🛡️ Advanced Deployment: The Gatekeeper (Level 2)
+
+We are adding a layer of **economic verification**. Now, the contract checks not only *who* you are (Registration), but also *what* you hold (Balance).
+
+We will tell the Assistant to create a contract that requires **Registration + 1 COTI Balance** to mint, using a **fresh wallet** for deployment.
+
+---
+
+## ⚡ ACTION: DEPLOY THE CONDITIONAL CONTRACT
+
+**Mission:** Go to the **COTI MCP Interface**. Copy the prompt inside the terminal below and paste it into the chat.
+
+<div style={{
+  background: 'linear-gradient(135deg, #7c3aed, #db2777)',
+  padding: '2px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 40px -10px rgba(124, 58, 237, 0.4)'
+}}>
+  <div style={{
+    background: '#0B0F19',
+    borderRadius: '14px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace'
+  }}>
+    
+    {/* Header: Title + Copy Button */}
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+        <div style={{width:'10px', height:'10px', background:'#d946ef', borderRadius:'50%', boxShadow:'0 0 10px #d946ef'}}></div>
+        <span style={{color: '#e879f9', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '1px'}}>CONDITIONAL_MINT.prompt</span>
+      </div>
+
+      <button 
+        style={{
+            background: 'linear-gradient(90deg, #7c3aed, #9333ea)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            display: 'flex', alignItems: 'center', gap: '6px',
+            transition: 'opacity 0.2s',
+            boxShadow: '0 2px 10px rgba(124, 58, 237, 0.3)'
+        }}
+        onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
+        onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
+        onClick={() => {
+            const textToCopy = `Deploy a new smart contract on the COTI blockchain that allows minting of a private ERC20 token under two enforced conditions:
+(1) the caller must be privately registered, and
+(2) the caller must have at least 1 COTI in their balance at the moment of minting.
+
+This deployment must use a newly generated wallet, which I will fund with COTI for gas.
+The system must create this new wallet before deployment and use it as the signer for the entire deployment flow.
+Return the generated wallet address so I can fund it before execution.
+
+The smart contract must implement the following logic:
+
+Maintain a private list of registered user addresses, stored using COTI’s private state architecture.
+
+Provide a public registration function that any user can call to request mint authorization; the stored authorization must be private.
+
+The mint function must:
+
+Allow minting only for addresses that appear in the private registration list.
+
+Before minting, verify that the caller has a minimum balance of 1 COTI using the COTI native balance-checking mechanism.
+
+Revert if the caller is not registered or does not hold at least 1 COTI.
+
+Return the deployed contract address upon successful deployment.`;
+            navigator.clipboard.writeText(textToCopy);
+            alert("Prompt Copied to Clipboard! 📋");
+        }}
+      >
+        <span>COPY PROMPT</span>
+      </button>
+    </div>
+
+    {/* Scrollable Content Area */}
+    <div style={{
+      padding: '24px',
+      maxHeight: '350px', // Altura máxima antes de hacer scroll
+      overflowY: 'auto',  // Permite deslizar
+      whiteSpace: 'pre-wrap', // Mantiene los saltos de línea
+      fontSize: '0.9rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+      Deploy a new smart contract on the COTI blockchain that allows minting of a private ERC20 token under two enforced conditions:<br/>
+      (1) the caller must be privately registered, and<br/>
+      <span style={{color: '#e879f9'}}>(2) the caller must have at least 1 COTI in their balance at the moment of minting.</span><br/><br/>
+
+      This deployment must use a newly generated wallet, which I will fund with COTI for gas.<br/>
+      The system must create this new wallet before deployment and use it as the signer for the entire deployment flow.<br/>
+      Return the generated wallet address so I can fund it before execution.<br/><br/>
+
+      The smart contract must implement the following logic:<br/><br/>
+      
+      1. Maintain a private list of registered user addresses, stored using COTI’s private state architecture.<br/><br/>
+      
+      2. Provide a public registration function that any user can call to request mint authorization; the stored authorization must be private.<br/><br/>
+      
+      3. The mint function must:<br/>
+      &nbsp;&nbsp;a. Allow minting only for addresses that appear in the private registration list.<br/>
+      &nbsp;&nbsp;b. <span style={{color: '#e879f9'}}>Before minting, verify that the caller has a minimum balance of 1 COTI.</span><br/><br/>
+      
+      4. Revert if the caller is not registered or does not hold at least 1 COTI.<br/><br/>
+      
+      Return the deployed contract address upon successful deployment.
+    </div>
+
+    {/* Visual Footer */}
+    <div style={{
+        background: '#020617',
+        borderTop: '1px solid #1e293b',
+        padding: '8px 20px',
+        display: 'flex', justifyContent: 'flex-end'
+    }}>
+        <span style={{fontSize: '0.7rem', color: '#64748b', fontFamily: 'sans-serif'}}>SCROLL TO VIEW FULL CONTENT ↕</span>
+    </div>
+
+  </div>
+</div>
