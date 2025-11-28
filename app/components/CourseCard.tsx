@@ -225,37 +225,62 @@ export default function CourseCard({ image, title, description, prompts, categor
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {prompts.map((prompt) => (
-                  <div
-                    key={prompt.id}
-                    onClick={() => handleSelectPromptCard(prompt)}
-                    className="relative h-32 sm:h-40 rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-102 group"
-                  >
-                    <Image
-                      src={prompt.image}
-                      alt={prompt.title}
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/80 group-hover:bg-black/70 transition-colors" />
+                {prompts.map((prompt) => {
+                  const isComingSoon = prompt.mdxPages.length === 1;
+                  return (
+                    <div
+                      key={prompt.id}
+                      onClick={() => !isComingSoon && handleSelectPromptCard(prompt)}
+                      className={`relative h-32 sm:h-40 rounded-lg overflow-hidden transition-transform group ${
+                        isComingSoon
+                          ? 'cursor-not-allowed opacity-70'
+                          : 'cursor-pointer hover:scale-102'
+                      }`}
+                    >
+                      <Image
+                        src={prompt.image}
+                        alt={prompt.title}
+                        fill
+                        className="object-cover"
+                      />
+                      <div className={`absolute inset-0 ${
+                        isComingSoon
+                          ? 'bg-black/90'
+                          : 'bg-black/80 group-hover:bg-black/70'
+                      } transition-colors`} />
 
-                    {/* Difficulty badge */}
-                    <div className="absolute top-3 right-3 z-10">
-                      <div className={`relative`}>
-                        <div className={`absolute inset-0 bg-gradient-to-r ${difficultyConfig[prompt.difficulty].bgGradient} rounded-full blur opacity-75`} />
-                        <span className={`relative flex items-center justify-center gap-1.5 bg-gradient-to-r ${difficultyConfig[prompt.difficulty].bgGradient} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg`}>
-                          {difficultyConfig[prompt.difficulty].label}
-                        </span>
+                      {/* Coming Soon badge */}
+                      {isComingSoon && (
+                        <div className="absolute top-3 left-3 z-10">
+                          <div className="relative">
+                            <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full blur opacity-75" />
+                            <span className="relative flex items-center justify-center gap-1.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                              Coming Soon
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Difficulty badge */}
+                      {!isComingSoon && (
+                        <div className="absolute top-3 right-3 z-10">
+                          <div className={`relative`}>
+                            <div className={`absolute inset-0 bg-gradient-to-r ${difficultyConfig[prompt.difficulty].bgGradient} rounded-full blur opacity-75`} />
+                            <span className={`relative flex items-center justify-center gap-1.5 bg-gradient-to-r ${difficultyConfig[prompt.difficulty].bgGradient} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg`}>
+                              {difficultyConfig[prompt.difficulty].label}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="absolute inset-0 flex items-center justify-center p-4">
+                        <h4 className="text-lg sm:text-xl font-bold text-white text-center">
+                          {prompt.title}
+                        </h4>
                       </div>
                     </div>
-
-                    <div className="absolute inset-0 flex items-center justify-center p-4">
-                      <h4 className="text-lg sm:text-xl font-bold text-white text-center">
-                        {prompt.title}
-                      </h4>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </>

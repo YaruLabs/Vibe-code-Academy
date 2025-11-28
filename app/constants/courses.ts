@@ -13,9 +13,7 @@ export const courses: Course[] = [
         title: "Smart Contract Security Audit",
         image: "/images/image1.jpg",
         mdxPages: [
-          "/docs/blockchain/smart-contract-security-audit/01-overview.mdx",
-          "/docs/blockchain/smart-contract-security-audit/02-common-vulnerabilities.mdx",
-          "/docs/blockchain/smart-contract-security-audit/03-audit-process.mdx"
+          "/docs/blockchain/01-overview.mdx"
         ],
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
