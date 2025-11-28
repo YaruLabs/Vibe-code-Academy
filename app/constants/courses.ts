@@ -82,7 +82,7 @@ export const courses: Course[] = [
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
         demoUrl: "https://coti.io",
-        recommendedAI: ["gemini", "openai"],
+        recommendedAI: ["cotiMcp", "v0"],
         difficulty: "beginner",
         welcome: {
           title: "Welcome to AI Enemy Behavior System",
@@ -101,7 +101,7 @@ export const courses: Course[] = [
         tutorialUrl: "https://www.youtube.com/@COTIGroup",
         repositoryUrl: "https://github.com/coti-io",
         demoUrl: "https://coti.io",
-        recommendedAI: ["claude", "v0"],
+        recommendedAI: ["cotiMcp", "v0"],
         difficulty: "advance",
         welcome: {
           title: "Welcome to 3D Custom Game",
