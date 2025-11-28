@@ -21,6 +21,30 @@ const categoryColors = {
   software: "bg-orange-500",
 };
 
+const categoryGradients = {
+  blockchain: "from-blue-500/20 via-blue-500/10 to-transparent",
+  games: "from-pink-500/20 via-pink-500/10 to-transparent",
+  software: "from-orange-500/20 via-orange-500/10 to-transparent",
+};
+
+const categoryAccents = {
+  blockchain: "bg-blue-500",
+  games: "bg-pink-500",
+  software: "bg-orange-500",
+};
+
+const categoryBorders = {
+  blockchain: "border-blue-500/30",
+  games: "border-pink-500/30",
+  software: "border-orange-500/30",
+};
+
+const categoryTextAccents = {
+  blockchain: "text-blue-500",
+  games: "text-pink-500",
+  software: "text-orange-500",
+};
+
 const aiAgentMap: Record<string, { name: string; icon: string }> = {
   claude: { name: "Claude", icon: "/icons/ai/claude.png" },
   gemini: { name: "Gemini", icon: "/icons/ai/gemini.png" },
@@ -32,11 +56,13 @@ export default function CourseCard({ image, title, description, prompts, categor
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [copied, setCopied] = useState(false);
   const [isDialogReady, setIsDialogReady] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
       setSelectedPrompt(null);
       setCurrentPageIndex(0);
+      setShowWelcome(true);
     }
   };
 
@@ -169,11 +195,97 @@ export default function CourseCard({ image, title, description, prompts, categor
               </div>
             </div>
           </>
+        ) : showWelcome ? (
+          <div className="flex flex-col h-full relative overflow-hidden">
+            {/* Animated gradient background */}
+            <div className={`absolute inset-0 bg-gradient-to-br ${categoryGradients[category]} pointer-events-none`} />
+            <div className={`absolute top-0 right-0 w-96 h-96 ${categoryAccents[category]} rounded-full blur-3xl opacity-10 pointer-events-none`} />
+            <div className={`absolute bottom-0 left-0 w-96 h-96 ${categoryAccents[category]} rounded-full blur-3xl opacity-10 pointer-events-none`} />
+
+            <div className="relative z-10 flex flex-col h-full p-6 pt-8">
+              <div className="mb-6">
+                <button
+                  onClick={() => setSelectedPrompt(null)}
+                  className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white flex items-center gap-2 hover:bg-white/50 dark:hover:bg-zinc-800/50 rounded-2xl p-2 transition-all backdrop-blur-sm"
+                >
+                  <span>←</span> Back
+                </button>
+              </div>
+
+              <div className="flex-1 flex flex-col items-center justify-center max-w-4xl mx-auto px-4 w-full">
+                <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                  {/* Category badge */}
+                  <div className="flex justify-center">
+                    <span className={`${categoryAccents[category]} text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg`}>
+                      {category}
+                    </span>
+                  </div>
+
+                  {/* Title with gradient text */}
+                  <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-zinc-900 dark:text-white text-center leading-tight">
+                    {selectedPrompt.welcome.title}
+                  </h2>
+
+                  {/* Description */}
+                  <p className="text-xl sm:text-2xl text-zinc-600 dark:text-zinc-300 text-center max-w-2xl mx-auto font-medium">
+                    {selectedPrompt.welcome.description}
+                  </p>
+
+                  {/* Agenda cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                    {selectedPrompt.welcome.agenda.map((item, index) => (
+                      <div
+                        key={index}
+                        className={`group bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm rounded-2xl p-5 border-2 ${categoryBorders[category]} hover:border-opacity-60 transition-all duration-300 hover:scale-105 hover:shadow-xl`}
+                      >
+                        <div className="flex items-start gap-4">
+                          <div className={`flex-shrink-0 w-10 h-10 rounded-xl ${categoryAccents[category]} text-white flex items-center justify-center text-lg font-bold shadow-lg group-hover:scale-110 transition-transform`}>
+                            {index + 1}
+                          </div>
+                          <p className="text-zinc-800 dark:text-zinc-200 font-medium pt-2 leading-relaxed">
+                            {item}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* CTA Button */}
+                  <div className="flex justify-center pt-8">
+                    <button
+                      onClick={() => setShowWelcome(false)}
+                      className={`group relative px-12 py-5 ${categoryAccents[category]} text-white rounded-2xl font-bold text-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl overflow-hidden`}
+                    >
+                      <span className="relative z-10 flex items-center gap-3">
+                        Continue
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          className="group-hover:translate-x-1 transition-transform"
+                        >
+                          <path
+                            d="M5 12H19M19 12L12 5M19 12L12 19"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
+                      <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         ) : (
           <div className="flex flex-col h-full p-6 pt-8">
             <div className="mb-6">
               <button
-                onClick={() => setSelectedPrompt(null)}
+                onClick={() => setShowWelcome(true)}
                 className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white flex items-center gap-2 hover:bg-gray-50 rounded-2xl p-2"
               >
                 <span>←</span> Back

@@ -4,6 +4,11 @@ export interface Prompt {
   image: string;
   mdxPages: string[];
   recommendedAI: string[];
+  welcome: {
+    title: string;
+    description: string;
+    agenda: string[];
+  };
 }
 
 export interface Course {
