@@ -41,32 +41,32 @@ export const usePromptExporter = () => {
     }, 2000);
   }, []);
 
-  const exportPrompt = useCallback(
-    async (prompt?: Prompt | null) => {
-      if (!prompt || status === "loading") return;
+  const exportPrompt = useCallback(async (prompt?: Prompt | null) => {
+    if (!prompt || status === "loading") return;
 
-      setStatus("loading");
+    setStatus("loading");
+    let hasErrors = false;
+
+    for (const mdxPath of prompt.mdxPages) {
       try {
-        for (const mdxPath of prompt.mdxPages) {
-          const response = await fetch(mdxPath);
-          if (!response.ok) {
-            throw new Error(`Failed to download ${mdxPath}`);
-          }
-          const mdxContent = await response.text();
-          const pageName = mdxPath.split("/").pop() || "page.mdx";
-          const promptPrefix = sanitizeForFilename(prompt.title);
-          downloadMarkdownFile(mdxContent, `${promptPrefix}-${pageName}`);
+        const response = await fetch(mdxPath);
+        if (!response.ok) {
+          throw new Error(`Failed to download ${mdxPath}`);
         }
-        setStatus("success");
-        scheduleReset();
+        const mdxContent = await response.text();
+        const pageName = mdxPath.split("/").pop() || "page.mdx";
+        const promptPrefix = sanitizeForFilename(prompt.title);
+        const mdFilename = pageName.replace(/\.mdx?$/i, ".md");
+        downloadMarkdownFile(mdxContent, `${promptPrefix}-${mdFilename}`);
       } catch (error) {
-        console.error("Failed to export prompt files:", error);
-        setStatus("error");
-        scheduleReset();
+        console.error("Failed to export prompt file:", error);
+        hasErrors = true;
       }
-    },
-    [scheduleReset, status]
-  );
+    }
+
+    setStatus(hasErrors ? "error" : "success");
+    scheduleReset();
+  }, [scheduleReset, status]);
 
   useEffect(() => {
     return () => {
