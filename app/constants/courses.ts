@@ -7,42 +7,7 @@ export const courses: Course[] = [
     title: "Blockchain",
     description: "Vibe-coding smart contracts",
     category: "blockchain",
-    prompts: [
-      {
-        id: 1,
-        title: "Smart Contract Security Audit",
-        image: "/images/image1.jpg",
-        mdxPages: [
-          "/docs/blockchain/01-overview.mdx"
-        ],
-        tutorialUrl: "https://www.youtube.com/@COTIGroup",
-        repositoryUrl: "https://github.com/coti-io",
-        demoUrl: "https://coti.io",
-        recommendedAI: ["claude", "openai", "cotiMcp"],
-        difficulty: "advance",
-        welcome: {
-          title: "Welcome to Smart Contract Security Audit",
-          description: "Learn how to identify and prevent common vulnerabilities in smart contracts to build secure decentralized applications."
-        }
-      },
-      {
-        id: 2,
-        title: "DeFi Protocol Development",
-        image: "/images/image1.jpg",
-        mdxPages: [
-          "/docs/blockchain/defi-protocol-development/01-overview.mdx"
-        ],
-        tutorialUrl: "https://www.youtube.com/@COTIGroup",
-        repositoryUrl: "https://github.com/coti-io",
-        demoUrl: "https://coti.io",
-        recommendedAI: ["claude", "gemini", "openai", "cotiMcp"],
-        difficulty: "advance",
-        welcome: {
-          title: "Welcome to DeFi Protocol Development",
-          description: "Master the fundamentals of building decentralized finance protocols from scratch."
-        }
-      }
-    ]
+    prompts: []
   },
   {
     id: 2,
@@ -116,41 +81,6 @@ export const courses: Course[] = [
     title: "Software Tools",
     description: "Worflows",
     category: "software",
-    prompts: [
-      {
-        id: 1,
-        title: "CLI Tool Development",
-        image: "/images/image3.jpg",
-        mdxPages: [
-          "/docs/software/cli-tool-development/01-overview.mdx"
-        ],
-        tutorialUrl: "https://www.youtube.com/@COTIGroup",
-        repositoryUrl: "https://github.com/coti-io",
-        demoUrl: "https://coti.io",
-        recommendedAI: ["claude"],
-        difficulty: "absolute-beginner",
-        welcome: {
-          title: "Welcome to CLI Tool Development",
-          description: "Build powerful and user-friendly command-line tools that developers love to use."
-        }
-      },
-      {
-        id: 2,
-        title: "API Documentation Generator",
-        image: "/images/image3.jpg",
-        mdxPages: [
-          "/docs/software/api-documentation-generator/01-overview.mdx"
-        ],
-        tutorialUrl: "https://www.youtube.com/@COTIGroup",
-        repositoryUrl: "https://github.com/coti-io",
-        demoUrl: "https://coti.io",
-        recommendedAI: ["openai", "gemini"],
-        difficulty: "beginner",
-        welcome: {
-          title: "Welcome to API Documentation Generator",
-          description: "Automate API documentation generation from code annotations and OpenAPI specifications."
-        }
-      }
-    ]
+    prompts: []
   }
 ];

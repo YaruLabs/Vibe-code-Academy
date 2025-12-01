@@ -249,18 +249,6 @@ export default function CourseCard({ image, title, description, prompts, categor
                           : 'bg-black/80 group-hover:bg-black/70'
                       } transition-colors`} />
 
-                      {/* Coming Soon badge */}
-                      {isComingSoon && (
-                        <div className="absolute top-3 left-3 z-10">
-                          <div className="relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full blur opacity-75" />
-                            <span className="relative flex items-center justify-center gap-1.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                              Coming Soon
-                            </span>
-                          </div>
-                        </div>
-                      )}
-
                       {/* Difficulty badge */}
                       {!isComingSoon && (
                         <div className="absolute top-3 right-3 z-10">
