@@ -1,0 +1,204 @@
+
+# 🔐 Step 2: Wallet Integration
+
+Now we're adding the blockchain layer. This step implements **WalletConnect** integration, allowing users to connect their crypto wallets to your mobile app.
+
+This prompt ensures secure, production-ready wallet connection with support for multiple wallets and proper error handling.
+
+---
+
+## ⚡ ACTION: IMPLEMENT WALLET CONNECTION
+
+**Mission:** Go to your **AI Assistant Interface**. Copy the prompt inside the terminal below and paste it into the chat.
+
+<div style={{
+  background: 'linear-gradient(135deg, #10b981, #06b6d4)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 50px -10px rgba(16, 185, 129, 0.5)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+
+    {/* Header Bar */}
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.03)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#10b981', borderRadius:'50%',
+            boxShadow:'0 0 12px #10b981'
+        }}></div>
+        <span style={{color: '#6ee7b7', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.5px'}}>
+          WALLET_CONNECT.prompt
+        </span>
+        <span style={{
+            background: 'rgba(6, 182, 212, 0.2)', color: '#67e8f9', fontSize: '0.65rem',
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(6, 182, 212, 0.3)'
+        }}>WALLETCONNECT V2</span>
+      </div>
+
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #10b981, #06b6d4)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            display: 'flex', alignItems: 'center', gap: '8px',
+            transition: 'transform 0.1s',
+            boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
+        }}
+        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+        onClick={() => {
+            const promptText = document.getElementById('wallet-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Wallet Integration Guide Copied! 🔐");
+        }}
+      >
+        <span>⚡ COPY PROMPT</span>
+      </button>
+    </div>
+
+    {/* Scrollable Content Area */}
+    <div id="wallet-prompt" style={{
+      padding: '24px',
+      maxHeight: '450px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.5',
+      color: '#cbd5e1'
+    }}>
+{`I need you to implement WalletConnect v2 integration in my existing React Native Expo mobile app. The implementation must be beginner-friendly while following security best practices.
+
+====================================================================
+REQUIREMENTS
+====================================================================
+
+1. Install and configure WalletConnect v2 for React Native:
+   - @walletconnect/react-native-compat
+   - @walletconnect/modal-react-native
+   - @walletconnect/utils
+   - ethers v6 (for blockchain interactions)
+
+2. Set up WalletConnect provider with proper configuration:
+   - Use COTI Testnet as the default network
+   - Chain ID: 7082400 (0x6c11a0)
+   - RPC URL: https://testnet.coti.io/rpc
+   - Explorer: https://testnet.cotiscan.io
+   - Native currency: COTI
+
+3. Create a custom hook useWallet that provides:
+   - connect() function
+   - disconnect() function
+   - wallet address (string | null)
+   - isConnected (boolean)
+   - balance (string)
+   - chainId (number)
+   - loading states
+   - error handling
+
+4. Implement wallet connection flow:
+   - Show WalletConnect modal when user clicks "Connect Wallet"
+   - Support multiple wallets (MetaMask, Trust Wallet, etc.)
+   - Automatically detect if user is on wrong network
+   - Prompt to switch to COTI Testnet if needed
+   - Persist connection state using AsyncStorage
+   - Auto-reconnect on app restart if previously connected
+
+5. Add balance checking functionality:
+   - Fetch user's COTI balance on connection
+   - Update balance automatically when transactions occur
+   - Display balance in human-readable format (not wei)
+   - Handle loading and error states
+
+6. Security best practices:
+   - Never store private keys
+   - Validate all blockchain responses
+   - Handle wallet disconnection gracefully
+   - Implement proper timeout handling
+   - Show clear error messages to users
+
+7. Create a WalletScreen component that shows:
+   - Connect button (when not connected)
+   - Wallet address (when connected)
+   - COTI balance (when connected)
+   - Network name and chain ID
+   - Disconnect button (when connected)
+   - Beautiful gradient UI matching the app theme
+
+8. Error handling for:
+   - User rejected connection
+   - Network errors
+   - Invalid network
+   - Wallet not installed
+   - Transaction failures
+
+====================================================================
+OUTPUT FORMAT
+====================================================================
+
+Provide:
+
+SECTION 1 — Installation commands
+- All npm packages needed
+- Any additional setup steps
+
+SECTION 2 — WalletConnect configuration
+- Complete setup code
+- Environment variables needed (if any)
+- Project ID setup instructions
+
+SECTION 3 — useWallet hook implementation
+- Full TypeScript code
+- All functions and state
+- Error handling logic
+
+SECTION 4 — WalletScreen component
+- Complete UI implementation
+- Connection flow
+- Balance display
+- Loading states
+
+SECTION 5 — Integration instructions
+- How to wrap the app with WalletConnect provider
+- How to use the hook in other screens
+- Testing steps
+
+Include detailed comments explaining each part.
+Make it production-ready but easy to understand for beginners.`}
+    </div>
+
+    {/* Visual Footer */}
+    <div style={{
+        background: '#020617',
+        borderTop: '1px solid #1e293b',
+        padding: '8px 20px',
+        display: 'flex', justifyContent: 'flex-end',
+        alignItems: 'center', gap: '10px'
+    }}>
+        <div style={{width:'8px', height:'8px', background:'#10b981', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
+        <span style={{fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'sans-serif', fontWeight: 'bold'}}>
+          SCROLL TO VIEW WALLET INTEGRATION SPECS ↕
+        </span>
+    </div>
+
+  </div>
+</div>

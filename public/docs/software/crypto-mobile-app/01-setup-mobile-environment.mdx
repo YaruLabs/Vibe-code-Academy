@@ -1,0 +1,187 @@
+
+# 📱 Step 1: Mobile Environment Setup
+
+We are building the foundation for your first crypto mobile app. This step will guide you through setting up a modern **React Native** environment with **Expo**, ready to integrate with blockchain wallets.
+
+This prompt ensures a clean, production-ready mobile development setup that works seamlessly with Web3 libraries.
+
+---
+
+## ⚡ ACTION: INITIALIZE THE MOBILE PROJECT
+
+**Mission:** Go to your **AI Assistant Interface** (v0, Claude, or ChatGPT). Copy the prompt inside the terminal below and paste it into the chat.
+
+<div style={{
+  background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 50px -10px rgba(59, 130, 246, 0.5)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+
+    {/* Header Bar */}
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.03)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#3b82f6', borderRadius:'50%',
+            boxShadow:'0 0 12px #3b82f6'
+        }}></div>
+        <span style={{color: '#93c5fd', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.5px'}}>
+          MOBILE_SETUP.prompt
+        </span>
+        <span style={{
+            background: 'rgba(139, 92, 246, 0.2)', color: '#c4b5fd', fontSize: '0.65rem',
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(139, 92, 246, 0.3)'
+        }}>EXPO + REACT NATIVE</span>
+      </div>
+
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #3b82f6, #8b5cf6)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            display: 'flex', alignItems: 'center', gap: '8px',
+            transition: 'transform 0.1s',
+            boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+        }}
+        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+        onClick={() => {
+            const promptText = document.getElementById('setup-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Setup Instructions Copied! 📱");
+        }}
+      >
+        <span>⚡ COPY PROMPT</span>
+      </button>
+    </div>
+
+    {/* Scrollable Content Area */}
+    <div id="setup-prompt" style={{
+      padding: '24px',
+      maxHeight: '450px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.5',
+      color: '#cbd5e1'
+    }}>
+{`I need you to create a complete React Native mobile application setup using Expo that will later integrate with cryptocurrency wallets and blockchain features.
+
+The project must be structured for absolute beginners while following production-ready best practices.
+
+====================================================================
+REQUIREMENTS
+====================================================================
+
+1. Initialize a new Expo project with TypeScript support
+   - Use the latest Expo SDK
+   - Include TypeScript configuration
+   - Set up proper folder structure
+
+2. Project Structure:
+   /src
+     /screens     (all app screens)
+     /components  (reusable UI components)
+     /services    (API and blockchain services)
+     /hooks       (custom React hooks)
+     /utils       (helper functions)
+     /types       (TypeScript type definitions)
+
+3. Install and configure essential dependencies:
+   - React Navigation (for screen navigation)
+   - AsyncStorage (for local data persistence)
+   - React Native Safe Area Context
+   - Expo Linear Gradient (for beautiful UIs)
+
+4. Create a basic navigation structure with:
+   - Home Screen
+   - Wallet Screen (placeholder for next step)
+   - Settings Screen
+
+5. Set up a clean, modern UI theme with:
+   - Color palette (primary, secondary, background, text)
+   - Typography system
+   - Spacing constants
+   - Reusable styled components
+
+6. Add placeholder hooks for future blockchain integration:
+   - /src/hooks/useWallet.ts (empty, will be implemented in next step)
+   - /src/services/blockchain.ts (empty, with TODO comments)
+
+7. Include proper error handling and loading states
+
+8. Add comments explaining:
+   - What each folder is for
+   - How to run the project
+   - How to test on iOS/Android
+   - Where blockchain logic will be added
+
+====================================================================
+OUTPUT FORMAT
+====================================================================
+
+Provide:
+
+SECTION 1 — Complete project initialization commands
+- Step-by-step terminal commands to create the project
+- All necessary npm/yarn install commands
+
+SECTION 2 — Full folder structure with all file paths
+
+SECTION 3 — Complete code for all files:
+- app.json configuration
+- tsconfig.json
+- App.tsx (main entry point)
+- All navigation files
+- All screen files with basic UI
+- Theme configuration
+- Placeholder hooks and services
+
+SECTION 4 — Instructions for running the app:
+- How to start the development server
+- How to run on iOS simulator
+- How to run on Android emulator
+- How to run on physical device with Expo Go
+
+No blockchain integration yet.
+No wallet connection yet.
+Just a clean, working mobile app foundation.`}
+    </div>
+
+    {/* Visual Footer */}
+    <div style={{
+        background: '#020617',
+        borderTop: '1px solid #1e293b',
+        padding: '8px 20px',
+        display: 'flex', justifyContent: 'flex-end',
+        alignItems: 'center', gap: '10px'
+    }}>
+        <div style={{width:'8px', height:'8px', background:'#3b82f6', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
+        <span style={{fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'sans-serif', fontWeight: 'bold'}}>
+          SCROLL TO VIEW FULL SETUP GUIDE ↕
+        </span>
+    </div>
+
+  </div>
+</div>

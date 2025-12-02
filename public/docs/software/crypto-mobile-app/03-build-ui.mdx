@@ -1,0 +1,262 @@
+
+# 🎨 Step 3: Build the User Interface
+
+Time to bring everything together with a beautiful, modern UI. This step creates a complete crypto mobile app interface with transaction features, token displays, and smooth animations.
+
+This prompt focuses on creating an intuitive, production-ready interface that feels like a real crypto wallet app.
+
+---
+
+## ⚡ ACTION: BUILD THE COMPLETE UI
+
+**Mission:** Go to your **AI Assistant Interface**. Copy the prompt inside the terminal below and paste it into the chat.
+
+<div style={{
+  background: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 50px -10px rgba(245, 158, 11, 0.5)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+
+    {/* Header Bar */}
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.03)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#f59e0b', borderRadius:'50%',
+            boxShadow:'0 0 12px #f59e0b'
+        }}></div>
+        <span style={{color: '#fbbf24', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.5px'}}>
+          CRYPTO_UI_BUILDER.prompt
+        </span>
+        <span style={{
+            background: 'rgba(239, 68, 68, 0.2)', color: '#fca5a5', fontSize: '0.65rem',
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(239, 68, 68, 0.3)'
+        }}>PRODUCTION UI</span>
+      </div>
+
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #f59e0b, #ef4444)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            display: 'flex', alignItems: 'center', gap: '8px',
+            transition: 'transform 0.1s',
+            boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)'
+        }}
+        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+        onClick={() => {
+            const promptText = document.getElementById('ui-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("UI Build Instructions Copied! 🎨");
+        }}
+      >
+        <span>⚡ COPY PROMPT</span>
+      </button>
+    </div>
+
+    {/* Scrollable Content Area */}
+    <div id="ui-prompt" style={{
+      padding: '24px',
+      maxHeight: '450px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.5',
+      color: '#cbd5e1'
+    }}>
+{`I need you to build a complete, beautiful UI for my crypto mobile app in React Native Expo. The app already has WalletConnect integration working. Now I need professional screens and components that make it feel like a real crypto wallet application.
+
+====================================================================
+REQUIREMENTS
+====================================================================
+
+1. Home Screen Features:
+   - Hero section with gradient background
+   - Wallet balance prominently displayed (large, bold)
+   - USD equivalent value (if possible, use a price API)
+   - Quick action buttons: Send, Receive, Swap
+   - Recent transactions list (with icons and status)
+   - Animated loading states
+   - Pull-to-refresh functionality
+
+2. Send Screen:
+   - Recipient address input with validation
+   - Amount input with max button
+   - Token selector (for future multi-token support)
+   - Transaction fee estimation
+   - Review modal before sending
+   - Success/error animations
+   - Transaction hash display after sending
+
+3. Receive Screen:
+   - QR code generator with user's wallet address
+   - Copy address button with confirmation feedback
+   - Share functionality
+   - Beautiful card design with gradients
+
+4. Transaction History Screen:
+   - Filterable transaction list (all, sent, received)
+   - Each transaction shows:
+     * Amount and direction (+ or -)
+     * Timestamp (formatted as "2 hours ago", etc.)
+     * Status badge (success, pending, failed)
+     * Transaction hash (truncated)
+   - Tap to view on block explorer
+   - Empty state when no transactions
+
+5. Profile/Settings Screen:
+   - Wallet address display with copy button
+   - Network selector (with COTI Testnet highlighted)
+   - Disconnect wallet button
+   - App version and info
+   - Clean, organized layout
+
+6. Reusable Components to Create:
+   - GradientCard (container with gradient background)
+   - ActionButton (for primary actions)
+   - TransactionItem (list item for transactions)
+   - BalanceDisplay (animated balance component)
+   - LoadingSpinner (custom animated loader)
+   - ErrorBoundary (for error handling)
+   - SuccessModal (celebration animation)
+
+7. Animations & Polish:
+   - Fade-in animations for screens
+   - Slide-in animations for modals
+   - Haptic feedback on button presses
+   - Smooth transitions between screens
+   - Loading skeletons for async data
+   - Success confetti or animation for transactions
+
+8. Design System:
+   - Consistent color palette (dark theme with accent colors)
+   - Typography scale (heading, body, caption sizes)
+   - Spacing system (4, 8, 16, 24, 32px)
+   - Border radius (small, medium, large)
+   - Shadow styles
+   - Gradient presets
+
+9. Integration with existing wallet hook:
+   - Use the useWallet hook from previous step
+   - Show connection state throughout app
+   - Handle wallet disconnection gracefully
+   - Update balance when transactions complete
+
+10. Error Handling:
+    - Network errors
+    - Invalid addresses
+    - Insufficient balance
+    - Transaction failures
+    - User-friendly error messages
+
+====================================================================
+OUTPUT FORMAT
+====================================================================
+
+Provide:
+
+SECTION 1 — Additional dependencies needed
+- Animation libraries (reanimated, etc.)
+- Icon libraries
+- Any UI libraries
+- QR code generator
+- Installation commands
+
+SECTION 2 — Design System
+- colors.ts (complete color palette)
+- typography.ts
+- spacing.ts
+- Complete theme configuration
+
+SECTION 3 — Reusable Components
+- Full code for each component
+- TypeScript props interfaces
+- Styling
+
+SECTION 4 — All Screen Implementations
+- HomeScreen.tsx
+- SendScreen.tsx
+- ReceiveScreen.tsx
+- TransactionHistoryScreen.tsx
+- SettingsScreen.tsx
+
+SECTION 5 — Navigation Updates
+- Add all new screens to navigation
+- Bottom tab navigator
+- Stack navigator for modals
+
+SECTION 6 — Utility Functions
+- formatAddress (truncate address)
+- formatBalance (display with decimals)
+- formatTimestamp (relative time)
+- copyToClipboard
+- openExplorer
+
+SECTION 7 — Testing Guide
+- How to test each screen
+- How to test with/without wallet connected
+- How to test transaction flows
+
+Make it visually stunning.
+Make it feel like a real crypto app.
+Keep code clean and well-commented.`}
+    </div>
+
+    {/* Visual Footer */}
+    <div style={{
+        background: '#020617',
+        borderTop: '1px solid #1e293b',
+        padding: '8px 20px',
+        display: 'flex', justifyContent: 'flex-end',
+        alignItems: 'center', gap: '10px'
+    }}>
+        <div style={{width:'8px', height:'8px', background:'#f59e0b', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
+        <span style={{fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'sans-serif', fontWeight: 'bold'}}>
+          SCROLL TO VIEW COMPLETE UI SPECIFICATIONS ↕
+        </span>
+    </div>
+
+  </div>
+</div>
+
+---
+
+## 🎉 Congratulations!
+
+You've built a complete crypto mobile app from scratch! You now have:
+
+- A professional React Native app with Expo
+- WalletConnect integration for multiple wallets
+- Beautiful, modern UI that rivals production apps
+- Transaction sending and receiving capabilities
+- Real blockchain interaction with COTI network
+
+### Next Steps:
+
+- Add more tokens to your app
+- Implement token swapping features
+- Add price charts and analytics
+- Deploy to App Store / Play Store
+- Share your creation with the world!

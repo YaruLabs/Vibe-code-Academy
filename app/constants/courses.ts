@@ -81,6 +81,26 @@ export const courses: Course[] = [
     title: "Software Tools",
     description: "Worflows",
     category: "software",
-    prompts: []
+    prompts: [
+      {
+        id: 1,
+        title: "Build a crypto Mobile App",
+        image: "/images/image3.jpg",
+        mdxPages: [
+          "/docs/software/crypto-mobile-app/01-setup-mobile-environment.mdx",
+          "/docs/software/crypto-mobile-app/02-create-wallet-integration.mdx",
+          "/docs/software/crypto-mobile-app/03-build-ui.mdx"
+        ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io",
+        demoUrl: "https://coti.io",
+        recommendedAI: ["cotiMcp", "v0"],
+        difficulty: "absolute-beginner",
+        welcome: {
+          title: "Build Your First Crypto Mobile App",
+          description: "Learn how to create a mobile application with cryptocurrency wallet integration and blockchain interactions from scratch."
+        }
+      }
+    ]
   }
 ];
