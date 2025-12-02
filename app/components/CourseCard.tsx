@@ -573,11 +573,10 @@ export default function CourseCard({ image, title, description, prompts, categor
                 </button>
 
                 <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">
-                  {/* Keyboard hint */}
                   <div className="mb-3 flex items-center justify-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
-                    <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 rounded font-mono">←</kbd>
-                    <span>Navigate</span>
-                    <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 rounded font-mono">→</kbd>
+                    <span className="text-xs text-zinc-500 dark:text-zinc-400 text-center max-w-[120px] truncate">
+                        {extractTitleFromMdxPath(selectedPrompt.mdxPages[currentPageIndex])}
+                    </span>
                   </div>
 
                   <div className="flex items-center justify-between gap-2">
@@ -595,9 +594,6 @@ export default function CourseCard({ image, title, description, prompts, categor
                     <div className="flex flex-col items-center gap-1">
                       <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
                         {currentPageIndex + 1} / {selectedPrompt.mdxPages.length}
-                      </span>
-                      <span className="text-xs text-zinc-500 dark:text-zinc-400 text-center max-w-[120px] truncate">
-                        {extractTitleFromMdxPath(selectedPrompt.mdxPages[currentPageIndex])}
                       </span>
                     </div>
 
