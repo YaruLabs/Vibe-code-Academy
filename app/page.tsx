@@ -4,8 +4,8 @@ import { courses } from "./constants/courses";
 
 export default function Home() {
   return (
-    <div className="h-[calc(100vh-4rem)] bg-zinc-50 dark:bg-zinc-950 p-2 sm:p-4">
-      <div className="h-full grid grid-cols-1 sm:grid-cols-2 grid-rows-4 sm:grid-rows-2 gap-2 sm:gap-4">
+    <div className="min-h-screen h-screen bg-zinc-50 dark:bg-zinc-950 p-2 sm:p-3 md:p-4 lg:p-6">
+      <div className="h-full w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 auto-rows-fr gap-2 sm:gap-3 md:gap-4 lg:gap-6">
         <HeroSection />
 
         {courses.map((course) => (
