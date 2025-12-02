@@ -163,6 +163,22 @@ export default function CourseCard({ image, title, description, prompts, categor
     }
   }, [selectedPrompt]);
 
+  // Keyboard navigation
+  useEffect(() => {
+    if (!selectedPrompt || showWelcome) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft' && currentPageIndex > 0) {
+        handlePreviousPage();
+      } else if (e.key === 'ArrowRight' && currentPageIndex < selectedPrompt.mdxPages.length - 1) {
+        handleNextPage();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedPrompt, currentPageIndex, showWelcome]);
+
   const courseCardPreview = (
     <div className="relative rounded-xl sm:rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-[1.02] h-full w-full cursor-pointer">
       <Image
@@ -557,43 +573,55 @@ export default function CourseCard({ image, title, description, prompts, categor
                 </button>
 
                 <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">
+                  {/* Keyboard hint */}
+                  <div className="mb-3 flex items-center justify-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+                    <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 rounded font-mono">←</kbd>
+                    <span>Navigate</span>
+                    <kbd className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 rounded font-mono">→</kbd>
+                  </div>
+
                   <div className="flex items-center justify-between gap-2">
                     <button
                       onClick={handlePreviousPage}
                       disabled={currentPageIndex === 0}
-                      className="p-2 rounded-lg bg-white dark:bg-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border-2 border-zinc-200 dark:border-zinc-700"
-                      title="Previous page"
+                      className="group relative p-3 rounded-xl bg-white dark:bg-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 border-2 border-zinc-200 dark:border-zinc-700 hover:scale-105 hover:shadow-md active:scale-95 disabled:hover:scale-100"
+                      title="Previous page (←)"
                     >
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" className="group-hover:-translate-x-0.5 transition-transform duration-200">
                         <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </button>
 
-                    <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                      {currentPageIndex + 1} / {selectedPrompt.mdxPages.length}
-                    </span>
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
+                        {currentPageIndex + 1} / {selectedPrompt.mdxPages.length}
+                      </span>
+                      <span className="text-xs text-zinc-500 dark:text-zinc-400 text-center max-w-[120px] truncate">
+                        {extractTitleFromMdxPath(selectedPrompt.mdxPages[currentPageIndex])}
+                      </span>
+                    </div>
 
                     <button
                       onClick={handleNextPage}
                       disabled={currentPageIndex === selectedPrompt.mdxPages.length - 1}
-                      className="p-2 rounded-lg bg-white dark:bg-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border-2 border-zinc-200 dark:border-zinc-700"
-                      title="Next page"
+                      className="group relative p-3 rounded-xl bg-white dark:bg-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 border-2 border-zinc-200 dark:border-zinc-700 hover:scale-105 hover:shadow-md active:scale-95 disabled:hover:scale-100"
+                      title="Next page (→)"
                     >
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" className="group-hover:translate-x-0.5 transition-transform duration-200">
                         <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </button>
                   </div>
 
-                  <div className="mt-3 flex gap-1 justify-center">
+                  <div className="mt-4 flex gap-1.5 justify-center">
                     {selectedPrompt.mdxPages.map((_, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentPageIndex(index)}
-                        className={`h-1.5 rounded-full transition-all ${
+                        className={`h-2 rounded-full transition-all duration-300 hover:scale-110 ${
                           index === currentPageIndex
-                            ? 'w-8 bg-zinc-900 dark:bg-zinc-100'
-                            : 'w-1.5 bg-zinc-300 dark:bg-zinc-600 hover:bg-zinc-400 dark:hover:bg-zinc-500'
+                            ? `w-10 ${categoryAccents[category]}`
+                            : 'w-2 bg-zinc-300 dark:bg-zinc-600 hover:bg-zinc-400 dark:hover:bg-zinc-500'
                         }`}
                         title={`Go to page ${index + 1}`}
                       />
