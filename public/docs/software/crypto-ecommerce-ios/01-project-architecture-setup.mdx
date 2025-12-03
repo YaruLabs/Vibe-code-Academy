@@ -1,0 +1,462 @@
+
+# 🏗️ Phase 1: iOS Project Architecture & Foundation
+
+We're building an **enterprise-grade e-commerce platform** with blockchain payments. This phase establishes a solid foundation using **Clean Architecture**, **MVVM pattern**, and **SwiftUI best practices**.
+
+This approach ensures scalability, testability, and maintainability for production deployment.
+
+---
+
+## ⚡ ACTION: ARCHITECT THE iOS PROJECT
+
+**Mission:** Use your **AI Assistant** (Claude recommended). Copy the prompt below and paste it into the chat.
+
+<div style={{
+  background: 'linear-gradient(135deg, #1e40af, #7c3aed)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 60px -15px rgba(30, 64, 175, 0.6)'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+
+    {/* Header Bar */}
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#1e40af', borderRadius:'50%',
+            boxShadow:'0 0 12px #1e40af'
+        }}></div>
+        <span style={{color: '#60a5fa', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.5px'}}>
+          SWIFT_ECOMMERCE_ARCHITECT.prompt
+        </span>
+        <span style={{
+            background: 'rgba(124, 58, 237, 0.2)', color: '#c4b5fd', fontSize: '0.65rem',
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(124, 58, 237, 0.3)'
+        }}>CLEAN ARCHITECTURE</span>
+      </div>
+
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #1e40af, #7c3aed)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            display: 'flex', alignItems: 'center', gap: '8px',
+            transition: 'transform 0.1s',
+            boxShadow: '0 4px 12px rgba(30, 64, 175, 0.4)'
+        }}
+        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+        onClick={() => {
+            const promptText = document.getElementById('architecture-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("iOS Architecture Blueprint Copied! 🏗️");
+        }}
+      >
+        <span>⚡ COPY ARCHITECTURE PROMPT</span>
+      </button>
+    </div>
+
+    {/* Scrollable Content Area */}
+    <div id="architecture-prompt" style={{
+      padding: '24px',
+      maxHeight: '500px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`You are a senior iOS architect specializing in SwiftUI, Clean Architecture, and blockchain integration. Your task is to create a complete, production-ready iOS e-commerce application architecture that accepts cryptocurrency payments via COTI blockchain.
+
+====================================================================
+🎯 PROJECT REQUIREMENTS
+====================================================================
+
+Application Type: Native iOS E-Commerce Platform with Crypto Payments
+Target iOS Version: iOS 16.0+
+Architecture Pattern: Clean Architecture + MVVM
+UI Framework: SwiftUI
+Blockchain: COTI Testnet (EVM-compatible)
+Payment Methods: COTI tokens (native and custom ERC20)
+
+====================================================================
+📐 ARCHITECTURE LAYERS (STRICT SEPARATION)
+====================================================================
+
+1. DOMAIN LAYER (Business Logic - Framework Independent)
+   - Entities: Product, Order, User, Transaction, Wallet
+   - Use Cases:
+     * GetProductsUseCase
+     * AddToCartUseCase
+     * ProcessPaymentUseCase
+     * ConnectWalletUseCase
+     * TrackOrderUseCase
+   - Repository Protocols (interfaces only)
+   - No UIKit, no SwiftUI, no third-party dependencies
+
+2. DATA LAYER (Implementations)
+   - Repository Implementations
+   - Network Service (REST API for product catalog)
+   - Blockchain Service (Web3, smart contract interactions)
+   - Local Storage (UserDefaults, CoreData for cart)
+   - DTOs and Mappers (API models → Domain entities)
+
+3. PRESENTATION LAYER (SwiftUI Views + ViewModels)
+   - Views: Pure SwiftUI, no business logic
+   - ViewModels: ObservableObject, handle UI state
+   - Coordinators/Routers: Navigation logic
+   - ViewModels communicate with Use Cases only
+
+====================================================================
+📁 REQUIRED FOLDER STRUCTURE
+====================================================================
+
+CryptoStore/
+├── App/
+│   ├── CryptoStoreApp.swift
+│   └── AppCoordinator.swift
+├── Domain/
+│   ├── Entities/
+│   │   ├── Product.swift
+│   │   ├── Order.swift
+│   │   ├── CartItem.swift
+│   │   ├── User.swift
+│   │   ├── Wallet.swift
+│   │   └── PaymentTransaction.swift
+│   ├── UseCases/
+│   │   ├── Products/
+│   │   │   ├── GetProductsUseCase.swift
+│   │   │   └── GetProductDetailsUseCase.swift
+│   │   ├── Cart/
+│   │   │   ├── AddToCartUseCase.swift
+│   │   │   ├── RemoveFromCartUseCase.swift
+│   │   │   └── GetCartUseCase.swift
+│   │   ├── Payment/
+│   │   │   ├── ProcessPaymentUseCase.swift
+│   │   │   ├── VerifyPaymentUseCase.swift
+│   │   │   └── GetPaymentStatusUseCase.swift
+│   │   └── Wallet/
+│   │       ├── ConnectWalletUseCase.swift
+│   │       ├── GetBalanceUseCase.swift
+│   │       └── DisconnectWalletUseCase.swift
+│   └── RepositoryProtocols/
+│       ├── ProductRepositoryProtocol.swift
+│       ├── OrderRepositoryProtocol.swift
+│       ├── WalletRepositoryProtocol.swift
+│       └── PaymentRepositoryProtocol.swift
+├── Data/
+│   ├── Repositories/
+│   │   ├── ProductRepository.swift
+│   │   ├── OrderRepository.swift
+│   │   ├── WalletRepository.swift
+│   │   └── PaymentRepository.swift
+│   ├── Network/
+│   │   ├── APIClient.swift
+│   │   ├── Endpoints.swift
+│   │   └── DTOs/
+│   │       ├── ProductDTO.swift
+│   │       └── OrderDTO.swift
+│   ├── Blockchain/
+│   │   ├── Web3Manager.swift
+│   │   ├── ContractManager.swift
+│   │   ├── TransactionManager.swift
+│   │   └── WalletConnectManager.swift
+│   └── Local/
+│       ├── CartStorageService.swift
+│       └── UserDefaultsManager.swift
+├── Presentation/
+│   ├── Screens/
+│   │   ├── Home/
+│   │   │   ├── HomeView.swift
+│   │   │   └── HomeViewModel.swift
+│   │   ├── ProductCatalog/
+│   │   │   ├── ProductCatalogView.swift
+│   │   │   ├── ProductCatalogViewModel.swift
+│   │   │   ├── ProductCardView.swift
+│   │   │   └── ProductDetailView.swift
+│   │   ├── Cart/
+│   │   │   ├── CartView.swift
+│   │   │   ├── CartViewModel.swift
+│   │   │   └── CartItemRowView.swift
+│   │   ├── Checkout/
+│   │   │   ├── CheckoutView.swift
+│   │   │   ├── CheckoutViewModel.swift
+│   │   │   └── PaymentConfirmationView.swift
+│   │   ├── Wallet/
+│   │   │   ├── WalletView.swift
+│   │   │   ├── WalletViewModel.swift
+│   │   │   └── WalletConnectView.swift
+│   │   └── Orders/
+│   │       ├── OrderHistoryView.swift
+│   │       ├── OrderHistoryViewModel.swift
+│   │       └── OrderDetailView.swift
+│   ├── Components/
+│   │   ├── LoadingView.swift
+│   │   ├── ErrorView.swift
+│   │   ├── EmptyStateView.swift
+│   │   ├── PriceTagView.swift
+│   │   └── CryptoBalanceView.swift
+│   └── Navigation/
+│       └── AppNavigationCoordinator.swift
+├── Core/
+│   ├── DependencyInjection/
+│   │   └── DIContainer.swift
+│   ├── Extensions/
+│   │   ├── String+Extensions.swift
+│   │   ├── Double+Extensions.swift
+│   │   └── Color+Extensions.swift
+│   ├── Constants/
+│   │   ├── AppConstants.swift
+│   │   └── BlockchainConstants.swift
+│   └── Utilities/
+│       ├── Logger.swift
+│       └── FormatHelper.swift
+└── Resources/
+    ├── Assets.xcassets
+    └── Info.plist
+
+====================================================================
+🔧 DEPENDENCIES (SPM - Swift Package Manager)
+====================================================================
+
+REQUIRED packages to add via Xcode:
+1. web3.swift - Blockchain interactions
+   https://github.com/argentlabs/web3.swift
+2. WalletConnectSwiftV2 - Wallet connection
+   https://github.com/WalletConnect/WalletConnectSwiftV2
+3. BigInt - Large number handling for crypto
+   https://github.com/attaswift/BigInt
+
+====================================================================
+📝 CODE REQUIREMENTS
+====================================================================
+
+SECTION 1 - Domain Entities (Examples)
+
+Product Entity must include:
+- id: UUID
+- name: String
+- description: String
+- priceInCOTI: Decimal
+- priceInUSD: Decimal (for display)
+- imageURL: URL
+- category: ProductCategory enum
+- stockQuantity: Int
+- isAvailable: Bool
+
+Order Entity must include:
+- id: UUID
+- userId: String
+- items: [CartItem]
+- totalAmount: Decimal
+- paymentStatus: PaymentStatus enum
+- transactionHash: String?
+- timestamp: Date
+- deliveryAddress: Address?
+
+SECTION 2 - Use Cases (Protocol-Oriented)
+
+Each use case must:
+- Be a protocol with execute() method
+- Have a concrete implementation
+- Inject repository dependencies via initializer
+- Return Result<Success, Error> type
+- Be fully testable (mockable repositories)
+
+Example structure:
+protocol GetProductsUseCase {
+    func execute() async throws -> [Product]
+}
+
+SECTION 3 - ViewModels (ObservableObject)
+
+Each ViewModel must:
+- Conform to ObservableObject
+- Use @Published for state properties
+- Inject use cases via initializer
+- Handle loading, error, and success states
+- Use async/await for asynchronous operations
+- Never import Foundation types into Domain layer
+
+SECTION 4 - SwiftUI Views
+
+Must follow:
+- Single Responsibility Principle
+- Extract subviews for complex UI
+- Use @StateObject for owned ViewModels
+- Use @EnvironmentObject for shared state
+- Implement proper accessibility labels
+- Support Dark Mode
+- Use SF Symbols for icons
+
+SECTION 5 - Dependency Injection Container
+
+Create a DIContainer that:
+- Registers all repositories
+- Registers all use cases
+- Provides factory methods
+- Supports lazy initialization
+- Enables easy testing with mocks
+
+====================================================================
+🎨 UI/UX REQUIREMENTS
+====================================================================
+
+Design System:
+- Color Palette: Modern, crypto-themed (blues, purples, dark mode friendly)
+- Typography: SF Pro (system font), clear hierarchy
+- Spacing: 8pt grid system
+- Corner Radius: Consistent (8pt, 12pt, 16pt)
+- Shadows: Subtle depth
+- Animations: Smooth, 0.3s default duration
+
+Key Screens Layout:
+1. Home: Featured products, categories, wallet connection status
+2. Product Catalog: Grid layout, filters, search
+3. Product Detail: Large image, description, price in COTI, add to cart
+4. Cart: List of items, quantities, total in COTI, checkout button
+5. Checkout: Order summary, wallet connection, payment confirmation
+6. Wallet: Balance, connected wallet address, transaction history
+
+====================================================================
+🔒 SECURITY & BEST PRACTICES
+====================================================================
+
+1. Never store private keys in the app
+2. Use WalletConnect for secure wallet connections
+3. Validate all user inputs
+4. Handle blockchain errors gracefully
+5. Implement proper error messages for users
+6. Use HTTPS for all API calls
+7. Sanitize data before displaying
+8. Implement rate limiting for API calls
+
+====================================================================
+🧪 TESTING CONSIDERATIONS
+====================================================================
+
+Structure must support:
+- Unit tests for ViewModels (inject mock use cases)
+- Unit tests for Use Cases (inject mock repositories)
+- UI tests for critical flows
+- Integration tests for blockchain interactions
+- Mock implementations for all protocols
+
+====================================================================
+📤 DELIVERABLES
+====================================================================
+
+You must provide:
+
+1. Complete Xcode project structure (folder organization)
+2. Full implementation of:
+   - All Domain entities
+   - All Use Case protocols and implementations
+   - All Repository protocols
+   - DIContainer with dependency graph
+   - At least 3 complete screen implementations (Home, ProductCatalog, Cart)
+   - ViewModels for those screens
+   - Reusable SwiftUI components
+3. SPM package dependencies list
+4. Constants file with COTI blockchain configuration:
+   - RPC URL: https://testnet.coti.io/rpc
+   - Chain ID: 7082400 (0x6c11a0)
+   - Block Explorer: https://testnet.cotiscan.io
+5. README with:
+   - Setup instructions
+   - Architecture explanation
+   - How to run the project
+   - How blockchain integration works
+
+====================================================================
+🚫 STRICT RULES - DO NOT
+====================================================================
+
+- Do NOT put business logic in Views or ViewModels
+- Do NOT import UIKit unless absolutely necessary
+- Do NOT use singletons (use DI instead)
+- Do NOT hardcode blockchain addresses (use constants)
+- Do NOT skip error handling
+- Do NOT create God objects (keep classes focused)
+- Do NOT ignore memory management (use weak references where needed)
+
+====================================================================
+✅ VALIDATION CHECKLIST
+====================================================================
+
+Before delivering, ensure:
+✓ All layers are properly separated
+✓ Dependencies only flow inward (Domain ← Data ← Presentation)
+✓ No circular dependencies
+✓ All protocols defined before implementations
+✓ ViewModels are testable
+✓ UI is responsive and supports all iPhone sizes
+✓ Dark mode works correctly
+✓ Code is documented with comments
+✓ No force unwraps (use guard/if let)
+✓ Async code uses async/await (not callbacks)
+
+====================================================================
+🎯 EXPECTED OUTPUT FORMAT
+====================================================================
+
+Provide code in sections:
+1. Project Structure (text tree)
+2. Domain Layer Code (all files)
+3. Data Layer Code (repository implementations)
+4. Presentation Layer Code (views + viewmodels)
+5. Core/DI Code
+6. Setup Instructions
+
+Use clean, production-ready Swift code with proper naming conventions.`}
+    </div>
+
+    {/* Visual Footer */}
+    <div style={{
+        background: '#020617',
+        borderTop: '1px solid #1e293b',
+        padding: '8px 20px',
+        display: 'flex', justifyContent: 'flex-end',
+        alignItems: 'center', gap: '10px'
+    }}>
+        <div style={{width:'8px', height:'8px', background:'#1e40af', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
+        <span style={{fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'sans-serif', fontWeight: 'bold'}}>
+          SCROLL TO VIEW COMPLETE ARCHITECTURE SPECS ↕
+        </span>
+    </div>
+
+  </div>
+</div>
+
+---
+
+## 🎓 What You'll Build
+
+After completing this phase, you'll have:
+
+- ✅ **Clean Architecture Foundation** - Properly separated layers
+- ✅ **MVVM Pattern** - Testable ViewModels
+- ✅ **Dependency Injection** - Scalable, maintainable code
+- ✅ **Core Screens** - Home, Catalog, Cart with full functionality
+- ✅ **Blockchain Setup** - COTI integration ready
+- ✅ **Production Structure** - Ready for App Store deployment

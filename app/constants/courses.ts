@@ -100,6 +100,28 @@ export const courses: Course[] = [
           title: "Build Your First Crypto Mobile App",
           description: "Learn how to create a mobile application with cryptocurrency wallet integration and blockchain interactions from scratch."
         }
+      },
+      {
+        id: 2,
+        title: "Build a Crypto E-Commerce iOS App",
+        image: "/images/image3.jpg",
+        mdxPages: [
+          "/docs/software/crypto-ecommerce-ios/01-project-architecture-setup.mdx",
+          "/docs/software/crypto-ecommerce-ios/02-smart-contracts-deployment.mdx",
+          "/docs/software/crypto-ecommerce-ios/03-product-catalog-ui.mdx",
+          "/docs/software/crypto-ecommerce-ios/04-wallet-integration.mdx",
+          "/docs/software/crypto-ecommerce-ios/05-payment-flow.mdx",
+          "/docs/software/crypto-ecommerce-ios/06-order-management.mdx"
+        ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io",
+        demoUrl: "https://coti.io",
+        recommendedAI: ["cotiMcp", "claude"],
+        difficulty: "advance",
+        welcome: {
+          title: "Build a Production-Ready Crypto E-Commerce Platform",
+          description: "Master the complete development of a professional iOS e-commerce app with COTI blockchain payments, smart contracts, and enterprise-grade architecture."
+        }
       }
     ]
   }

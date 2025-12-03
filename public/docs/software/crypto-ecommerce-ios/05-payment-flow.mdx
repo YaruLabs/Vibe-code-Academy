@@ -1,0 +1,814 @@
+
+# 💳 Phase 5: Payment Flow & Transaction Processing
+
+Implementing the **complete payment pipeline** from checkout to blockchain confirmation. This phase handles transaction signing, gas estimation, payment escrow, and real-time status tracking with COTI blockchain.
+
+Enterprise-grade payment processing with retry logic, error recovery, and transaction monitoring.
+
+---
+
+## ⚡ ACTION: BUILD PAYMENT SYSTEM
+
+**Mission:** Use **Claude** or **COTI MCP**. Copy the prompt below and paste it into the chat.
+
+<div style={{
+  background: 'linear-gradient(135deg, #0891b2, #6366f1)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 60px -15px rgba(8, 145, 178, 0.6)'
+}}>
+  <div style={{
+    background: '#0a1220',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+
+    {/* Header Bar */}
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#0891b2', borderRadius:'50%',
+            boxShadow:'0 0 12px #0891b2'
+        }}></div>
+        <span style={{color: '#67e8f9', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.5px'}}>
+          PAYMENT_PROCESSOR.swift
+        </span>
+        <span style={{
+            background: 'rgba(99, 102, 241, 0.2)', color: '#a5b4fc', fontSize: '0.65rem',
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(99, 102, 241, 0.3)'
+        }}>ESCROW + MONITORING</span>
+      </div>
+
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #0891b2, #6366f1)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            display: 'flex', alignItems: 'center', gap: '8px',
+            transition: 'transform 0.1s',
+            boxShadow: '0 4px 12px rgba(8, 145, 178, 0.4)'
+        }}
+        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+        onClick={() => {
+            const promptText = document.getElementById('payment-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Payment System Blueprint Copied! 💳");
+        }}
+      >
+        <span>⚡ COPY PAYMENT PROMPT</span>
+      </button>
+    </div>
+
+    {/* Scrollable Content Area */}
+    <div id="payment-prompt" style={{
+      padding: '24px',
+      maxHeight: '500px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`You are a blockchain payment systems architect specializing in iOS, Web3 transactions, and secure e-commerce flows. Your task is to implement a complete, production-ready payment processing system for a crypto e-commerce app on COTI blockchain.
+
+====================================================================
+🎯 PAYMENT FLOW REQUIREMENTS
+====================================================================
+
+Payment Methods:
+1. Native COTI (direct transfer to escrow contract)
+2. Store Token (ERC20 CST transfer to escrow)
+
+Flow Steps:
+1. User selects items, proceeds to checkout
+2. System creates order on-chain (OrderManager contract)
+3. Calculate total including platform fee
+4. Request wallet approval for token transfer
+5. Execute payment to PaymentEscrow contract
+6. Monitor transaction confirmation
+7. Update order status on confirmation
+8. Display success/failure to user
+
+Critical Features:
+- Gas estimation before transaction
+- Retry logic for failed transactions
+- Real-time transaction monitoring
+- Escrow fund locking
+- Payment verification
+- Refund handling
+
+====================================================================
+📐 ARCHITECTURE LAYERS
+====================================================================
+
+1. TransactionManager
+   - Builds transactions
+   - Estimates gas
+   - Signs via WalletConnect
+   - Monitors confirmations
+
+2. PaymentService
+   - Orchestrates payment flow
+   - Interacts with smart contracts
+   - Handles state transitions
+
+3. PaymentRepository (implements PaymentRepositoryProtocol)
+   - Domain layer interface
+   - Returns domain entities
+   - Coordinates TransactionManager + PaymentService
+
+4. CheckoutViewModel
+   - UI state management
+   - Calls ProcessPaymentUseCase
+   - Shows loading/success/error states
+
+====================================================================
+📝 IMPLEMENTATION: TransactionManager
+====================================================================
+
+import Foundation
+import web3
+import BigInt
+import WalletConnectSign
+
+class TransactionManager {
+    private let web3Manager = Web3Manager()
+    private let walletManager = WalletConnectionManager.shared
+
+    // MARK: - Gas Estimation
+
+    func estimateGas(
+        to: EthereumAddress,
+        value: BigUInt,
+        data: Data?
+    ) async throws -> BigUInt {
+        guard let fromAddress = getConnectedAddress() else {
+            throw TransactionError.walletNotConnected
+        }
+
+        let transaction = EthereumTransaction(
+            from: fromAddress,
+            to: to,
+            value: value,
+            data: data ?? Data(),
+            nonce: try await getCurrentNonce(for: fromAddress),
+            gasPrice: try await web3Manager.getCurrentGasPrice(),
+            gasLimit: 0, // Will be estimated
+            chainId: 7082400
+        )
+
+        let estimatedGas = try await web3Manager.estimateGas(transaction: transaction)
+
+        // Add 20% buffer for safety
+        return estimatedGas * 120 / 100
+    }
+
+    // MARK: - Transaction Building
+
+    func buildPaymentTransaction(
+        escrowAddress: String,
+        orderId: BigUInt,
+        amount: BigUInt,
+        useNativeCOTI: Bool
+    ) async throws -> EthereumTransaction {
+        guard let from = getConnectedAddress() else {
+            throw TransactionError.walletNotConnected
+        }
+
+        let escrowAddr = try EthereumAddress(hex: escrowAddress, eip55: true)
+
+        if useNativeCOTI {
+            // Native COTI transfer with createPayment call
+            let data = encodeCreatePaymentCall(orderId: orderId, amount: amount, useNative: true)
+
+            return EthereumTransaction(
+                from: from,
+                to: escrowAddr,
+                value: amount,
+                data: data,
+                nonce: try await getCurrentNonce(for: from),
+                gasPrice: try await web3Manager.getCurrentGasPrice(),
+                gasLimit: try await estimateGas(to: escrowAddr, value: amount, data: data),
+                chainId: 7082400
+            )
+        } else {
+            // ERC20 token transfer (approve + createPayment)
+            // First, approve escrow to spend tokens
+            let data = encodeCreatePaymentCall(orderId: orderId, amount: amount, useNative: false)
+
+            return EthereumTransaction(
+                from: from,
+                to: escrowAddr,
+                value: 0,
+                data: data,
+                nonce: try await getCurrentNonce(for: from),
+                gasPrice: try await web3Manager.getCurrentGasPrice(),
+                gasLimit: try await estimateGas(to: escrowAddr, value: 0, data: data),
+                chainId: 7082400
+            )
+        }
+    }
+
+    // MARK: - Transaction Signing & Sending
+
+    func signAndSendTransaction(_ transaction: EthereumTransaction) async throws -> String {
+        // Serialize transaction for signing
+        let transactionData = try encodeTransactionForSigning(transaction)
+
+        // Request signature via WalletConnect
+        let signature = try await requestSignature(data: transactionData)
+
+        // Build signed transaction
+        let signedTx = try buildSignedTransaction(transaction, signature: signature)
+
+        // Send to network
+        let txHash = try await sendRawTransaction(signedTx)
+
+        return txHash
+    }
+
+    private func requestSignature(data: Data) async throws -> String {
+        guard let session = walletManager.sessions.first else {
+            throw TransactionError.noActiveSession
+        }
+
+        let method = "eth_sendTransaction"
+        let params = [data.hexString]
+
+        let response = try await Sign.instance.request(
+            params: .init(
+                topic: session.topic,
+                method: method,
+                params: AnyCodable(params),
+                chainId: Blockchain("eip155:7082400")!
+            )
+        )
+
+        // Extract transaction hash from response
+        guard let hashString = response.result.value as? String else {
+            throw TransactionError.invalidResponse
+        }
+
+        return hashString
+    }
+
+    // MARK: - Transaction Monitoring
+
+    func waitForConfirmation(
+        txHash: String,
+        requiredConfirmations: Int = 1,
+        timeout: TimeInterval = 300
+    ) async throws -> TransactionReceipt {
+        let startTime = Date()
+
+        while Date().timeIntervalSince(startTime) < timeout {
+            if let receipt = try? await getTransactionReceipt(txHash: txHash) {
+                if receipt.status == 1 {
+                    return receipt
+                } else {
+                    throw TransactionError.transactionFailed
+                }
+            }
+
+            // Wait 2 seconds before next check
+            try await Task.sleep(nanoseconds: 2_000_000_000)
+        }
+
+        throw TransactionError.confirmationTimeout
+    }
+
+    private func getTransactionReceipt(txHash: String) async throws -> TransactionReceipt {
+        // Implementation using web3.swift
+        // Query eth_getTransactionReceipt
+        return try await withCheckedThrowingContinuation { continuation in
+            // RPC call to get receipt
+        }
+    }
+
+    // MARK: - Helper Methods
+
+    private func getCurrentNonce(for address: EthereumAddress) async throws -> Int {
+        // Get current nonce from network
+        return try await withCheckedThrowingContinuation { continuation in
+            web3Manager.client.eth_getTransactionCount(
+                address: address,
+                block: .latest
+            ) { result in
+                switch result {
+                case .success(let nonce):
+                    continuation.resume(returning: nonce)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    private func getConnectedAddress() -> EthereumAddress? {
+        guard let addressString = walletManager.getAddress() else { return nil }
+        return try? EthereumAddress(hex: addressString, eip55: false)
+    }
+
+    private func encodeCreatePaymentCall(
+        orderId: BigUInt,
+        amount: BigUInt,
+        useNative: Bool
+    ) -> Data {
+        // Encode PaymentEscrow.createPayment(orderId, amount, useNative)
+        let function = EscrowFunctions.createPayment(
+            orderId: orderId,
+            amount: amount,
+            useNativeCOTI: useNative
+        )
+        return function.data
+    }
+}
+
+====================================================================
+📝 IMPLEMENTATION: PaymentService
+====================================================================
+
+class PaymentService {
+    private let transactionManager = TransactionManager()
+    private let orderService: OrderService
+
+    private let escrowAddress = BlockchainConstants.paymentEscrowAddress
+    private let storeTokenAddress = BlockchainConstants.storeTokenAddress
+
+    init(orderService: OrderService) {
+        self.orderService = orderService
+    }
+
+    // MARK: - Payment Processing
+
+    func processPayment(
+        order: Order,
+        paymentMethod: PaymentMethod
+    ) async throws -> PaymentResult {
+        // Step 1: Validate wallet connection
+        guard transactionManager.isWalletConnected else {
+            throw PaymentError.walletNotConnected
+        }
+
+        // Step 2: Validate sufficient balance
+        try await validateBalance(amount: order.totalAmount, method: paymentMethod)
+
+        // Step 3: If using ERC20, approve tokens first
+        if case .storeToken = paymentMethod {
+            try await approveTokens(amount: order.totalAmount)
+        }
+
+        // Step 4: Create order on-chain
+        let orderId = try await orderService.createOnChainOrder(order)
+
+        // Step 5: Build payment transaction
+        let transaction = try await buildPaymentTransaction(
+            orderId: orderId,
+            amount: order.totalAmountInWei,
+            method: paymentMethod
+        )
+
+        // Step 6: Estimate gas
+        let gasEstimate = try await transactionManager.estimateGas(
+            to: transaction.to,
+            value: transaction.value,
+            data: transaction.data
+        )
+
+        // Step 7: Sign and send transaction
+        let txHash = try await transactionManager.signAndSendTransaction(transaction)
+
+        // Step 8: Monitor confirmation
+        let receipt = try await transactionManager.waitForConfirmation(txHash: txHash)
+
+        // Step 9: Extract payment ID from logs
+        let paymentId = try parsePaymentIdFromReceipt(receipt)
+
+        return PaymentResult(
+            transactionHash: txHash,
+            paymentId: paymentId,
+            orderId: orderId,
+            status: .confirmed,
+            gasUsed: receipt.gasUsed
+        )
+    }
+
+    // MARK: - Token Approval (ERC20)
+
+    private func approveTokens(amount: BigUInt) async throws {
+        let approveData = encodeApproveCall(
+            spender: escrowAddress,
+            amount: amount
+        )
+
+        let approveTx = try await transactionManager.buildTransaction(
+            to: storeTokenAddress,
+            value: 0,
+            data: approveData
+        )
+
+        _ = try await transactionManager.signAndSendTransaction(approveTx)
+
+        // Wait for approval confirmation
+        try await Task.sleep(nanoseconds: 3_000_000_000) // 3 seconds
+    }
+
+    // MARK: - Balance Validation
+
+    private func validateBalance(amount: Decimal, method: PaymentMethod) async throws {
+        let balance = try await getCurrentBalance(method: method)
+
+        guard balance >= amount else {
+            throw PaymentError.insufficientBalance(
+                required: amount,
+                available: balance
+            )
+        }
+    }
+
+    private func getCurrentBalance(method: PaymentMethod) async throws -> Decimal {
+        switch method {
+        case .nativeCOTI:
+            return try await web3Manager.getNativeCOTIBalance()
+        case .storeToken:
+            return try await web3Manager.getTokenBalance(tokenAddress: storeTokenAddress)
+        }
+    }
+
+    // MARK: - Receipt Parsing
+
+    private func parsePaymentIdFromReceipt(_ receipt: TransactionReceipt) throws -> BigUInt {
+        // Parse PaymentCreated event from receipt logs
+        // Event signature: PaymentCreated(uint256 indexed paymentId, uint256 orderId, address buyer, uint256 amount)
+        guard let log = receipt.logs.first(where: { $0.topics.first == paymentCreatedEventSignature }) else {
+            throw PaymentError.paymentIdNotFound
+        }
+
+        // Payment ID is first indexed parameter (second topic)
+        let paymentIdHex = log.topics[1]
+        return BigUInt(paymentIdHex.drop0x, radix: 16) ?? 0
+    }
+
+    private var paymentCreatedEventSignature: String {
+        // keccak256("PaymentCreated(uint256,uint256,address,uint256)")
+        "0x..." // Actual event signature hash
+    }
+}
+
+====================================================================
+📱 UI IMPLEMENTATION: CheckoutView
+====================================================================
+
+struct CheckoutView: View {
+    @StateObject var viewModel: CheckoutViewModel
+    @Environment(\.dismiss) var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 24) {
+                    // Order summary section
+                    orderSummarySection
+
+                    // Payment method selector
+                    paymentMethodSection
+
+                    // Gas fee estimate
+                    if let gasFee = viewModel.estimatedGasFee {
+                        gasFeeSection(gasFee)
+                    }
+
+                    // Total section
+                    totalSection
+
+                    // Pay button
+                    payButton
+                }
+                .padding()
+            }
+            .navigationTitle("Checkout")
+            .navigationBarTitleDisplayMode(.inline)
+            .overlay {
+                if viewModel.isProcessing {
+                    processingOverlay
+                }
+            }
+            .sheet(isPresented: $viewModel.showSuccess) {
+                paymentSuccessView
+            }
+            .alert("Payment Failed", isPresented: $viewModel.showError) {
+                Button("Retry") {
+                    Task { await viewModel.retryPayment() }
+                }
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text(viewModel.errorMessage ?? "Unknown error occurred")
+            }
+        }
+    }
+
+    private var payButton: some View {
+        Button {
+            Task {
+                await viewModel.processPayment()
+            }
+        } label: {
+            HStack {
+                if viewModel.isProcessing {
+                    ProgressView()
+                        .tint(.white)
+                }
+                Text(viewModel.isProcessing ? "Processing..." : "Pay \(viewModel.totalCOTI) COTI")
+            }
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(12)
+        }
+        .disabled(viewModel.isProcessing || !viewModel.canProceed)
+    }
+
+    private var processingOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.4)
+                .ignoresSafeArea()
+
+            VStack(spacing: 20) {
+                ProgressView()
+                    .scaleEffect(1.5)
+                    .tint(.white)
+
+                Text(viewModel.processingStatus)
+                    .foregroundColor(.white)
+                    .font(.headline)
+
+                if let txHash = viewModel.currentTransactionHash {
+                    Button("View on Explorer") {
+                        openBlockExplorer(txHash)
+                    }
+                    .buttonStyle(.bordered)
+                }
+            }
+            .padding(40)
+            .background(.ultraThinMaterial)
+            .cornerRadius(20)
+        }
+    }
+
+    private var paymentSuccessView: some View {
+        VStack(spacing: 24) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 80))
+                .foregroundColor(.green)
+
+            Text("Payment Successful!")
+                .font(.title.bold())
+
+            Text("Your order has been placed")
+                .foregroundColor(.secondary)
+
+            if let txHash = viewModel.currentTransactionHash {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Transaction Hash:")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    Text(txHash)
+                        .font(.caption.monospaced())
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+            }
+
+            Button("View Order") {
+                dismiss()
+                // Navigate to order detail
+            }
+            .buttonStyle(.borderedProminent)
+        }
+        .padding()
+    }
+}
+
+====================================================================
+📝 IMPLEMENTATION: CheckoutViewModel
+====================================================================
+
+@MainActor
+class CheckoutViewModel: ObservableObject {
+    @Published var isProcessing = false
+    @Published var processingStatus = "Preparing transaction..."
+    @Published var currentTransactionHash: String?
+    @Published var showSuccess = false
+    @Published var showError = false
+    @Published var errorMessage: String?
+    @Published var estimatedGasFee: Decimal?
+    @Published var selectedPaymentMethod: PaymentMethod = .nativeCOTI
+
+    private let processPaymentUseCase: ProcessPaymentUseCase
+    private let order: Order
+
+    var totalCOTI: String {
+        order.totalAmount.formatted()
+    }
+
+    var canProceed: Bool {
+        !isProcessing && estimatedGasFee != nil
+    }
+
+    init(order: Order, processPaymentUseCase: ProcessPaymentUseCase) {
+        self.order = order
+        self.processPaymentUseCase = processPaymentUseCase
+        Task { await estimateGas() }
+    }
+
+    func processPayment() async {
+        isProcessing = true
+        errorMessage = nil
+
+        do {
+            processingStatus = "Requesting signature..."
+
+            let result = try await processPaymentUseCase.execute(
+                order: order,
+                paymentMethod: selectedPaymentMethod
+            )
+
+            currentTransactionHash = result.transactionHash
+            processingStatus = "Confirming transaction..."
+
+            // Transaction confirmed
+            showSuccess = true
+            isProcessing = false
+
+        } catch let error as PaymentError {
+            handlePaymentError(error)
+        } catch {
+            errorMessage = error.localizedDescription
+            showError = true
+            isProcessing = false
+        }
+    }
+
+    func retryPayment() async {
+        await processPayment()
+    }
+
+    private func estimateGas() async {
+        // Estimate gas for this payment
+        do {
+            estimatedGasFee = try await processPaymentUseCase.estimateGas(
+                order: order,
+                paymentMethod: selectedPaymentMethod
+            )
+        } catch {
+            print("Failed to estimate gas: \(error)")
+        }
+    }
+
+    private func handlePaymentError(_ error: PaymentError) {
+        switch error {
+        case .walletNotConnected:
+            errorMessage = "Please connect your wallet first"
+        case .insufficientBalance(let required, let available):
+            errorMessage = "Insufficient balance. Required: \(required) COTI, Available: \(available) COTI"
+        case .transactionFailed:
+            errorMessage = "Transaction failed. Please try again."
+        case .userRejected:
+            errorMessage = "You rejected the transaction"
+            return // Don't show error alert
+        default:
+            errorMessage = "Payment failed: \(error.localizedDescription)"
+        }
+        showError = true
+        isProcessing = false
+    }
+}
+
+====================================================================
+📤 DELIVERABLES
+====================================================================
+
+Provide complete code for:
+
+1. Services:
+   - TransactionManager.swift
+   - PaymentService.swift
+   - OrderService.swift
+
+2. Repository:
+   - PaymentRepository.swift
+
+3. Use Cases:
+   - ProcessPaymentUseCase.swift
+   - EstimateGasUseCase.swift
+
+4. ViewModels:
+   - CheckoutViewModel.swift
+
+5. Views:
+   - CheckoutView.swift
+   - PaymentMethodSelectorView.swift
+   - TransactionStatusView.swift
+
+6. Models:
+   - PaymentMethod.swift (enum)
+   - PaymentResult.swift
+   - TransactionReceipt.swift
+
+7. Error Handling:
+   - PaymentError.swift (enum with all error cases)
+   - TransactionError.swift
+
+8. Constants:
+   - Event signatures
+   - Contract ABIs for payment functions
+
+9. Testing:
+   - Mock payment flows
+   - Error scenario tests
+   - Gas estimation tests
+
+====================================================================
+🔒 SECURITY CHECKLIST
+====================================================================
+
+✓ Validate all amounts before transaction
+✓ Check network before sending
+✓ Verify contract addresses
+✓ Handle user rejection gracefully
+✓ Never auto-retry failed transactions without user consent
+✓ Display gas fees upfront
+✓ Confirm transaction details with user
+✓ Monitor for stuck transactions
+✓ Implement timeout mechanisms
+✓ Log all transactions for support
+
+====================================================================
+⚡ ERROR RECOVERY
+====================================================================
+
+Implement recovery for:
+- Rejected signature
+- Network timeout
+- Insufficient gas
+- Transaction underpriced
+- Nonce too low
+- Transaction stuck (pending too long)
+- Contract execution reverted
+
+Provide retry logic with exponential backoff for network errors.`}
+    </div>
+
+    {/* Visual Footer */}
+    <div style={{
+        background: '#020617',
+        borderTop: '1px solid #1e293b',
+        padding: '8px 20px',
+        display: 'flex', justifyContent: 'flex-end',
+        alignItems: 'center', gap: '10px'
+    }}>
+        <div style={{width:'8px', height:'8px', background:'#0891b2', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
+        <span style={{fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'sans-serif', fontWeight: 'bold'}}>
+          SCROLL TO VIEW COMPLETE PAYMENT FLOW ↕
+        </span>
+    </div>
+
+  </div>
+</div>
+
+---
+
+## 🎓 What You'll Build
+
+After this phase, you'll have:
+
+- ✅ **Complete Payment Pipeline** - Checkout to confirmation
+- ✅ **Gas Estimation** - Upfront cost transparency
+- ✅ **Transaction Signing** - WalletConnect integration
+- ✅ **Real-Time Monitoring** - Confirmation tracking
+- ✅ **Escrow Integration** - Secure fund locking
+- ✅ **Error Recovery** - Retry logic and fallbacks
+- ✅ **UX Optimization** - Loading states and feedback
+- ✅ **Production Ready** - Battle-tested payment flow

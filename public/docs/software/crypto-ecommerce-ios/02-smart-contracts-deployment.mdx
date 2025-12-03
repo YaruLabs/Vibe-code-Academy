@@ -1,0 +1,436 @@
+
+# 🔐 Phase 2: Smart Contracts Architecture & Deployment
+
+We're building a **secure payment infrastructure** with escrow mechanisms, refunds, and order tracking on COTI blockchain. This ensures trustless e-commerce transactions with full transparency.
+
+This phase creates production-grade smart contracts with gas optimization and security best practices.
+
+---
+
+## ⚡ ACTION: DEPLOY E-COMMERCE SMART CONTRACTS
+
+**Mission:** Use **COTI MCP** or **Claude**. Copy the prompt below and paste it into the chat.
+
+<div style={{
+  background: 'linear-gradient(135deg, #059669, #0891b2)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 60px -15px rgba(5, 150, 105, 0.6)'
+}}>
+  <div style={{
+    background: '#0a1f1a',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+
+    {/* Header Bar */}
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#059669', borderRadius:'50%',
+            boxShadow:'0 0 12px #059669'
+        }}></div>
+        <span style={{color: '#6ee7b7', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.5px'}}>
+          ECOMMERCE_CONTRACTS.sol
+        </span>
+        <span style={{
+            background: 'rgba(8, 145, 178, 0.2)', color: '#67e8f9', fontSize: '0.65rem',
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(8, 145, 178, 0.3)'
+        }}>ESCROW + COTI PRIVACY</span>
+      </div>
+
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #059669, #0891b2)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            display: 'flex', alignItems: 'center', gap: '8px',
+            transition: 'transform 0.1s',
+            boxShadow: '0 4px 12px rgba(5, 150, 105, 0.4)'
+        }}
+        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+        onClick={() => {
+            const promptText = document.getElementById('contracts-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Smart Contract Blueprint Copied! 🔐");
+        }}
+      >
+        <span>⚡ COPY CONTRACTS PROMPT</span>
+      </button>
+    </div>
+
+    {/* Scrollable Content Area */}
+    <div id="contracts-prompt" style={{
+      padding: '24px',
+      maxHeight: '500px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`You are an expert Solidity developer specializing in e-commerce smart contracts, COTI blockchain privacy features, and secure payment protocols. Your task is to create a production-ready smart contract system for a decentralized e-commerce platform.
+
+====================================================================
+🎯 CONTRACT REQUIREMENTS
+====================================================================
+
+Blockchain: COTI Testnet (EVM-compatible)
+Solidity Version: ^0.8.20
+Token Standard: ERC20 (custom COTI store token)
+Payment Features: Escrow, refunds, order tracking
+Privacy: COTI confidential state for sensitive order data
+Security: ReentrancyGuard, Ownable, Pausable
+
+====================================================================
+📐 SMART CONTRACT ARCHITECTURE
+====================================================================
+
+You must create THREE interconnected contracts:
+
+1. StoreToken.sol - Custom ERC20 token for the store
+2. PaymentEscrow.sol - Handles payments, escrow, and refunds
+3. OrderManager.sol - Tracks orders and manages state
+
+====================================================================
+📝 CONTRACT 1: StoreToken.sol
+====================================================================
+
+REQUIREMENTS:
+
+- Standard ERC20 implementation (OpenZeppelin)
+- Name: "CryptoStore Token"
+- Symbol: "CST"
+- Decimals: 18
+- Initial supply: 1,000,000 tokens (minted to deployer)
+- Burnable functionality
+- Pausable (owner can pause transfers)
+- Minting restricted to owner
+- Events for all major actions
+
+FEATURES TO IMPLEMENT:
+
+✓ constructor(address initialOwner)
+✓ mint(address to, uint256 amount) - Owner only
+✓ burn(uint256 amount) - Any holder
+✓ pause() / unpause() - Owner only
+✓ Proper access control using Ownable
+
+USE CASE:
+- Store can mint tokens for promotions
+- Users pay for products with CST or native COTI
+- Tokens can be burned to reduce supply
+
+====================================================================
+📝 CONTRACT 2: PaymentEscrow.sol
+====================================================================
+
+This is the CORE payment contract. Must handle:
+
+STATE VARIABLES:
+
+struct Payment {
+    uint256 orderId;
+    address buyer;
+    address seller;
+    uint256 amount;
+    PaymentStatus status; // Pending, Completed, Refunded, Disputed
+    uint256 createdAt;
+    uint256 completedAt;
+}
+
+mapping(uint256 => Payment) public payments;
+uint256 public paymentCounter;
+address public storeTokenAddress;
+address public platformFeeCollector;
+uint256 public platformFeePercent; // e.g., 250 = 2.5%
+
+REQUIRED FUNCTIONS:
+
+1. createPayment(uint256 orderId, uint256 amount, bool useNativeCOTI)
+   - Transfers tokens/COTI from buyer to escrow
+   - Emits PaymentCreated event
+   - Returns payment ID
+
+2. releasePayment(uint256 paymentId)
+   - Only callable by buyer or admin after order delivery
+   - Transfers funds to seller minus platform fee
+   - Updates payment status to Completed
+   - Emits PaymentReleased event
+
+3. refundPayment(uint256 paymentId)
+   - Only callable by seller or admin
+   - Returns full amount to buyer
+   - Updates payment status to Refunded
+   - Emits PaymentRefunded event
+
+4. disputePayment(uint256 paymentId)
+   - Buyer can dispute if not satisfied
+   - Locks payment until admin resolves
+   - Emits PaymentDisputed event
+
+5. resolveDispute(uint256 paymentId, bool favorBuyer)
+   - Admin only
+   - Either refunds buyer or releases to seller
+   - Emits DisputeResolved event
+
+SECURITY REQUIREMENTS:
+
+- Use ReentrancyGuard for all payment functions
+- Validate order exists before creating payment
+- Prevent double-spending
+- Emit events for all state changes
+- Use SafeERC20 for token transfers
+- Implement emergency pause mechanism
+
+GAS OPTIMIZATION:
+
+- Pack structs efficiently
+- Use uint256 instead of smaller types (unless packing)
+- Minimize storage reads/writes
+- Use memory for temporary data
+
+====================================================================
+📝 CONTRACT 3: OrderManager.sol
+====================================================================
+
+Manages order lifecycle and integrates with PaymentEscrow.
+
+STATE VARIABLES:
+
+struct Order {
+    uint256 id;
+    address buyer;
+    string[] productIds; // Off-chain product IDs
+    uint256 totalAmount;
+    OrderStatus status; // Placed, Paid, Shipped, Delivered, Cancelled
+    uint256 createdAt;
+    uint256 updatedAt;
+    string shippingHash; // IPFS hash or encrypted delivery info
+}
+
+mapping(uint256 => Order) public orders;
+mapping(address => uint256[]) public userOrders;
+uint256 public orderCounter;
+address public paymentEscrowAddress;
+
+REQUIRED FUNCTIONS:
+
+1. createOrder(string[] memory productIds, uint256 totalAmount)
+   - Creates new order
+   - Assigns unique order ID
+   - Sets status to Placed
+   - Emits OrderCreated event
+   - Returns order ID
+
+2. confirmPayment(uint256 orderId, uint256 paymentId)
+   - Links order to payment
+   - Updates status to Paid
+   - Only payment escrow can call
+   - Emits OrderPaid event
+
+3. updateOrderStatus(uint256 orderId, OrderStatus newStatus)
+   - Owner/admin can update shipping status
+   - Validates status transitions (Paid → Shipped → Delivered)
+   - Emits OrderStatusUpdated event
+
+4. cancelOrder(uint256 orderId)
+   - Buyer can cancel if not yet paid
+   - Admin can cancel anytime with refund
+   - Triggers refund in PaymentEscrow if paid
+   - Emits OrderCancelled event
+
+5. getOrdersByBuyer(address buyer)
+   - Returns array of order IDs for a buyer
+   - View function (no gas cost)
+
+PRIVACY FEATURE (COTI-SPECIFIC):
+
+- Use COTI's private state to store sensitive shipping info
+- Only buyer and seller can decrypt delivery address
+- Implement using COTI's confidential storage:
+
+itString private shippingAddress; // COTI private type
+function setShippingAddress(uint256 orderId, itString memory encryptedAddress)
+    external onlyBuyer(orderId)
+
+====================================================================
+🔗 CONTRACT INTEGRATION
+====================================================================
+
+PaymentEscrow must call OrderManager.confirmPayment()
+OrderManager must call PaymentEscrow.refundPayment() when cancelling
+
+Use interface pattern:
+interface IOrderManager {
+    function confirmPayment(uint256 orderId, uint256 paymentId) external;
+}
+
+====================================================================
+🧪 TESTING REQUIREMENTS
+====================================================================
+
+Provide Hardhat test scenarios:
+
+1. StoreToken Tests:
+   - Deployment with correct supply
+   - Minting by owner
+   - Burning tokens
+   - Pause/unpause functionality
+   - Transfer restrictions when paused
+
+2. PaymentEscrow Tests:
+   - Create payment with CST tokens
+   - Create payment with native COTI
+   - Release payment after delivery
+   - Refund payment
+   - Dispute and resolution flow
+   - Platform fee calculation
+   - Reentrancy attack prevention
+
+3. OrderManager Tests:
+   - Create order
+   - Link payment to order
+   - Update order status
+   - Cancel order with refund
+   - Get orders by buyer
+
+4. Integration Tests:
+   - Complete purchase flow: Create order → Pay → Ship → Deliver → Release payment
+   - Refund flow: Create order → Pay → Cancel → Refund
+   - Dispute flow: Create order → Pay → Dispute → Resolve
+
+====================================================================
+🚀 DEPLOYMENT SCRIPT
+====================================================================
+
+Provide Hardhat deployment script that:
+
+1. Deploys StoreToken
+2. Deploys PaymentEscrow with StoreToken address
+3. Deploys OrderManager with PaymentEscrow address
+4. Links contracts (set addresses)
+5. Mints initial tokens
+6. Transfers ownership if needed
+7. Verifies contracts on block explorer
+
+Network Configuration for COTI Testnet:
+- RPC URL: https://testnet.coti.io/rpc
+- Chain ID: 7082400
+- Currency: COTI
+- Explorer: https://testnet.cotiscan.io
+
+====================================================================
+📤 DELIVERABLES
+====================================================================
+
+You must provide:
+
+1. Complete Solidity code for all 3 contracts
+2. Hardhat config with COTI testnet setup
+3. Deployment script with gas estimates
+4. Test suite (minimum 20 test cases)
+5. README with:
+   - Contract addresses (after deployment)
+   - Function documentation
+   - Integration guide for iOS app
+   - ABI files explanation
+6. ABIs in JSON format for iOS integration
+7. Constants file for iOS:
+   - Contract addresses
+   - Function signatures
+   - Event signatures
+
+====================================================================
+🔒 SECURITY CHECKLIST
+====================================================================
+
+Ensure contracts have:
+✓ No reentrancy vulnerabilities
+✓ Access control on all admin functions
+✓ Input validation (non-zero addresses, amounts)
+✓ Overflow protection (Solidity 0.8+)
+✓ Emergency pause mechanism
+✓ No hardcoded private keys
+✓ Events for all state changes
+✓ No unchecked external calls
+✓ Proper error messages
+✓ Gas-efficient code
+
+====================================================================
+⚡ GAS OPTIMIZATION TIPS
+====================================================================
+
+- Use calldata instead of memory for read-only arrays
+- Pack structs (uint256 last, smaller types first)
+- Use ++i instead of i++ in loops
+- Cache array length in loops
+- Use errors instead of require strings (Solidity 0.8.4+)
+- Minimize storage operations
+- Use immutable for constants set in constructor
+
+====================================================================
+📋 EXPECTED OUTPUT FORMAT
+====================================================================
+
+Provide code in this order:
+1. contracts/StoreToken.sol (full code)
+2. contracts/PaymentEscrow.sol (full code)
+3. contracts/OrderManager.sol (full code)
+4. contracts/interfaces/* (all interfaces)
+5. scripts/deploy.js (deployment script)
+6. test/*.test.js (all test files)
+7. hardhat.config.js (network config)
+8. Integration guide for iOS (Markdown)
+
+Use clean, commented code following Solidity style guide.`}
+    </div>
+
+    {/* Visual Footer */}
+    <div style={{
+        background: '#020617',
+        borderTop: '1px solid #1e293b',
+        padding: '8px 20px',
+        display: 'flex', justifyContent: 'flex-end',
+        alignItems: 'center', gap: '10px'
+    }}>
+        <div style={{width:'8px', height:'8px', background:'#059669', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
+        <span style={{fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'sans-serif', fontWeight: 'bold'}}>
+          SCROLL TO VIEW COMPLETE CONTRACT SPECS ↕
+        </span>
+    </div>
+
+  </div>
+</div>
+
+---
+
+## 🎓 What You'll Build
+
+After this phase, you'll have:
+
+- ✅ **Custom ERC20 Token** - Store currency with burn/mint capabilities
+- ✅ **Escrow System** - Secure payments with buyer protection
+- ✅ **Order Tracking** - On-chain order management
+- ✅ **Refund Mechanism** - Automated refund processing
+- ✅ **Dispute Resolution** - Admin-mediated conflict resolution
+- ✅ **COTI Privacy** - Encrypted shipping information
+- ✅ **Full Test Suite** - 20+ test scenarios
+- ✅ **Production Ready** - Audited patterns and gas-optimized

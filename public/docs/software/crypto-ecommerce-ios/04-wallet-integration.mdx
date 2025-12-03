@@ -1,0 +1,680 @@
+
+# 🔗 Phase 4: WalletConnect Integration & Blockchain Connection
+
+Implementing **secure wallet connectivity** using WalletConnect V2 and Web3.swift. This phase enables users to connect their crypto wallets (MetaMask, Trust Wallet, etc.) to make payments on COTI blockchain.
+
+Production-grade wallet integration with proper error handling, session management, and security.
+
+---
+
+## ⚡ ACTION: INTEGRATE WALLETCONNECT
+
+**Mission:** Use **Claude** or **COTI MCP**. Copy the prompt below and paste it into the chat.
+
+<div style={{
+  background: 'linear-gradient(135deg, #7c3aed, #ec4899)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 60px -15px rgba(124, 58, 237, 0.6)'
+}}>
+  <div style={{
+    background: '#1a0a1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+
+    {/* Header Bar */}
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#7c3aed', borderRadius:'50%',
+            boxShadow:'0 0 12px #7c3aed'
+        }}></div>
+        <span style={{color: '#c4b5fd', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.5px'}}>
+          WALLET_CONNECTOR.swift
+        </span>
+        <span style={{
+            background: 'rgba(236, 72, 153, 0.2)', color: '#f9a8d4', fontSize: '0.65rem',
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(236, 72, 153, 0.3)'
+        }}>WALLETCONNECT V2</span>
+      </div>
+
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #7c3aed, #ec4899)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            display: 'flex', alignItems: 'center', gap: '8px',
+            transition: 'transform 0.1s',
+            boxShadow: '0 4px 12px rgba(124, 58, 237, 0.4)'
+        }}
+        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+        onClick={() => {
+            const promptText = document.getElementById('wallet-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Wallet Integration Guide Copied! 🔗");
+        }}
+      >
+        <span>⚡ COPY WALLET INTEGRATION PROMPT</span>
+      </button>
+    </div>
+
+    {/* Scrollable Content Area */}
+    <div id="wallet-prompt" style={{
+      padding: '24px',
+      maxHeight: '500px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`You are a blockchain integration specialist for iOS, expert in WalletConnect V2, Web3.swift, and COTI blockchain. Your task is to implement a complete, production-ready wallet connection system for an e-commerce iOS app.
+
+====================================================================
+🎯 INTEGRATION REQUIREMENTS
+====================================================================
+
+Primary Goal: Enable users to connect crypto wallets to make payments
+Supported Wallets: MetaMask, Trust Wallet, Rainbow, Coinbase Wallet
+Protocol: WalletConnect V2
+Blockchain: COTI Testnet (EVM-compatible)
+Web3 Library: web3.swift (Argentlabs)
+Session Management: Persistent across app launches
+Security: Never store private keys, secure session handling
+
+====================================================================
+📦 DEPENDENCIES (Swift Package Manager)
+====================================================================
+
+Add these packages to Xcode:
+
+1. WalletConnectSwiftV2
+   URL: https://github.com/WalletConnect/WalletConnectSwiftV2
+   Exact version: 1.9.0+
+
+2. web3.swift
+   URL: https://github.com/argentlabs/web3.swift
+   Exact version: 1.6.0+
+
+3. BigInt
+   URL: https://github.com/attaswift/BigInt
+   Exact version: 5.3.0+
+
+====================================================================
+🏗️ ARCHITECTURE OVERVIEW
+====================================================================
+
+Layer Structure:
+
+1. WalletConnectionManager (Singleton)
+   - Manages WalletConnect sessions
+   - Handles pairing and connection
+   - Emits connection state changes
+
+2. Web3Manager
+   - Wraps web3.swift
+   - Provides blockchain interaction methods
+   - Handles RPC calls to COTI
+
+3. WalletRepository (implements WalletRepositoryProtocol)
+   - Bridges WalletConnect + Web3
+   - Implements domain repository protocol
+   - Returns domain entities
+
+4. ViewModels
+   - WalletViewModel
+   - Uses ConnectWalletUseCase
+   - Manages UI state
+
+====================================================================
+📝 IMPLEMENTATION: WalletConnectionManager
+====================================================================
+
+This is the CORE wallet connection service.
+
+import Foundation
+import WalletConnectSign
+import Combine
+
+class WalletConnectionManager: ObservableObject {
+    // MARK: - Singleton
+    static let shared = WalletConnectionManager()
+
+    // MARK: - Published Properties
+    @Published var connectionState: ConnectionState = .disconnected
+    @Published var connectedWallet: WalletInfo?
+    @Published var errorMessage: String?
+
+    // MARK: - Private Properties
+    private var sessions: [Session] = []
+    private var cancellables = Set<AnyCancellable>()
+
+    // WalletConnect configuration
+    private let projectId = "YOUR_WALLETCONNECT_PROJECT_ID" // Get from cloud.walletconnect.com
+    private let metadata = AppMetadata(
+        name: "CryptoStore",
+        description: "E-commerce with crypto payments",
+        url: "https://cryptostore.example",
+        icons: ["https://cryptostore.example/icon.png"]
+    )
+
+    // MARK: - Init
+    private init() {
+        configureCOTINetwork()
+        setupWalletConnect()
+        restorePreviousSession()
+    }
+
+    // MARK: - Configuration
+    private func configureCOTINetwork() {
+        // COTI Testnet configuration
+        let cotiChain = Blockchain("eip155:7082400")! // COTI chain ID
+        // Configure supported chains, methods, events
+    }
+
+    private func setupWalletConnect() {
+        Networking.configure(projectId: projectId, socketFactory: DefaultSocketFactory())
+        Pair.configure(metadata: metadata)
+
+        // Subscribe to session events
+        Sign.instance.sessionSettlePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] session in
+                self?.handleSessionSettled(session)
+            }
+            .store(in: &cancellables)
+
+        Sign.instance.sessionDeletePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.handleSessionDeleted()
+            }
+            .store(in: &cancellables)
+    }
+
+    // MARK: - Public Methods
+
+    func connect() async throws {
+        connectionState = .connecting
+
+        // Create pairing URI
+        let uri = try await Pair.instance.create()
+
+        // Open wallet app with URI
+        if let url = URL(string: "wc://\(uri)") {
+            await UIApplication.shared.open(url)
+        }
+
+        // Propose session with COTI network
+        let chains = [Blockchain("eip155:7082400")!]
+        let methods = ["eth_sendTransaction", "personal_sign", "eth_signTypedData"]
+        let events = ["chainChanged", "accountsChanged"]
+
+        let namespaces: [String: ProposalNamespace] = [
+            "eip155": ProposalNamespace(
+                chains: chains,
+                methods: Set(methods),
+                events: Set(events)
+            )
+        ]
+
+        try await Sign.instance.connect(requiredNamespaces: namespaces, topic: uri.topic)
+    }
+
+    func disconnect() async throws {
+        guard let session = sessions.first else { return }
+
+        try await Sign.instance.disconnect(topic: session.topic)
+        connectionState = .disconnected
+        connectedWallet = nil
+
+        // Clear persisted session
+        UserDefaults.standard.removeObject(forKey: "wallet_session")
+    }
+
+    func getAddress() -> String? {
+        guard let session = sessions.first,
+              let account = session.namespaces["eip155"]?.accounts.first else {
+            return nil
+        }
+        return account.address
+    }
+
+    func switchToNetwork(_ chainId: String) async throws {
+        // Request wallet to switch to COTI network
+        let method = "wallet_switchEthereumChain"
+        let params = [["chainId": chainId]]
+
+        _ = try await Sign.instance.request(
+            params: .init(
+                topic: sessions.first!.topic,
+                method: method,
+                params: AnyCodable(params),
+                chainId: Blockchain("eip155:7082400")!
+            )
+        )
+    }
+
+    // MARK: - Private Handlers
+
+    private func handleSessionSettled(_ session: Session) {
+        sessions.append(session)
+
+        if let account = session.namespaces["eip155"]?.accounts.first {
+            connectedWallet = WalletInfo(
+                address: account.address,
+                chainId: account.blockchain.reference
+            )
+            connectionState = .connected
+
+            // Persist session
+            persistSession(session)
+        }
+    }
+
+    private func handleSessionDeleted() {
+        sessions.removeAll()
+        connectedWallet = nil
+        connectionState = .disconnected
+        UserDefaults.standard.removeObject(forKey: "wallet_session")
+    }
+
+    private func persistSession(_ session: Session) {
+        // Save session topic for restoration
+        UserDefaults.standard.set(session.topic, forKey: "wallet_session")
+    }
+
+    private func restorePreviousSession() {
+        // Restore active sessions from WalletConnect storage
+        sessions = Sign.instance.getSessions()
+
+        if let session = sessions.first,
+           let account = session.namespaces["eip155"]?.accounts.first {
+            connectedWallet = WalletInfo(
+                address: account.address,
+                chainId: account.blockchain.reference
+            )
+            connectionState = .connected
+        }
+    }
+}
+
+// MARK: - Supporting Types
+
+enum ConnectionState {
+    case disconnected
+    case connecting
+    case connected
+    case error(String)
+}
+
+struct WalletInfo {
+    let address: String
+    let chainId: String
+
+    var truncatedAddress: String {
+        "\(address.prefix(6))...\(address.suffix(4))"
+    }
+}
+
+====================================================================
+📝 IMPLEMENTATION: Web3Manager
+====================================================================
+
+Handles blockchain interactions using web3.swift
+
+import Foundation
+import web3
+import BigInt
+
+class Web3Manager {
+    private let rpcURL = "https://testnet.coti.io/rpc"
+    private lazy var client: EthereumHttpClient = {
+        guard let url = URL(string: rpcURL) else {
+            fatalError("Invalid RPC URL")
+        }
+        return EthereumHttpClient(url: url, network: .custom("\(cotiChainId)"))
+    }()
+
+    private let cotiChainId = 7082400
+
+    // MARK: - Balance Queries
+
+    func getBalance(address: EthereumAddress) async throws -> BigUInt {
+        return try await withCheckedThrowingContinuation { continuation in
+            client.eth_getBalance(address: address, block: .latest) { result in
+                switch result {
+                case .success(let balance):
+                    continuation.resume(returning: balance)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func getTokenBalance(walletAddress: EthereumAddress, tokenAddress: EthereumAddress) async throws -> BigUInt {
+        let function = ERC20Functions.balanceOf(contract: tokenAddress, account: walletAddress)
+        let data = try function.transaction.data ?? Data()
+
+        return try await withCheckedThrowingContinuation { continuation in
+            client.eth_call(function, block: .latest) { result in
+                switch result {
+                case .success(let balance):
+                    continuation.resume(returning: balance)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    // MARK: - Transaction Building
+
+    func estimateGas(transaction: EthereumTransaction) async throws -> BigUInt {
+        return try await withCheckedThrowingContinuation { continuation in
+            client.eth_estimateGas(transaction) { result in
+                switch result {
+                case .success(let gas):
+                    continuation.resume(returning: gas)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func getCurrentGasPrice() async throws -> BigUInt {
+        return try await withCheckedThrowingContinuation { continuation in
+            client.eth_gasPrice { result in
+                switch result {
+                case .success(let price):
+                    continuation.resume(returning: price)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    // MARK: - Contract Interactions
+
+    func readContract<T: ABIResponse>(
+        contractAddress: EthereumAddress,
+        function: ABIFunction
+    ) async throws -> T {
+        return try await withCheckedThrowingContinuation { continuation in
+            function.call(
+                withClient: client,
+                responseType: T.self,
+                block: .latest
+            ) { result in
+                switch result {
+                case .success(let response):
+                    continuation.resume(returning: response)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    // MARK: - Network Validation
+
+    func validateCOTINetwork() async throws -> Bool {
+        let chainId = try await getChainId()
+        return chainId == cotiChainId
+    }
+
+    private func getChainId() async throws -> Int {
+        return try await withCheckedThrowingContinuation { continuation in
+            client.net_version { result in
+                switch result {
+                case .success(let chainId):
+                    continuation.resume(returning: Int(chainId) ?? 0)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+}
+
+====================================================================
+📝 IMPLEMENTATION: WalletRepository
+====================================================================
+
+Implements domain repository protocol, bridges WalletConnect + Web3
+
+class WalletRepository: WalletRepositoryProtocol {
+    private let walletManager = WalletConnectionManager.shared
+    private let web3Manager = Web3Manager()
+
+    func connect() async throws {
+        try await walletManager.connect()
+    }
+
+    func disconnect() async throws {
+        try await walletManager.disconnect()
+    }
+
+    func getConnectedWallet() -> Wallet? {
+        guard let info = walletManager.connectedWallet else { return nil }
+
+        return Wallet(
+            address: info.address,
+            chainId: info.chainId,
+            isConnected: true
+        )
+    }
+
+    func getBalance() async throws -> Decimal {
+        guard let addressString = walletManager.getAddress(),
+              let address = try? EthereumAddress(hex: addressString, eip55: false) else {
+            throw WalletError.notConnected
+        }
+
+        let balanceWei = try await web3Manager.getBalance(address: address)
+        let balanceEther = Decimal(string: Web3.Utils.formatToEthereumUnits(balanceWei)) ?? 0
+
+        return balanceEther
+    }
+
+    func validateNetwork() async throws -> Bool {
+        return try await web3Manager.validateCOTINetwork()
+    }
+}
+
+====================================================================
+📱 UI IMPLEMENTATION: WalletView
+====================================================================
+
+SwiftUI view for wallet connection:
+
+struct WalletView: View {
+    @StateObject var viewModel: WalletViewModel
+
+    var body: some View {
+        VStack(spacing: 24) {
+            if viewModel.isConnected {
+                // Connected state
+                connectedView
+            } else {
+                // Disconnected state
+                disconnectedView
+            }
+        }
+        .padding()
+        .alert("Error", isPresented: $viewModel.showError) {
+            Button("OK") { }
+        } message: {
+            Text(viewModel.errorMessage ?? "Unknown error")
+        }
+    }
+
+    private var connectedView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 60))
+                .foregroundColor(.green)
+
+            Text("Wallet Connected")
+                .font(.title2.bold())
+
+            Text(viewModel.walletAddress)
+                .font(.footnote.monospaced())
+                .foregroundColor(.secondary)
+
+            CryptoBalanceView(balance: viewModel.balance)
+
+            Button("Disconnect") {
+                Task {
+                    await viewModel.disconnect()
+                }
+            }
+            .buttonStyle(.bordered)
+        }
+    }
+
+    private var disconnectedView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "wallet.pass")
+                .font(.system(size: 60))
+                .foregroundColor(.purple)
+
+            Text("Connect Your Wallet")
+                .font(.title2.bold())
+
+            Text("Connect to make purchases with crypto")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+
+            Button {
+                Task {
+                    await viewModel.connect()
+                }
+            } label: {
+                HStack {
+                    if viewModel.isConnecting {
+                        ProgressView()
+                            .tint(.white)
+                    }
+                    Text(viewModel.isConnecting ? "Connecting..." : "Connect Wallet")
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(viewModel.isConnecting)
+        }
+    }
+}
+
+====================================================================
+📤 DELIVERABLES
+====================================================================
+
+Provide complete code for:
+
+1. Managers:
+   - WalletConnectionManager.swift
+   - Web3Manager.swift
+
+2. Repository:
+   - WalletRepository.swift
+
+3. ViewModels:
+   - WalletViewModel.swift
+
+4. Views:
+   - WalletView.swift
+   - WalletConnectionButton.swift (compact connection status)
+
+5. Configuration:
+   - BlockchainConstants.swift (RPC URLs, chain IDs, contract addresses)
+   - Info.plist entries for URL schemes
+
+6. Documentation:
+   - Setup guide
+   - WalletConnect Cloud project setup
+   - Testing instructions
+
+====================================================================
+🔒 SECURITY REQUIREMENTS
+====================================================================
+
+✓ Never log private keys or seed phrases
+✓ Validate all addresses before transactions
+✓ Check network before every transaction
+✓ Handle session expiration gracefully
+✓ Clear sensitive data on logout
+✓ Use HTTPS for all RPC calls
+✓ Implement request timeouts
+✓ Validate smart contract ABIs
+
+====================================================================
+🧪 ERROR HANDLING
+====================================================================
+
+Handle these scenarios:
+- User rejects connection
+- Wallet app not installed
+- Wrong network connected
+- Session expired
+- RPC node unavailable
+- Transaction reverted
+- Insufficient gas
+- Network timeout
+
+Provide user-friendly error messages for each.`}
+    </div>
+
+    {/* Visual Footer */}
+    <div style={{
+        background: '#020617',
+        borderTop: '1px solid #1e293b',
+        padding: '8px 20px',
+        display: 'flex', justifyContent: 'flex-end',
+        alignItems: 'center', gap: '10px'
+    }}>
+        <div style={{width:'8px', height:'8px', background:'#7c3aed', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
+        <span style={{fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'sans-serif', fontWeight: 'bold'}}>
+          SCROLL TO VIEW COMPLETE WALLET INTEGRATION ↕
+        </span>
+    </div>
+
+  </div>
+</div>
+
+---
+
+## 🎓 What You'll Build
+
+After this phase, you'll have:
+
+- ✅ **WalletConnect V2 Integration** - Multi-wallet support
+- ✅ **COTI Network Configuration** - Testnet ready
+- ✅ **Session Management** - Persistent connections
+- ✅ **Balance Queries** - Native COTI + ERC20 tokens
+- ✅ **Network Validation** - Ensure correct chain
+- ✅ **Error Handling** - User-friendly messages
+- ✅ **Clean Architecture** - Repository pattern
+- ✅ **Production Ready** - Secure and tested

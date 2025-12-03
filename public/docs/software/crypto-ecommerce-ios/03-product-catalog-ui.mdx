@@ -1,0 +1,637 @@
+
+# 🎨 Phase 3: Product Catalog UI & Shopping Experience
+
+Building a **stunning, conversion-optimized product catalog** with SwiftUI. This phase focuses on creating an App Store-quality shopping experience with smooth animations, search, filters, and intuitive navigation.
+
+Modern e-commerce UI/UX principles meet iOS design guidelines for maximum user engagement.
+
+---
+
+## ⚡ ACTION: BUILD THE PRODUCT EXPERIENCE
+
+**Mission:** Use **V0**, **Claude**, or **ChatGPT**. Copy the prompt below and paste it into the chat.
+
+<div style={{
+  background: 'linear-gradient(135deg, #dc2626, #f59e0b)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 60px -15px rgba(220, 38, 38, 0.6)'
+}}>
+  <div style={{
+    background: '#1a0f0a',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+
+    {/* Header Bar */}
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#dc2626', borderRadius:'50%',
+            boxShadow:'0 0 12px #dc2626'
+        }}></div>
+        <span style={{color: '#fca5a5', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.5px'}}>
+          CATALOG_UI_DESIGNER.swift
+        </span>
+        <span style={{
+            background: 'rgba(245, 158, 11, 0.2)', color: '#fbbf24', fontSize: '0.65rem',
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(245, 158, 11, 0.3)'
+        }}>SWIFTUI MASTERY</span>
+      </div>
+
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #dc2626, #f59e0b)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            display: 'flex', alignItems: 'center', gap: '8px',
+            transition: 'transform 0.1s',
+            boxShadow: '0 4px 12px rgba(220, 38, 38, 0.4)'
+        }}
+        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+        onClick={() => {
+            const promptText = document.getElementById('catalog-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("UI Design Blueprint Copied! 🎨");
+        }}
+      >
+        <span>⚡ COPY UI DESIGN PROMPT</span>
+      </button>
+    </div>
+
+    {/* Scrollable Content Area */}
+    <div id="catalog-prompt" style={{
+      padding: '24px',
+      maxHeight: '500px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`You are a senior iOS UI/UX designer and SwiftUI expert specializing in e-commerce applications. Your task is to create a world-class product catalog experience for a crypto e-commerce iOS app, combining Apple's Human Interface Guidelines with conversion-optimized design patterns.
+
+====================================================================
+🎯 UI/UX OBJECTIVES
+====================================================================
+
+Primary Goals:
+1. Maximize product discoverability
+2. Optimize conversion rate (browse → cart → checkout)
+3. Showcase crypto pricing prominently
+4. Create trust through professional design
+5. Support seamless navigation and search
+6. Enable quick add-to-cart actions
+
+Design Philosophy:
+- Clean, spacious layouts (avoid clutter)
+- Bold, scannable typography
+- High-quality product imagery
+- Micro-interactions for feedback
+- Smooth, purposeful animations
+- Accessibility-first approach
+
+====================================================================
+🎨 DESIGN SYSTEM SPECIFICATION
+====================================================================
+
+COLOR PALETTE:
+
+Primary Colors:
+- Brand Primary: #1e40af (Blue 800) - CTAs, links
+- Brand Secondary: #7c3aed (Purple 700) - Accents
+- Success: #059669 (Emerald 600) - In stock, success states
+- Warning: #f59e0b (Amber 500) - Low stock
+- Error: #dc2626 (Red 600) - Out of stock, errors
+
+Neutrals:
+- Background Light: #ffffff
+- Background Dark: #0f172a (Slate 950)
+- Surface Light: #f8fafc (Slate 50)
+- Surface Dark: #1e293b (Slate 800)
+- Text Primary Light: #0f172a
+- Text Primary Dark: #f8fafc
+- Text Secondary Light: #64748b
+- Text Secondary Dark: #94a3b8
+
+Crypto Accent:
+- COTI Gold: #fbbf24 (Amber 400) - For crypto prices
+- Crypto Purple: #a78bfa (Violet 400) - Blockchain indicators
+
+TYPOGRAPHY SCALE:
+
+Font: SF Pro (System)
+- Display: 34pt, Bold (Hero product names)
+- Title 1: 28pt, Bold (Section headers)
+- Title 2: 22pt, Semibold (Product names)
+- Title 3: 20pt, Semibold (Card titles)
+- Headline: 17pt, Semibold (Labels)
+- Body: 17pt, Regular (Descriptions)
+- Callout: 16pt, Regular (Metadata)
+- Subheadline: 15pt, Regular (Secondary info)
+- Footnote: 13pt, Regular (Helper text)
+- Caption 1: 12pt, Regular (Tiny labels)
+
+SPACING SYSTEM (8pt grid):
+
+- XXS: 4pt
+- XS: 8pt
+- S: 12pt
+- M: 16pt
+- L: 24pt
+- XL: 32pt
+- XXL: 48pt
+- XXXL: 64pt
+
+CORNER RADIUS:
+
+- Small: 8pt (Buttons, tags)
+- Medium: 12pt (Cards)
+- Large: 16pt (Hero elements)
+- XLarge: 24pt (Modals)
+- Circular: 50% (Avatar, badges)
+
+SHADOWS:
+
+Light Mode:
+- Small: 0 1px 2px rgba(0,0,0,0.05)
+- Medium: 0 4px 6px rgba(0,0,0,0.07)
+- Large: 0 10px 15px rgba(0,0,0,0.1)
+
+Dark Mode:
+- Small: 0 1px 2px rgba(0,0,0,0.3)
+- Medium: 0 4px 6px rgba(0,0,0,0.4)
+- Large: 0 10px 15px rgba(0,0,0,0.5)
+
+====================================================================
+📱 SCREEN IMPLEMENTATIONS REQUIRED
+====================================================================
+
+SCREEN 1: HomeView
+-----------------
+
+Layout Sections:
+1. Header
+   - App logo/name
+   - Wallet connection status indicator (small badge)
+   - Cart icon with item count badge
+   - Search icon
+
+2. Hero Banner (Optional)
+   - Featured product or promotion
+   - SwiftUI PageTabView with auto-scroll
+   - Crypto payment benefits callout
+
+3. Category Pills
+   - Horizontal ScrollView
+   - Pill-shaped buttons: All, Electronics, Fashion, Home, Sports
+   - Active state highlighting
+   - Smooth scroll indicators
+
+4. Featured Products Grid
+   - LazyVGrid with 2 columns
+   - Product cards (detailed spec below)
+   - Infinite scroll / Load more
+   - Pull-to-refresh
+
+SwiftUI Code Structure:
+struct HomeView: View {
+    @StateObject var viewModel: HomeViewModel
+    @State private var searchText = ""
+    @State private var selectedCategory: ProductCategory? = nil
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                LazyVStack(spacing: 16) {
+                    // Header, categories, grid
+                }
+            }
+            .navigationTitle("CryptoStore")
+            .toolbar { /* wallet + cart */ }
+        }
+    }
+}
+
+SCREEN 2: ProductCatalogView
+---------------------------
+
+Features:
+- Full product grid (2-3 columns adaptive)
+- Filter drawer (price range, category, availability)
+- Sort options (price, newest, popular)
+- Search integration
+- Empty state when no results
+- Loading skeletons while fetching
+
+Filter UI:
+- Sheet presentation
+- Multi-select categories
+- Price range slider (in COTI)
+- Stock availability toggle
+- Apply/Reset buttons
+
+SCREEN 3: ProductDetailView
+-------------------------
+
+Layout (Vertical Scroll):
+
+1. Image Carousel
+   - TabView with page indicators
+   - Pinch-to-zoom support
+   - High-res images (AsyncImage with placeholder)
+
+2. Product Header
+   - Product name (Title 1)
+   - Category tag (capsule)
+   - Stock status badge
+
+3. Pricing Section
+   - Large COTI price (with icon)
+   - USD equivalent (smaller, muted)
+   - Savings badge if discounted
+
+4. Description
+   - Expandable text (Show more/less)
+   - Markdown support for formatting
+
+5. Quantity Selector
+   - Stepper with current quantity
+   - Stock limit enforcement
+
+6. Action Buttons
+   - "Add to Cart" (Primary CTA, full width)
+   - "Buy Now" (Secondary, outline style)
+
+7. Additional Info
+   - Specifications (Expandable list)
+   - Shipping info
+   - Return policy
+
+SCREEN 4: CartView
+-----------------
+
+Layout:
+
+1. Header
+   - "Shopping Cart" title
+   - Clear cart button (destructive)
+
+2. Cart Items List
+   - ForEach over cart items
+   - Swipe-to-delete gesture
+   - Quantity adjustment inline
+   - Real-time price updates
+
+3. Cart Item Card
+   - Product image (small thumbnail)
+   - Name + variant
+   - Quantity controls
+   - Price (per unit + total)
+   - Remove button
+
+4. Summary Card (Sticky footer)
+   - Subtotal
+   - Platform fee (2.5%)
+   - Total in COTI (bold, large)
+   - USD equivalent
+   - "Proceed to Checkout" button
+
+5. Empty State
+   - Illustration or SF Symbol
+   - "Your cart is empty" message
+   - "Browse Products" button
+
+====================================================================
+🎨 REUSABLE COMPONENTS
+====================================================================
+
+COMPONENT 1: ProductCardView
+---------------------------
+
+struct ProductCardView: View {
+    let product: Product
+    let onAddToCart: () -> Void
+
+    // Visual elements:
+    // - Rounded rectangle card with shadow
+    // - AsyncImage with placeholder
+    // - Favorite button (heart icon, top-right)
+    // - Stock badge (top-left): "In Stock" / "Low Stock" / "Out of Stock"
+    // - Product name (2 lines max, truncate)
+    // - Price in COTI with icon
+    // - USD price (smaller)
+    // - Quick add button (+) with haptic feedback
+
+    // Interactions:
+    // - Tap card → Navigate to detail
+    // - Tap + → Add to cart with animation
+    // - Long press → Quick view sheet
+}
+
+COMPONENT 2: PriceLabelView
+--------------------------
+
+Displays crypto price with proper formatting:
+- COTI icon
+- Amount with 4 decimals
+- Optional USD equivalent
+- Color coding (success green)
+
+struct PriceLabelView: View {
+    let cotiAmount: Decimal
+    let showUSD: Bool
+
+    // Format: "🪙 125.5000 COTI"
+    // Secondary: "$450.23 USD"
+}
+
+COMPONENT 3: StockBadgeView
+--------------------------
+
+enum StockStatus {
+    case inStock
+    case lowStock(Int)
+    case outOfStock
+}
+
+Visual:
+- Capsule shape
+- Color: Green (in stock), Amber (low), Red (out)
+- Text: "In Stock", "Only 3 left!", "Out of Stock"
+
+COMPONENT 4: CategoryPillView
+----------------------------
+
+struct CategoryPillView: View {
+    let category: ProductCategory
+    let isSelected: Bool
+    let action: () -> Void
+
+    // Pill-shaped button
+    // Selected: Filled with primary color
+    // Unselected: Outline style
+    // Smooth scale animation on tap
+}
+
+COMPONENT 5: LoadingSkeletonView
+-------------------------------
+
+Shimmer loading effect:
+- Gray rectangles with animated gradient
+- Matches ProductCardView layout
+- Shows while products load
+
+COMPONENT 6: SearchBarView
+-------------------------
+
+struct SearchBarView: View {
+    @Binding var text: String
+    var onSearch: () -> Void
+
+    // Rounded search field
+    // Magnifying glass icon
+    // Clear button when text present
+    // Keyboard dismissal
+}
+
+====================================================================
+🎬 ANIMATIONS & MICRO-INTERACTIONS
+====================================================================
+
+1. Card Tap Animation
+   .scaleEffect(isPressed ? 0.95 : 1.0)
+   .animation(.spring(response: 0.3), value: isPressed)
+
+2. Add to Cart Button
+   - Scale up briefly
+   - Color flash (green)
+   - Haptic feedback (.success)
+   - Particle effect (optional)
+
+3. Image Load Transition
+   .transition(.opacity.combined(with: .scale(scale: 0.8)))
+
+4. Filter Sheet
+   .presentation(detents: [.medium, .large])
+
+5. Scroll-to-Top Button
+   - Appears after scrolling down
+   - Fade in/out
+   - Smooth scroll animation
+
+6. Pull-to-Refresh
+   - Native refreshable modifier
+   - Custom loading indicator
+
+7. Skeleton to Content
+   .opacity(isLoading ? 0 : 1)
+   .overlay { if isLoading { SkeletonView() } }
+
+====================================================================
+📐 LAYOUT SPECIFICATIONS
+====================================================================
+
+Product Grid:
+- Adaptive columns: LazyVGrid(columns: [GridItem(.adaptive(minimum: 160))])
+- Spacing: 16pt horizontal, 20pt vertical
+- Padding: 16pt edges
+
+Product Card Dimensions:
+- Width: Adaptive (min 160pt)
+- Height: ~280pt
+- Image aspect ratio: 1:1 (square)
+- Corner radius: 12pt
+- Shadow: Medium
+
+Product Detail Image:
+- Full width
+- Aspect ratio: 4:3
+- Page indicators: Bottom center
+
+Cart Item Row:
+- Height: 100pt
+- Image: 80x80pt, corner radius 8pt
+- Horizontal layout: Image | Info | Actions
+
+====================================================================
+🎨 DARK MODE SUPPORT
+====================================================================
+
+Use SwiftUI's environment colorScheme:
+@Environment(\.colorScheme) var colorScheme
+
+Adaptive Colors:
+- Use Color.primary, Color.secondary (adapts automatically)
+- Custom colors: Define in Asset Catalog with Light/Dark variants
+- Shadows: Adjust opacity based on colorScheme
+
+====================================================================
+♿ ACCESSIBILITY REQUIREMENTS
+====================================================================
+
+1. VoiceOver Support:
+   - All interactive elements have .accessibilityLabel
+   - Prices announced with "dollars" / "COTI tokens"
+   - Cart badge: "Cart, 3 items"
+
+2. Dynamic Type:
+   - Use .font(.body) instead of fixed sizes
+   - Test with larger text sizes
+
+3. Color Contrast:
+   - Minimum 4.5:1 for text
+   - Status colors pass WCAG AA
+
+4. Reduced Motion:
+   - Check AccessibilityReduceMotion
+   - Disable decorative animations
+
+====================================================================
+🧪 INTERACTION STATES
+====================================================================
+
+For all tappable elements:
+- Normal state
+- Pressed state (scale or opacity change)
+- Disabled state (50% opacity)
+- Loading state (progress indicator)
+
+Examples:
+Button: .buttonStyle(.bordered) or custom ButtonStyle
+Toggle: Native switch with tint color
+TextField: Focus border color change
+
+====================================================================
+📤 DELIVERABLES
+====================================================================
+
+Provide complete SwiftUI code for:
+
+1. Views:
+   - HomeView.swift
+   - ProductCatalogView.swift
+   - ProductDetailView.swift
+   - CartView.swift
+
+2. Components:
+   - ProductCardView.swift
+   - PriceLabelView.swift
+   - StockBadgeView.swift
+   - CategoryPillView.swift
+   - LoadingSkeletonView.swift
+   - SearchBarView.swift
+   - EmptyStateView.swift
+
+3. ViewModels:
+   - HomeViewModel.swift
+   - ProductCatalogViewModel.swift
+   - ProductDetailViewModel.swift
+   - CartViewModel.swift
+
+4. Design System:
+   - AppColors.swift (Color extensions)
+   - AppFonts.swift (Font extensions)
+   - AppStyles.swift (ButtonStyles, ViewModifiers)
+
+5. Assets:
+   - Color Set in Assets.xcassets
+   - Example product images (placeholders)
+
+6. Documentation:
+   - UI component library (Markdown)
+   - Design system guide
+   - Usage examples
+
+====================================================================
+🎨 CODE QUALITY REQUIREMENTS
+====================================================================
+
+- Extract complex views into subviews
+- Use @ViewBuilder for conditional content
+- Implement PreviewProvider for all views
+- Use GeometryReader sparingly (performance)
+- Avoid force unwrapping (use if let, guard)
+- SwiftUI Previews with sample data
+- Comments for complex logic
+- Consistent naming (camelCase)
+
+====================================================================
+✅ VALIDATION CHECKLIST
+====================================================================
+
+Before submitting, ensure:
+✓ All screens render correctly on iPhone 14 Pro and SE
+✓ Dark mode looks professional
+✓ VoiceOver reads all elements
+✓ Animations are smooth (60fps)
+✓ Images load with placeholders
+✓ Empty states exist
+✓ Error states handled
+✓ Loading states shown
+✓ Navigation works forward and back
+✓ No compile warnings
+
+====================================================================
+📋 EXPECTED OUTPUT
+====================================================================
+
+Organize code by:
+1. Views/ folder (all screen views)
+2. Components/ folder (reusable components)
+3. ViewModels/ folder
+4. DesignSystem/ folder (colors, fonts, styles)
+5. Assets.xcassets
+6. README with screenshots and usage guide
+
+Use modern SwiftUI patterns (iOS 16+): NavigationStack, @State, @StateObject, async/await in ViewModels.`}
+    </div>
+
+    {/* Visual Footer */}
+    <div style={{
+        background: '#020617',
+        borderTop: '1px solid #1e293b',
+        padding: '8px 20px',
+        display: 'flex', justifyContent: 'flex-end',
+        alignItems: 'center', gap: '10px'
+    }}>
+        <div style={{width:'8px', height:'8px', background:'#dc2626', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
+        <span style={{fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'sans-serif', fontWeight: 'bold'}}>
+          SCROLL TO VIEW COMPLETE UI SPECS ↕
+        </span>
+    </div>
+
+  </div>
+</div>
+
+---
+
+## 🎓 What You'll Build
+
+After this phase, you'll have:
+
+- ✅ **Professional Product Catalog** - App Store quality UI
+- ✅ **Smooth Animations** - Delightful micro-interactions
+- ✅ **Full Shopping Flow** - Browse → Detail → Cart → Checkout
+- ✅ **Dark Mode** - Complete theme support
+- ✅ **Accessibility** - VoiceOver and Dynamic Type
+- ✅ **Reusable Components** - Scalable design system
+- ✅ **Crypto-First Design** - COTI pricing prominent
+- ✅ **Conversion Optimized** - UX patterns that drive sales
