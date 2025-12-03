@@ -7,7 +7,28 @@ export const courses: Course[] = [
     title: "Blockchain",
     description: "Vibe-coding smart contracts",
     category: "blockchain",
-    prompts: []
+    prompts: [
+      {
+        id: 1,
+        title: "Staking System Smart Contract",
+        image: "/images/image1.jpg",
+        mdxPages: [
+          "/docs/blockchain/staking-system/01-setup-project.mdx",
+          "/docs/blockchain/staking-system/02-implement-staking-logic.mdx",
+          "/docs/blockchain/staking-system/03-rewards-system.mdx",
+          "/docs/blockchain/staking-system/04-deploy-verify.mdx"
+        ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io/coti-contracts",
+        demoUrl: "https://docs.coti.io",
+        recommendedAI: ["cotiMcp", "claude"],
+        difficulty: "advance",
+        welcome: {
+          title: "Build a Privacy-Preserving Staking System",
+          description: "Master advanced blockchain development by creating a production-grade staking smart contract with complete privacy using COTI's MPC technology. Learn to implement encrypted staking, time-based rewards, and secure fund management on-chain."
+        }
+      }
+    ]
   },
   {
     id: 2,

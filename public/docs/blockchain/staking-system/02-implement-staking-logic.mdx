@@ -1,0 +1,306 @@
+# ⚡ Implementing Privacy-Preserving Staking Logic
+
+Now that your environment is ready, let's build the core staking mechanics with **complete privacy** using COTI's MPC technology. Users will be able to stake tokens without revealing their balances or staking amounts to anyone!
+
+---
+
+## 1. Create the Staking Smart Contract Base 🏗️
+
+**Action Required:** Use COTI MCP to generate the foundational staking contract:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a privacy-preserving staking smart contract on COTI that inherits from MpcCore and AccountOnboard. The contract should manage a Private ERC20 token for staking. Include encrypted state variables using ctUint64 for storing each user's staked amount, staking timestamp, and accumulated rewards. Use the Data Privacy Framework to ensure only the user can decrypt their own staking information."
+    </div>
+  </div>
+</div>
+
+---
+
+## 2. Implement the Stake Function 🔒
+
+**Action Required:** Now let's add the staking mechanism with privacy guarantees:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add a stake function to the PrivateStaking contract that accepts an encrypted amount (itUint64). The function should transfer the private tokens from the user to the contract, update the user's encrypted staked balance using MPC addition, record the staking timestamp, and emit an encrypted event. Ensure the staked amount remains confidential using COTI's garbled types (gtUint64)."
+    </div>
+  </div>
+</div>
+
+---
+
+## 3. Understanding Encrypted Data Types 🔐
+
+COTI uses special encrypted types to keep data private:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### ctUint64 - Ciphertext
+Stored encrypted values that only authorized users can decrypt.
+
+<div style={{
+  background: 'rgba(59, 130, 246, 0.1)',
+  padding: '12px',
+  borderRadius: '8px',
+  margin: '10px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px'
+}}>
+<code style={{color: '#60a5fa'}}>
+ctUint64 userStakedBalance; // Encrypted on-chain
+</code>
+</div>
+
+### itUint64 - Input Type
+User-provided encrypted inputs with signatures for authenticity.
+
+<div style={{
+  background: 'rgba(59, 130, 246, 0.1)',
+  padding: '12px',
+  borderRadius: '8px',
+  margin: '10px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px'
+}}>
+<code style={{color: '#60a5fa'}}>
+function stake(itUint64 calldata amount) // User input
+</code>
+</div>
+
+### gtUint64 - Garbled Type
+Runtime encrypted values for secure computations.
+
+<div style={{
+  background: 'rgba(59, 130, 246, 0.1)',
+  padding: '12px',
+  borderRadius: '8px',
+  margin: '10px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px'
+}}>
+<code style={{color: '#60a5fa'}}>
+gtUint64 newBalance = MPC.add(currentBalance, amount);
+</code>
+</div>
+
+</div>
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '10px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>📚 Learn More:</span>
+  <a href="https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/mpc-core"
+     style={{color: '#60a5fa', marginLeft: '8px'}}
+     target="_blank">
+    MPC Core Types Documentation
+  </a>
+</div>
+
+---
+
+## 4. Implement Unstake Function 📤
+
+**Action Required:** Add the withdrawal mechanism:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Implement an unstake function that allows users to withdraw their staked tokens. The function should accept an encrypted amount, verify the user has sufficient staked balance using MPC.lte (less than or equal) comparison, subtract the amount from the user's encrypted balance using MPC.sub, transfer the private tokens back to the user, and update all state while maintaining confidentiality. Include proper access control so users can only unstake their own funds."
+    </div>
+  </div>
+</div>
+
+---
+
+## 5. Add View Function for Encrypted Balance 👁️
+
+**Action Required:** Let users securely view their own staked amounts:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a getStakedBalance function that returns the user's encrypted staked amount as a gtUint64. The function should convert the stored ctUint64 to gtUint64 using MPC.decrypt, allowing the user to decrypt it client-side with their private key. Only the calling user should be able to decrypt their own balance."
+    </div>
+  </div>
+</div>
+
+---
+
+## 6. Contract Architecture Overview 🏛️
+
+Your staking contract structure:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px'
+}}>
+<pre>{`contract PrivateStaking is MpcCore, AccountOnboard {
+
+    // State Variables (all encrypted)
+    mapping(address => ctUint64) stakedBalances;
+    mapping(address => uint256) stakingTimestamps;
+    mapping(address => ctUint64) pendingRewards;
+
+    IPrivateERC20 stakingToken;
+
+    // Core Functions
+    ✅ stake(itUint64 amount)
+    ✅ unstake(itUint64 amount)
+    ✅ getStakedBalance() → gtUint64
+
+    // Coming Next: Rewards Logic
+    ⏳ calculateRewards(address user)
+    ⏳ claimRewards()
+}`}</pre>
+</div>
+
+---
+
+## ✅ Checkpoint
+
+You now have:
+- ✅ A privacy-preserving staking contract
+- ✅ Encrypted stake and unstake functions
+- ✅ Secure balance queries
+- ✅ MPC operations for arithmetic
+- ✅ Access control mechanisms
+
+**Next Step:** Implement the reward distribution system with time-based calculations!

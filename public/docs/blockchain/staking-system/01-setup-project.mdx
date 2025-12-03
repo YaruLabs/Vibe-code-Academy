@@ -1,0 +1,235 @@
+# 🔧 Project Setup & Environment Configuration
+
+Welcome to building a **Privacy-Preserving Staking System** on COTI! In this first step, we'll set up the development environment and initialize our smart contract project using COTI's privacy framework.
+
+---
+
+## 1. Initialize the Smart Contract Project 💬
+
+**Action Required:** Go to the **COTI MCP Assistant** interface. Copy the text below exactly and paste it into the chat.
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a new Hardhat project for COTI blockchain development. Set up the basic structure with @coti-io/coti-contracts library, configure the network settings for COTI devnet, and create the initial folder structure for a staking smart contract. Include the necessary dependencies for privacy-preserving operations using MPC (Multi-Party Computation)."
+    </div>
+  </div>
+</div>
+
+---
+
+## 2. Understanding the Project Structure 📁
+
+After running the prompt, your project will have the following structure:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px'
+}}>
+<pre>{`staking-project/
+├── contracts/
+│   └── PrivateStaking.sol
+├── scripts/
+│   └── deploy.js
+├── test/
+│   └── PrivateStaking.test.js
+├── hardhat.config.js
+├── package.json
+└── .env.example`}</pre>
+</div>
+
+---
+
+## 3. Install Required Dependencies 📦
+
+**Action Required:** Copy and paste this prompt to install all necessary packages:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Install the @coti-io/coti-contracts package and configure it in the project. This library provides the MPC Core primitives, Data Privacy Framework, and Private ERC20 token standards needed for building privacy-preserving staking contracts on COTI."
+    </div>
+  </div>
+</div>
+
+---
+
+## 4. Key Libraries You'll Use 🔑
+
+Your staking system will leverage these COTI privacy primitives:
+
+### A. MPC Core
+Provides encrypted data types like `ctUint64`, `gtUint64`, and `gtBool` for secure computations.
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '10px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>📚 Reference:</span>
+  <a href="https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/mpc-core"
+     style={{color: '#60a5fa', marginLeft: '8px'}}
+     target="_blank">
+    MPC Core Documentation
+  </a>
+</div>
+
+### B. Data Privacy Framework
+Enables onboarding users and managing their encryption keys.
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '10px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>📚 Reference:</span>
+  <a href="https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/data-privacy-framework"
+     style={{color: '#60a5fa', marginLeft: '8px'}}
+     target="_blank">
+    Data Privacy Framework
+  </a>
+</div>
+
+### C. Private ERC20
+The token standard for privacy-preserving staking rewards.
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '10px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>📚 Reference:</span>
+  <a href="https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/tokens/private-erc20"
+     style={{color: '#60a5fa', marginLeft: '8px'}}
+     target="_blank">
+    Private ERC20 Documentation
+  </a>
+</div>
+
+---
+
+## 5. Environment Variables Setup 🔐
+
+**Action Required:** Ask COTI MCP to configure your environment variables:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Set up the .env file with the necessary configuration for COTI devnet, including RPC URL, chain ID, and a private key for deployment. Also configure the account onboarding settings required for the Privacy Framework."
+    </div>
+  </div>
+</div>
+
+---
+
+## ✅ Checkpoint
+
+At this point, you should have:
+- ✅ A Hardhat project configured for COTI blockchain
+- ✅ @coti-io/coti-contracts library installed
+- ✅ Network configuration ready
+- ✅ Environment variables set up
+- ✅ Understanding of the privacy primitives you'll use
+
+**Next Step:** We'll implement the core staking logic with privacy-preserving features!

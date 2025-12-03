@@ -1,0 +1,333 @@
+# 💰 Privacy-Preserving Rewards Distribution
+
+Time to implement the reward system! Users will earn rewards based on their staking duration, and **everything remains encrypted** - neither the staking amount nor the rewards will be visible to anyone except the user.
+
+---
+
+## 1. Implement Reward Calculation Logic 🧮
+
+**Action Required:** Add the time-based reward calculation:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add a calculateRewards internal function to the PrivateStaking contract. The function should compute rewards based on the time elapsed since staking began (block.timestamp minus stakingTimestamp), the user's encrypted staked amount, and an annual percentage yield (APY) rate. Use MPC operations to multiply the staked amount by the time factor and APY rate while keeping all values encrypted. Return the result as a gtUint64 to maintain privacy. Set a configurable APY rate (e.g., 10% annual)."
+    </div>
+  </div>
+</div>
+
+---
+
+## 2. Understanding Encrypted Arithmetic 🔢
+
+The reward calculation uses MPC operations to compute on encrypted data:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### Formula (Encrypted):
+<div style={{
+  background: 'rgba(139, 92, 246, 0.2)',
+  padding: '16px',
+  borderRadius: '8px',
+  margin: '15px 0',
+  fontSize: '16px',
+  textAlign: 'center',
+  color: '#e2e8f0'
+}}>
+  <code>rewards = (stakedAmount × timeStaked × APY) / (365 days × 100)</code>
+</div>
+
+### All computed in MPC:
+- `stakedAmount` → **ctUint64** (encrypted)
+- `timeStaked` → **uint256** (public, but result stays encrypted)
+- `APY` → **uint256** (public parameter)
+- `rewards` → **gtUint64** (encrypted result)
+
+<div style={{
+  background: 'rgba(251, 191, 36, 0.1)',
+  border: '1px solid rgba(251, 191, 36, 0.3)',
+  borderRadius: '8px',
+  padding: '12px',
+  marginTop: '15px'
+}}>
+  <span style={{color: '#fbbf24'}}>⚡ Key Insight:</span>
+  <span style={{color: '#cbd5e1', marginLeft: '8px'}}>
+    Even though time and APY are public, the final rewards remain encrypted because they're multiplied with the encrypted staked amount!
+  </span>
+</div>
+
+</div>
+
+---
+
+## 3. Add Claim Rewards Function 🎁
+
+**Action Required:** Let users claim their earned rewards:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Implement a claimRewards function in the PrivateStaking contract. The function should call calculateRewards to get the user's earned amount, verify there are rewards to claim using MPC.gt (greater than) comparison, add the rewards to the user's staked balance using MPC.add, reset the staking timestamp to prevent double-claiming, and emit an encrypted RewardClaimed event. Ensure all operations maintain privacy by using MPC operations throughout."
+    </div>
+  </div>
+</div>
+
+---
+
+## 4. View Pending Rewards (Encrypted) 👀
+
+**Action Required:** Add a function to check rewards without claiming:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a getPendingRewards view function that returns the user's current earned rewards as a gtUint64 without modifying state. This allows users to decrypt and view their rewards client-side before deciding to claim them."
+    </div>
+  </div>
+</div>
+
+---
+
+## 5. Emergency Withdraw & Admin Functions 🚨
+
+**Action Required:** Add safety mechanisms:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add an emergencyWithdraw function that allows users to withdraw their full staked balance without claiming rewards in case of emergency. Also add an onlyOwner function to update the APY rate and a pause mechanism using OpenZeppelin's Pausable to halt staking operations if needed. Maintain privacy throughout all operations."
+    </div>
+  </div>
+</div>
+
+---
+
+## 6. Complete Contract Structure 📋
+
+Your final staking system:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '13px'
+}}>
+<pre>{`contract PrivateStaking is MpcCore, AccountOnboard, Pausable {
+
+    // Configuration
+    uint256 public apyRate = 10; // 10% annual
+    IPrivateERC20 public stakingToken;
+
+    // User Data (all encrypted)
+    mapping(address => ctUint64) private stakedBalances;
+    mapping(address => uint256) private stakingTimestamps;
+
+    // Core Staking
+    ✅ stake(itUint64 amount)
+    ✅ unstake(itUint64 amount)
+    ✅ getStakedBalance() → gtUint64
+
+    // Rewards System
+    ✅ calculateRewards(address) → gtUint64 [internal]
+    ✅ claimRewards()
+    ✅ getPendingRewards() → gtUint64
+
+    // Safety & Admin
+    ✅ emergencyWithdraw()
+    ✅ setAPY(uint256 newAPY) [onlyOwner]
+    ✅ pause() / unpause() [onlyOwner]
+
+    // Events (encrypted)
+    event Staked(address user, ctUint64 amount);
+    event Unstaked(address user, ctUint64 amount);
+    event RewardClaimed(address user, ctUint64 reward);
+}`}</pre>
+</div>
+
+---
+
+## 7. Testing the Rewards 🧪
+
+**Action Required:** Create test scenarios:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create comprehensive Hardhat tests for the PrivateStaking contract. Test scenarios should include: staking tokens, waiting for time to pass using evm_increaseTime, checking encrypted pending rewards, claiming rewards successfully, verifying reward calculations are correct, testing emergency withdrawals, and ensuring only users can access their own encrypted data. Use COTI's testing utilities to decrypt and verify encrypted values in tests."
+    </div>
+  </div>
+</div>
+
+---
+
+## ✅ Checkpoint
+
+Your staking system now includes:
+- ✅ Time-based reward calculation
+- ✅ Encrypted reward claiming
+- ✅ Pending rewards viewer
+- ✅ Emergency withdrawal
+- ✅ Configurable APY
+- ✅ Pause mechanism
+- ✅ Complete privacy preservation
+
+**Next Step:** Deploy to COTI devnet and verify everything works on-chain!

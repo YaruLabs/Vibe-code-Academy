@@ -1,0 +1,512 @@
+# 🚀 Deploy & Verify on COTI Blockchain
+
+The final step! Let's deploy your privacy-preserving staking system to COTI devnet and verify it works as expected. Users will be able to stake, earn rewards, and unstake - all with complete privacy.
+
+---
+
+## 1. Compile Your Contract 🔨
+
+**Action Required:** Ensure everything compiles correctly:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Compile the PrivateStaking smart contract using Hardhat. Ensure all dependencies from @coti-io/coti-contracts are properly imported and there are no compilation errors. Verify that the contract size is within the deployment limits."
+    </div>
+  </div>
+</div>
+
+---
+
+## 2. Run Tests Locally 🧪
+
+**Action Required:** Validate the contract logic before deployment:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Run all the Hardhat tests for the PrivateStaking contract. Verify that staking, unstaking, reward calculation, claiming rewards, and emergency withdrawal all pass successfully. Check that privacy is maintained throughout all operations and encrypted values can only be decrypted by authorized users."
+    </div>
+  </div>
+</div>
+
+<div style={{
+  background: 'rgba(251, 191, 36, 0.1)',
+  border: '1px solid rgba(251, 191, 36, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '20px 0'
+}}>
+  <span style={{color: '#fbbf24', fontWeight: 'bold'}}>⚠️ Important:</span>
+  <span style={{color: '#e2e8f0', marginLeft: '8px'}}>
+    Make sure all tests pass with 100% success rate before proceeding to deployment!
+  </span>
+</div>
+
+---
+
+## 3. Deploy the Staking Token 🪙
+
+**Action Required:** First, deploy the Private ERC20 token that will be staked:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Deploy a new Private ERC20 token contract on COTI devnet with the name 'Staking Reward Token' and symbol 'SRT'. This will be the token used for staking. Mint an initial supply to the deployer address for testing. Save the deployed contract address."
+    </div>
+  </div>
+</div>
+
+<div style={{
+  background: 'rgba(255, 255, 255, 0.05)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'blur(10px)',
+  borderRadius: '12px',
+  padding: '16px',
+  marginTop: '15px',
+  display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+}}>
+  <div>
+    <span style={{color: '#94a3b8', fontSize: '12px', display: 'block'}}>Token Address Example</span>
+    <span style={{color: '#60a5fa', fontFamily: 'monospace', fontSize: '1.1rem'}}>0x742d35Cc6634C0532925a3b844Bc454e4438f44e</span>
+  </div>
+  <div style={{background:'#10b981', color:'#064e3b', fontSize:'12px', padding:'4px 8px', borderRadius:'4px', fontWeight:'bold'}}>Deployed</div>
+</div>
+
+---
+
+## 4. Deploy the Staking Contract 📜
+
+**Action Required:** Now deploy the main staking contract:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Deploy the PrivateStaking contract to COTI devnet. Pass the previously deployed Private ERC20 token address as a constructor parameter. Set the initial APY to 10%. Save the deployed staking contract address and verify the deployment was successful by checking the transaction receipt."
+    </div>
+  </div>
+</div>
+
+<div style={{
+  background: 'rgba(255, 255, 255, 0.05)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'blur(10px)',
+  borderRadius: '12px',
+  padding: '16px',
+  marginTop: '15px',
+  display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+}}>
+  <div>
+    <span style={{color: '#94a3b8', fontSize: '12px', display: 'block'}}>Staking Contract Address Example</span>
+    <span style={{color: '#60a5fa', fontFamily: 'monospace', fontSize: '1.1rem'}}>0x1234567890123456789012345678901234567890</span>
+  </div>
+  <div style={{background:'#10b981', color:'#064e3b', fontSize:'12px', padding:'4px 8px', borderRadius:'4px', fontWeight:'bold'}}>Active</div>
+</div>
+
+---
+
+## 5. Verify Contracts on Explorer 🔍
+
+**Action Required:** Make your contracts publicly verifiable:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Verify both the PrivateStaking contract and the Private ERC20 token contract on the COTI block explorer using Hardhat's verify plugin. This makes the source code publicly available and allows users to interact with verified contracts through the explorer interface."
+    </div>
+  </div>
+</div>
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '10px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>📚 Reference:</span>
+  <a href="https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/onboard"
+     style={{color: '#60a5fa', marginLeft: '8px'}}
+     target="_blank">
+    Account Onboarding Documentation
+  </a>
+</div>
+
+---
+
+## 6. Test On-Chain Interactions 🎯
+
+**Action Required:** Verify everything works on devnet:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create an interaction script that performs a complete staking workflow on COTI devnet: 1) Onboard a test user account using the AccountOnboard functionality, 2) Approve the staking contract to spend tokens, 3) Stake tokens with an encrypted amount, 4) Wait and query pending rewards, 5) Claim rewards, 6) Verify all balances remain encrypted and can only be decrypted by the user. Log all transaction hashes and verify them on the COTI block explorer."
+    </div>
+  </div>
+</div>
+
+---
+
+## 7. Create Deployment Documentation 📝
+
+**Action Required:** Document your deployment for future reference:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Generate a deployment summary document that includes: deployed contract addresses, network details (COTI devnet), constructor parameters used, block explorer verification links, ABI files for frontend integration, and example code snippets for interacting with the staking system. Save this as DEPLOYMENT.md in the project root."
+    </div>
+  </div>
+</div>
+
+---
+
+## 8. Deployment Checklist ✅
+
+Make sure you have completed all steps:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0'
+}}>
+
+<div style={{marginBottom: '12px', display: 'flex', alignItems: 'center'}}>
+  <span style={{color: '#10b981', marginRight: '10px', fontSize: '20px'}}>✅</span>
+  <span style={{color: '#e2e8f0'}}>Contract compiled successfully</span>
+</div>
+
+<div style={{marginBottom: '12px', display: 'flex', alignItems: 'center'}}>
+  <span style={{color: '#10b981', marginRight: '10px', fontSize: '20px'}}>✅</span>
+  <span style={{color: '#e2e8f0'}}>All tests passing (100% coverage)</span>
+</div>
+
+<div style={{marginBottom: '12px', display: 'flex', alignItems: 'center'}}>
+  <span style={{color: '#10b981', marginRight: '10px', fontSize: '20px'}}>✅</span>
+  <span style={{color: '#e2e8f0'}}>Private ERC20 token deployed</span>
+</div>
+
+<div style={{marginBottom: '12px', display: 'flex', alignItems: 'center'}}>
+  <span style={{color: '#10b981', marginRight: '10px', fontSize: '20px'}}>✅</span>
+  <span style={{color: '#e2e8f0'}}>PrivateStaking contract deployed</span>
+</div>
+
+<div style={{marginBottom: '12px', display: 'flex', alignItems: 'center'}}>
+  <span style={{color: '#10b981', marginRight: '10px', fontSize: '20px'}}>✅</span>
+  <span style={{color: '#e2e8f0'}}>Contracts verified on block explorer</span>
+</div>
+
+<div style={{marginBottom: '12px', display: 'flex', alignItems: 'center'}}>
+  <span style={{color: '#10b981', marginRight: '10px', fontSize: '20px'}}>✅</span>
+  <span style={{color: '#e2e8f0'}}>On-chain interaction tested successfully</span>
+</div>
+
+<div style={{marginBottom: '12px', display: 'flex', alignItems: 'center'}}>
+  <span style={{color: '#10b981', marginRight: '10px', fontSize: '20px'}}>✅</span>
+  <span style={{color: '#e2e8f0'}}>Privacy verified (encrypted balances)</span>
+</div>
+
+<div style={{display: 'flex', alignItems: 'center'}}>
+  <span style={{color: '#10b981', marginRight: '10px', fontSize: '20px'}}>✅</span>
+  <span style={{color: '#e2e8f0'}}>Deployment documentation created</span>
+</div>
+
+</div>
+
+---
+
+## 9. Next Steps & Frontend Integration 🌐
+
+Your staking system is live! Here's what you can build next:
+
+<div style={{
+  background: 'rgba(59, 130, 246, 0.1)',
+  border: '1px solid rgba(59, 130, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+### Frontend Integration
+Build a web interface using **wagmi** or **ethers.js** to interact with your staking contract.
+
+### Features to Add:
+- Dashboard showing encrypted staked balances
+- Real-time APY calculator
+- Staking/unstaking forms with privacy UI
+- Transaction history viewer
+- Rewards tracker
+
+### Advanced Features:
+- Multiple staking pools with different APYs
+- NFT staking using Private ERC721
+- Governance voting based on staked amounts
+- Liquidity mining rewards
+
+</div>
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '20px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>📚 Additional Resources:</span>
+  <div style={{marginTop: '10px'}}>
+    <a href="https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/tokens/private-erc721"
+       style={{color: '#60a5fa', display: 'block', marginBottom: '5px'}}
+       target="_blank">
+      → Private ERC721 (NFTs)
+    </a>
+    <a href="https://docs.coti.io"
+       style={{color: '#60a5fa', display: 'block'}}
+       target="_blank">
+      → COTI Documentation
+    </a>
+  </div>
+</div>
+
+---
+
+## 🎉 Congratulations!
+
+You've successfully built and deployed a **production-grade, privacy-preserving staking system** on COTI blockchain!
+
+**What you've accomplished:**
+- ✨ Full privacy using MPC encryption
+- ⚡ Time-based reward distribution
+- 🔒 Secure stake/unstake mechanisms
+- 🎯 On-chain deployment and verification
+- 🛡️ Emergency safety mechanisms
+
+Your users can now stake tokens and earn rewards with **complete confidentiality** - nobody can see their balances or transactions except themselves!
+
+<div style={{
+  background: 'linear-gradient(to right, #8b5cf6, #ec4899)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '30px 0',
+  textAlign: 'center'
+}}>
+  <div style={{fontSize: '24px', marginBottom: '10px'}}>🚀</div>
+  <div style={{color: '#fff', fontSize: '18px', fontWeight: 'bold'}}>
+    Ready to build something even bigger?
+  </div>
+  <div style={{color: '#e2e8f0', marginTop: '8px'}}>
+    Explore more privacy-preserving DeFi protocols on COTI!
+  </div>
+</div>
