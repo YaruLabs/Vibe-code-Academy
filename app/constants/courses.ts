@@ -27,6 +27,26 @@ export const courses: Course[] = [
           title: "Build a Privacy-Preserving Staking System",
           description: "Master advanced blockchain development by creating a production-grade staking smart contract with complete privacy using COTI's MPC technology. Learn to implement encrypted staking, time-based rewards, and secure fund management on-chain."
         }
+      },
+      {
+        id: 2,
+        title: "Privacy-First DAO Governance Platform",
+        image: "/images/image1.jpg",
+        mdxPages: [
+          "/docs/blockchain/dao-system/01-setup-project.mdx",
+          "/docs/blockchain/dao-system/02-implement-governance-logic.mdx",
+          "/docs/blockchain/dao-system/03-voting-system.mdx",
+          "/docs/blockchain/dao-system/04-deploy-verify.mdx"
+        ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io/coti-contracts",
+        demoUrl: "https://docs.coti.io",
+        recommendedAI: ["cotiMcp", "claude"],
+        difficulty: "advance",
+        welcome: {
+          title: "Build a Privacy-Preserving DAO Governance Platform",
+          description: "Master advanced blockchain governance by creating a production-grade DAO with complete privacy using COTI's MPC technology. Learn to implement encrypted voting, confidential proposals, secure vote tallying, and transparent execution while keeping individual votes private."
+        }
       }
     ]
   },

@@ -1,0 +1,376 @@
+# ⚡ Implementing Privacy-Preserving Governance Logic
+
+Now that your environment is ready, let's build the core DAO governance mechanics with **complete privacy** using COTI's MPC technology. Members will be able to create proposals and participate in governance without revealing their voting power or preferences!
+
+---
+
+## 1. Create the Governance Token Contract 🪙
+
+**Action Required:** Use COTI MCP to generate the governance token:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a privacy-preserving governance token contract on COTI that inherits from IPrivateERC20, MpcCore, and AccountOnboard. The token should have a name 'DAO Governance Token' and symbol 'DGOV'. Include encrypted balances using ctUint64 for storing each user's token holdings. Add a function to get voting power as an encrypted value (gtUint64) that only the token holder can decrypt. Implement snapshot functionality to capture voting power at the time a proposal is created to prevent vote manipulation."
+    </div>
+  </div>
+</div>
+
+---
+
+## 2. Create the DAO Smart Contract Base 🏗️
+
+**Action Required:** Now let's build the main DAO governance contract:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a privacy-preserving DAO governance contract called PrivateDAO that inherits from MpcCore and AccountOnboard. The contract should accept the governance token address in the constructor. Define a Proposal struct that includes: proposal ID, proposer address, description (can be public or encrypted), voting start/end timestamps, quorum threshold, encrypted vote counts for 'for', 'against', and 'abstain' votes (using ctUint64), proposal state (Pending, Active, Succeeded, Defeated, Executed), and execution data. Create a mapping to store proposals by ID and track the next proposal ID."
+    </div>
+  </div>
+</div>
+
+---
+
+## 3. Understanding Proposal States 📊
+
+Your DAO will manage proposals through different lifecycle states:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### Proposal Lifecycle:
+
+<div style={{
+  background: 'rgba(59, 130, 246, 0.1)',
+  padding: '16px',
+  borderRadius: '8px',
+  margin: '15px 0'
+}}>
+<code style={{color: '#e2e8f0', display: 'block', lineHeight: '1.8'}}>
+  <span style={{color: '#fbbf24'}}>⏳ Pending</span> → Waiting for voting to start<br/>
+  <span style={{color: '#10b981'}}>🗳️  Active</span> → Currently accepting votes<br/>
+  <span style={{color: '#60a5fa'}}>✅ Succeeded</span> → Passed quorum and majority<br/>
+  <span style={{color: '#ef4444'}}>❌ Defeated</span> → Failed to pass<br/>
+  <span style={{color: '#8b5cf6'}}>⚡ Executed</span> → Successfully executed on-chain
+</code>
+</div>
+
+### State Transitions:
+- **Pending → Active**: When voting period starts (block.timestamp >= startTime)
+- **Active → Succeeded**: When voting ends and proposal passes (votes 'for' > votes 'against' AND quorum met)
+- **Active → Defeated**: When voting ends and proposal fails
+- **Succeeded → Executed**: When proposal actions are executed on-chain
+
+</div>
+
+---
+
+## 4. Implement Proposal Creation 📝
+
+**Action Required:** Add the function to create new proposals:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add a createProposal function to the PrivateDAO contract that accepts a description, voting duration (in seconds), and optional execution calldata. The function should verify that the caller holds governance tokens, create a new proposal with a unique ID, set the voting start time to current block timestamp and end time based on the duration, initialize encrypted vote counters to zero using MPC, set the initial state to Pending, emit a ProposalCreated event, and return the proposal ID. Add a minimum token requirement (e.g., 100 tokens) to create proposals to prevent spam."
+    </div>
+  </div>
+</div>
+
+---
+
+## 5. Implement Proposal State Management 🔄
+
+**Action Required:** Add functions to manage proposal states:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a getProposalState internal function that determines the current state of a proposal based on the current timestamp and vote counts. Check if the proposal is still Pending (before start time), Active (between start and end time), or needs to be finalized (after end time). For finalization, compare encrypted vote counts using MPC.gt (greater than) to determine if the proposal Succeeded or was Defeated. Also check if quorum was met by comparing total votes to the quorum threshold. Add a public updateProposalState function that anyone can call to trigger state transitions."
+    </div>
+  </div>
+</div>
+
+---
+
+## 6. Add Governance Configuration ⚙️
+
+**Action Required:** Implement configurable governance parameters:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add configurable governance parameters to the PrivateDAO contract: quorum percentage (e.g., 10% of total supply must vote), minimum voting period (e.g., 24 hours), maximum voting period (e.g., 7 days), proposal threshold (minimum tokens to create proposal), and execution delay (time between success and execution). Create onlyOwner functions to update these parameters. Add a time lock mechanism to ensure parameter changes don't affect active proposals."
+    </div>
+  </div>
+</div>
+
+---
+
+## 7. Contract Architecture Overview 🏛️
+
+Your DAO governance structure:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`contract PrivateDAO is MpcCore, AccountOnboard {
+
+    // Governance Token
+    IPrivateERC20 public governanceToken;
+
+    // Configuration
+    uint256 public quorumPercentage = 10;
+    uint256 public minVotingPeriod = 1 days;
+    uint256 public maxVotingPeriod = 7 days;
+    uint256 public proposalThreshold = 100e18;
+    uint256 public executionDelay = 2 days;
+
+    // Proposal Storage
+    mapping(uint256 => Proposal) public proposals;
+    uint256 public nextProposalId = 1;
+
+    // Core Functions
+    ✅ createProposal(string description, uint256 duration)
+    ✅ getProposalState(uint256 proposalId) → ProposalState
+    ✅ updateProposalState(uint256 proposalId)
+
+    // Configuration (onlyOwner)
+    ✅ setQuorum(uint256 percentage)
+    ✅ setVotingPeriods(uint256 min, uint256 max)
+    ✅ setProposalThreshold(uint256 threshold)
+
+    // Coming Next: Voting Logic
+    ⏳ castVote(uint256 proposalId, VoteType vote)
+    ⏳ getVotingPower(address voter) → gtUint64
+    ⏳ executeProposal(uint256 proposalId)
+}`}</pre>
+</div>
+
+---
+
+## 8. Understanding Encrypted Vote Storage 🔐
+
+How votes are kept private:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### Vote Count Storage:
+<div style={{
+  background: 'rgba(59, 130, 246, 0.1)',
+  padding: '12px',
+  borderRadius: '8px',
+  margin: '10px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px'
+}}>
+<code style={{color: '#e2e8f0'}}>
+ctUint64 votesFor;      // Total 'for' votes (encrypted)<br/>
+ctUint64 votesAgainst;  // Total 'against' votes (encrypted)<br/>
+ctUint64 votesAbstain;  // Total 'abstain' votes (encrypted)
+</code>
+</div>
+
+### Privacy Benefits:
+- Individual vote choices remain private
+- Running tallies are encrypted during voting
+- Only final results revealed after voting ends
+- Prevents vote manipulation and coercion
+
+<div style={{
+  background: 'rgba(251, 191, 36, 0.1)',
+  border: '1px solid rgba(251, 191, 36, 0.3)',
+  borderRadius: '8px',
+  padding: '12px',
+  marginTop: '15px'
+}}>
+  <span style={{color: '#fbbf24'}}>⚡ Key Insight:</span>
+  <span style={{color: '#cbd5e1', marginLeft: '8px'}}>
+    Vote tallies accumulate using MPC addition, so the running total stays encrypted until you choose to reveal it!
+  </span>
+</div>
+
+</div>
+
+---
+
+## ✅ Checkpoint
+
+You now have:
+- ✅ A privacy-preserving governance token
+- ✅ DAO contract with proposal management
+- ✅ Proposal state machine
+- ✅ Configurable governance parameters
+- ✅ Encrypted vote count storage
+- ✅ Access control mechanisms
+
+**Next Step:** Implement the confidential voting system where members can cast private votes!
