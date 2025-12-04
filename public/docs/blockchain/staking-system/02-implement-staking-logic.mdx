@@ -115,7 +115,7 @@ Stored encrypted values that only authorized users can decrypt.
   fontFamily: 'monospace',
   fontSize: '14px'
 }}>
-<code style={{color: '#60a5fa'}}>
+<code style={{color: '#e2e8f0'}}>
 ctUint64 userStakedBalance; // Encrypted on-chain
 </code>
 </div>
@@ -131,7 +131,7 @@ User-provided encrypted inputs with signatures for authenticity.
   fontFamily: 'monospace',
   fontSize: '14px'
 }}>
-<code style={{color: '#60a5fa'}}>
+<code style={{color: '#e2e8f0'}}>
 function stake(itUint64 calldata amount) // User input
 </code>
 </div>
@@ -147,7 +147,7 @@ Runtime encrypted values for secure computations.
   fontFamily: 'monospace',
   fontSize: '14px'
 }}>
-<code style={{color: '#60a5fa'}}>
+<code style={{color: '#e2e8f0'}}>
 gtUint64 newBalance = MPC.add(currentBalance, amount);
 </code>
 </div>
@@ -270,9 +270,10 @@ Your staking contract structure:
   padding: '20px',
   margin: '20px 0',
   fontFamily: 'monospace',
-  fontSize: '14px'
+  fontSize: '14px',
+  color: '#e2e8f0'
 }}>
-<pre>{`contract PrivateStaking is MpcCore, AccountOnboard {
+<pre style={{margin: 0}}>{`contract PrivateStaking is MpcCore, AccountOnboard {
 
     // State Variables (all encrypted)
     mapping(address => ctUint64) stakedBalances;

@@ -239,9 +239,10 @@ Your final staking system:
   padding: '20px',
   margin: '20px 0',
   fontFamily: 'monospace',
-  fontSize: '13px'
+  fontSize: '13px',
+  color: '#e2e8f0'
 }}>
-<pre>{`contract PrivateStaking is MpcCore, AccountOnboard, Pausable {
+<pre style={{margin: 0}}>{`contract PrivateStaking is MpcCore, AccountOnboard, Pausable {
 
     // Configuration
     uint256 public apyRate = 10; // 10% annual
