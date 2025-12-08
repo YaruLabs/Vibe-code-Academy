@@ -47,6 +47,25 @@ export const courses: Course[] = [
           title: "Build a Privacy-Preserving DAO Governance Platform",
           description: "Master advanced blockchain governance by creating a production-grade DAO with complete privacy using COTI's MPC technology. Learn to implement encrypted voting, confidential proposals, secure vote tallying, and transparent execution while keeping individual votes private."
         }
+      },
+      {
+        id: 3,
+        title: "Private Token Faucet",
+        image: "/images/image1.jpg",
+        mdxPages: [
+          "/docs/blockchain/token-faucet/01-setup-project.mdx",
+          "/docs/blockchain/token-faucet/02-implement-faucet-logic.mdx",
+          "/docs/blockchain/token-faucet/03-deploy-verify.mdx"
+        ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io/coti-contracts",
+        demoUrl: "https://docs.coti.io",
+        recommendedAI: ["cotiMcp", "claude"],
+        difficulty: "beginner",
+        welcome: {
+          title: "Build Your First Private Token Faucet",
+          description: "Perfect for beginners! Learn blockchain privacy fundamentals by building a token faucet that distributes tokens with encrypted amounts. Understand MPC basics, encrypted data types, and deploy your first privacy-preserving smart contract on COTI."
+        }
       }
     ]
   },

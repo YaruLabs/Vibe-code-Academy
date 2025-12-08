@@ -1,0 +1,226 @@
+# 🚰 Project Setup & Environment Configuration
+
+Welcome to building a **Privacy-Preserving Token Faucet** on COTI! In this beginner-friendly tutorial, you'll learn how to create a faucet that distributes private tokens while keeping the amounts confidential.
+
+---
+
+## What is a Token Faucet? 💧
+
+A token faucet is a smart contract that distributes free tokens to users - commonly used for testing and onboarding. Our faucet will be special because:
+
+- **Private Balances**: Token amounts are encrypted on-chain
+- **Cooldown Protection**: Users can only claim once per period
+- **Admin Controls**: Owner can refill and configure the faucet
+
+---
+
+## 1. Initialize the Smart Contract Project 💬
+
+**Action Required:** Go to the **COTI MCP Assistant** interface. Copy the text below exactly and paste it into the chat.
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a new Hardhat project for a COTI token faucet. Set up the basic structure with @coti-io/coti-contracts library, configure the network settings for COTI devnet, and create the initial folder structure. This is a beginner project so keep the structure simple with just a contracts, scripts, and test folder."
+    </div>
+  </div>
+</div>
+
+---
+
+## 2. Understanding the Project Structure 📁
+
+After running the prompt, your project will have the following structure:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`token-faucet/
+├── contracts/
+│   └── PrivateFaucet.sol
+├── scripts/
+│   └── deploy.js
+├── test/
+│   └── PrivateFaucet.test.js
+├── hardhat.config.js
+├── package.json
+└── .env.example`}</pre>
+</div>
+
+---
+
+## 3. Install Required Dependencies 📦
+
+**Action Required:** Copy and paste this prompt to install all necessary packages:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Install the @coti-io/coti-contracts package for our faucet project. Explain briefly what MPC (Multi-Party Computation) is and why it makes our token balances private. Keep the explanation simple for beginners."
+    </div>
+  </div>
+</div>
+
+---
+
+## 4. Key Concepts for Beginners 🎓
+
+Before we code, let's understand the basics:
+
+### A. What is MPC?
+Multi-Party Computation allows encrypted data to be processed without revealing the actual values. Think of it like a sealed envelope that can be added to other sealed envelopes - you get a result without ever opening them!
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '10px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>📚 Reference:</span>
+  <a href="https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/mpc-core"
+     style={{color: '#60a5fa', marginLeft: '8px'}}
+     target="_blank">
+    MPC Core Documentation
+  </a>
+</div>
+
+### B. Encrypted Data Types
+COTI provides special data types for private values:
+- `ctUint64` - Encrypted unsigned integer (stored on-chain)
+- `gtUint64` - Garbled unsigned integer (used in computations)
+
+<div style={{
+  background: 'rgba(245, 158, 11, 0.1)',
+  border: '1px solid rgba(245, 158, 11, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '10px 0'
+}}>
+  <span style={{color: '#f59e0b', fontWeight: 'bold'}}>💡 Tip:</span>
+  <span style={{marginLeft: '8px'}}>Think of <code>ct</code> as "ciphertext" (encrypted) and <code>gt</code> as "garbled" (for processing)!</span>
+</div>
+
+---
+
+## 5. Environment Variables Setup 🔐
+
+**Action Required:** Ask COTI MCP to configure your environment variables:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        👇 COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a .env file with the COTI devnet configuration. Include comments explaining what each variable does. Generate a test wallet for me to use during development."
+    </div>
+  </div>
+</div>
+
+---
+
+## ✅ Checkpoint
+
+At this point, you should have:
+- ✅ A Hardhat project configured for COTI blockchain
+- ✅ @coti-io/coti-contracts library installed
+- ✅ Basic understanding of MPC and encrypted types
+- ✅ Environment variables configured
+- ✅ A test wallet ready for development
+
+**Next Step:** Let's implement the faucet logic with privacy features!
