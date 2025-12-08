@@ -1,0 +1,591 @@
+# 🔄 Phase 2: AMM Smart Contracts with Privacy
+
+Now we'll implement the core AMM (Automated Market Maker) smart contracts. These contracts power the token swapping functionality with encrypted amounts using COTI's MPC technology.
+
+---
+
+## 🧠 Understanding AMM Before Coding
+
+Before we write code, let's understand what makes our AMM special:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+### Traditional AMM vs Private AMM
+
+| Aspect | Traditional (Uniswap) | Our Private AMM |
+|--------|----------------------|-----------------|
+| Reserves | Public on-chain | Public (needed for pricing) |
+| Swap Amounts | Visible to all | Encrypted (only user knows) |
+| User Balances | Public | Encrypted |
+| Trade History | Fully transparent | Amounts hidden |
+
+</div>
+
+---
+
+## ⚡ ACTION: CREATE THE CORE AMM CONTRACT
+
+**Mission:** Use your **AI Assistant** to create the PrivateAMM.sol contract.
+
+<div style={{
+  background: 'linear-gradient(135deg, #1e40af, #7c3aed)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 60px -15px rgba(30, 64, 175, 0.6)'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#10b981', borderRadius:'50%',
+            boxShadow:'0 0 12px #10b981'
+        }}></div>
+        <span style={{color: '#6ee7b7', fontWeight: 'bold', fontSize: '0.85rem'}}>
+          PRIVATE_AMM_CONTRACT.prompt
+        </span>
+        <span style={{
+            background: 'rgba(16, 185, 129, 0.2)', color: '#a7f3d0', fontSize: '0.65rem',
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(16, 185, 129, 0.3)'
+        }}>SOLIDITY + MPC</span>
+      </div>
+
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #10b981, #3b82f6)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('amm-contract-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("AMM Contract Prompt Copied! 🔄");
+        }}
+      >
+        <span>⚡ COPY PROMPT</span>
+      </button>
+    </div>
+
+    <div id="amm-contract-prompt" style={{
+      padding: '24px',
+      maxHeight: '500px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Create a PrivateAMM.sol smart contract for COTI blockchain that implements a constant product AMM (x*y=k) with privacy-preserving features.
+
+REQUIREMENTS:
+
+1. IMPORTS & INHERITANCE
+- Import MpcCore from @coti-io/coti-contracts for encrypted operations
+- Import DataPrivacyFramework for user onboarding
+- Import PrivateERC20 interfaces for token interactions
+- Inherit from Ownable for admin functions
+
+2. STATE VARIABLES
+- token0: address (first token in pair)
+- token1: address (second token in pair)
+- reserve0: uint256 (public reserve for price calculation)
+- reserve1: uint256 (public reserve for price calculation)
+- kLast: uint256 (last k value for fee calculation)
+- totalFees0: ctUint64 (encrypted accumulated fees token0)
+- totalFees1: ctUint64 (encrypted accumulated fees token1)
+- swapFee: uint256 (fee percentage, e.g., 30 = 0.3%)
+- FEE_DENOMINATOR: constant 10000
+
+3. CORE FUNCTIONS
+
+function swap(
+    itUint64 calldata amountIn,
+    address tokenIn,
+    itUint64 calldata minAmountOut
+) external returns (ctUint64 amountOut)
+
+This function should:
+- Verify tokenIn is either token0 or token1
+- Convert input amount to garbled type for computation
+- Calculate output using: amountOut = (amountIn * reserveOut * (FEE_DENOMINATOR - swapFee)) / (reserveIn * FEE_DENOMINATOR + amountIn * (FEE_DENOMINATOR - swapFee))
+- Verify amountOut >= minAmountOut (encrypted comparison)
+- Transfer tokenIn from user (private transfer)
+- Transfer tokenOut to user (private transfer)
+- Update reserves
+- Emit SwapExecuted event (without amounts for privacy)
+
+function getAmountOut(
+    uint256 amountIn,
+    address tokenIn
+) external view returns (uint256 amountOut)
+
+Public view function for UI price quotes:
+- Use public reserves for calculation
+- Apply fee deduction
+- Return expected output amount
+
+function getPrice(
+    address tokenIn,
+    address tokenOut
+) external view returns (uint256 price)
+
+Returns price ratio (scaled by 1e18):
+- price = reserveOut * 1e18 / reserveIn
+
+4. RESERVE MANAGEMENT
+
+function _updateReserves(uint256 newReserve0, uint256 newReserve1) internal
+
+Updates reserves after swaps:
+- Must maintain k or increase it (fees)
+- Emit Sync event with new reserves
+
+5. EVENTS
+- SwapExecuted(address indexed user, address tokenIn, address tokenOut, uint256 timestamp)
+- Sync(uint256 reserve0, uint256 reserve1)
+
+6. SECURITY
+- Add reentrancy guard
+- Validate all inputs
+- Use SafeMath for calculations
+- Check for zero addresses
+
+7. MPC INTEGRATION NOTES
+Use these COTI MPC patterns:
+- gtUint64 for garbled computations
+- MpcCore.decrypt() only when necessary
+- MpcCore.transfer() for private token transfers
+- gtBool for encrypted comparisons
+
+Add comprehensive NatSpec comments explaining each function.`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## 📐 The Math Behind Swaps
+
+Let's understand the constant product formula in detail:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(59, 130, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace'
+}}>
+
+```
+Initial State:
+  Reserve ETH (x) = 100
+  Reserve USDC (y) = 200,000
+  k = x * y = 20,000,000
+
+User wants to swap 1 ETH:
+  New x = 100 + 1 = 101
+  New y = k / new_x = 20,000,000 / 101 = 198,019.80
+
+  USDC received = 200,000 - 198,019.80 = 1,980.20 USDC
+
+With 0.3% fee:
+  Effective input = 1 * 0.997 = 0.997 ETH
+  New x = 100 + 0.997 = 100.997
+  New y = 20,000,000 / 100.997 = 198,025.74
+
+  USDC received = 200,000 - 198,025.74 = 1,974.26 USDC
+  Fee collected = 1,980.20 - 1,974.26 = 5.94 USDC equivalent
+```
+
+</div>
+
+---
+
+## ⚡ ACTION: CREATE THE ROUTER CONTRACT
+
+The Router handles swap routing and multi-hop swaps:
+
+<div style={{
+  background: 'linear-gradient(135deg, #7c3aed, #ec4899)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 60px -15px rgba(124, 58, 237, 0.6)'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#ec4899', borderRadius:'50%',
+            boxShadow:'0 0 12px #ec4899'
+        }}></div>
+        <span style={{color: '#f9a8d4', fontWeight: 'bold', fontSize: '0.85rem'}}>
+          PRIVATE_ROUTER_CONTRACT.prompt
+        </span>
+      </div>
+
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #ec4899, #8b5cf6)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('router-contract-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Router Contract Prompt Copied! 🛣️");
+        }}
+      >
+        <span>⚡ COPY PROMPT</span>
+      </button>
+    </div>
+
+    <div id="router-contract-prompt" style={{
+      padding: '24px',
+      maxHeight: '400px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Create a PrivateRouter.sol contract that routes swaps through multiple pools for optimal execution.
+
+REQUIREMENTS:
+
+1. STATE VARIABLES
+- factory: address (pool factory address)
+- WETH: address (wrapped native token)
+- pools: mapping(address => mapping(address => address)) (token pair to pool)
+
+2. CORE SWAP FUNCTIONS
+
+function swapExactTokensForTokens(
+    itUint64 calldata amountIn,
+    itUint64 calldata amountOutMin,
+    address[] calldata path,
+    address to,
+    uint256 deadline
+) external returns (ctUint64[] memory amounts)
+
+Multi-hop swap through path:
+- path[0] is input token, path[n-1] is output token
+- Execute swap through each pool in sequence
+- Verify final output >= amountOutMin
+- Deadline check for transaction expiry
+
+function swapTokensForExactTokens(
+    itUint64 calldata amountOut,
+    itUint64 calldata amountInMax,
+    address[] calldata path,
+    address to,
+    uint256 deadline
+) external returns (ctUint64[] memory amounts)
+
+Swap to get exact output amount.
+
+3. QUOTE FUNCTIONS (Public, for UI)
+
+function getAmountsOut(
+    uint256 amountIn,
+    address[] calldata path
+) external view returns (uint256[] memory amounts)
+
+Calculate output amounts through path.
+
+function getAmountsIn(
+    uint256 amountOut,
+    address[] calldata path
+) external view returns (uint256[] memory amounts)
+
+Calculate required input for desired output.
+
+4. PRICE IMPACT CALCULATION
+
+function calculatePriceImpact(
+    uint256 amountIn,
+    address[] calldata path
+) external view returns (uint256 impactBps)
+
+Returns price impact in basis points (100 = 1%):
+- Compare spot price vs execution price
+- Warn users of high slippage
+
+5. HELPER FUNCTIONS
+- getPool(address tokenA, address tokenB) returns pool address
+- pairFor(address tokenA, address tokenB) computes deterministic pool address
+- sortTokens(address tokenA, address tokenB) returns sorted pair
+
+Include deadline modifier and comprehensive error messages.`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## 🔒 Privacy Considerations
+
+<div style={{
+  background: 'rgba(245, 158, 11, 0.1)',
+  border: '1px solid rgba(245, 158, 11, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+### What's Encrypted vs Public
+
+**Encrypted (Private):**
+- `amountIn` - How much the user is swapping
+- `amountOut` - How much the user receives
+- `minAmountOut` - User's slippage tolerance
+- Individual balances
+
+**Public (Necessary for AMM):**
+- Pool reserves (needed for price calculation)
+- Price ratios
+- Pool existence
+
+### Why Some Data Must Be Public
+
+The AMM formula `x * y = k` requires knowing reserves to calculate prices. Without public reserves:
+- Users couldn't get price quotes
+- Arbitrageurs couldn't balance prices
+- The DEX would be non-functional
+
+Our privacy is at the **individual level**, not the **protocol level**.
+
+</div>
+
+---
+
+## ⚡ ACTION: ADD TOKEN APPROVAL FLOW
+
+<div style={{
+  background: 'linear-gradient(135deg, #3b82f6, #10b981)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <span style={{color: '#6ee7b7', fontWeight: 'bold', fontSize: '0.85rem'}}>
+        TOKEN_APPROVAL_FLOW.prompt
+      </span>
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #3b82f6, #10b981)',
+            border: 'none', color: 'white', padding: '8px 16px',
+            borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('approval-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Token Approval Prompt Copied! ✅");
+        }}
+      >
+        ⚡ COPY PROMPT
+      </button>
+    </div>
+
+    <div id="approval-prompt" style={{
+      padding: '24px',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Before swapping, users must approve the Router to spend their tokens. Add these functions:
+
+1. In PrivateRouter.sol, add a helper function:
+function ensureApproval(
+    address token,
+    address owner,
+    itUint64 calldata amount
+) internal
+
+2. Create approval checking view:
+function getAllowance(
+    address token,
+    address owner
+) external view returns (ctUint64)
+
+3. The swap flow should be:
+   a. Check if Router has approval
+   b. If not, prompt user to approve first
+   c. Then execute swap
+
+Add events:
+- ApprovalRequired(address token, address owner)
+- ApprovalGranted(address token, address owner)
+
+The approval amount should also be private using COTI's MPC.`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## 🧪 Testing Your AMM
+
+<div style={{
+  background: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+    }}>
+      <span style={{color: '#fcd34d', fontWeight: 'bold', fontSize: '0.85rem'}}>
+        AMM_TESTS.prompt
+      </span>
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #f59e0b, #ef4444)',
+            border: 'none', color: 'white', padding: '8px 16px',
+            borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('test-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Test Prompt Copied! 🧪");
+        }}
+      >
+        ⚡ COPY PROMPT
+      </button>
+    </div>
+
+    <div id="test-prompt" style={{
+      padding: '24px',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Create comprehensive tests for the PrivateAMM contract using Hardhat and Chai:
+
+TEST SUITE:
+
+1. Deployment Tests
+- Should set correct token addresses
+- Should initialize with zero reserves
+- Should set correct fee
+
+2. Swap Tests
+- Should execute basic swap correctly
+- Should apply fee correctly
+- Should respect minAmountOut (slippage protection)
+- Should revert when minAmountOut not met
+- Should update reserves after swap
+- Should emit SwapExecuted event
+
+3. Price Calculation Tests
+- getAmountOut should match manual calculation
+- getPrice should return correct ratio
+- Price impact should increase with larger swaps
+
+4. Security Tests
+- Should prevent reentrancy
+- Should reject invalid token addresses
+- Only authorized addresses can call admin functions
+
+5. Edge Cases
+- Swap with zero amount should revert
+- Swap with insufficient balance should revert
+- Swap after deadline should revert
+
+Use hardhat-coti plugin for MPC testing support.`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## ✅ Checkpoint
+
+After this phase, you should have:
+
+- ✅ PrivateAMM.sol with constant product formula
+- ✅ PrivateRouter.sol for swap routing
+- ✅ Token approval flow
+- ✅ Price calculation functions
+- ✅ Comprehensive test suite
+- ✅ Understanding of AMM mathematics
+
+**Next Step:** Implement Liquidity Pools for users to provide liquidity and earn fees!

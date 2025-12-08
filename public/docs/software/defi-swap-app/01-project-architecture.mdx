@@ -1,0 +1,510 @@
+# 🏗️ Phase 1: DeFi Swap App Architecture & Foundation
+
+Welcome to building a **Privacy-Preserving DEX (Decentralized Exchange)** mobile application! This advanced tutorial will guide you through creating a Uniswap-style AMM (Automated Market Maker) with complete privacy using COTI's MPC technology.
+
+This is an **enterprise-grade** project combining:
+- **iOS Native Development** with SwiftUI
+- **Smart Contract Development** for AMM/DEX
+- **Privacy-Preserving Finance** using COTI's MPC
+
+---
+
+## 🎯 What We're Building
+
+A complete DeFi mobile app featuring:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+| Feature | Description |
+|---------|-------------|
+| **Token Swaps** | Exchange tokens using constant product AMM |
+| **Liquidity Pools** | Add/remove liquidity and earn fees |
+| **Private Balances** | All balances encrypted on-chain |
+| **Price Discovery** | Real-time price calculations |
+| **Slippage Protection** | Configurable slippage tolerance |
+| **Transaction History** | Encrypted swap history |
+
+</div>
+
+---
+
+## ⚡ ACTION: ARCHITECT THE iOS + SMART CONTRACT PROJECT
+
+**Mission:** Use your **AI Assistant** (Claude recommended). Copy the prompt below and paste it into the chat.
+
+<div style={{
+  background: 'linear-gradient(135deg, #1e40af, #7c3aed)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 60px -15px rgba(30, 64, 175, 0.6)'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+
+    {/* Header Bar */}
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#8b5cf6', borderRadius:'50%',
+            boxShadow:'0 0 12px #8b5cf6'
+        }}></div>
+        <span style={{color: '#a78bfa', fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.5px'}}>
+          DEFI_SWAP_ARCHITECT.prompt
+        </span>
+        <span style={{
+            background: 'rgba(139, 92, 246, 0.2)', color: '#c4b5fd', fontSize: '0.65rem',
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(139, 92, 246, 0.3)'
+        }}>AMM + iOS</span>
+      </div>
+
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #7c3aed, #ec4899)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            display: 'flex', alignItems: 'center', gap: '8px',
+            transition: 'transform 0.1s',
+            boxShadow: '0 4px 12px rgba(139, 92, 246, 0.4)'
+        }}
+        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+        onClick={() => {
+            const promptText = document.getElementById('defi-architecture-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("DeFi Architecture Blueprint Copied! 🚀");
+        }}
+      >
+        <span>⚡ COPY FULL ARCHITECTURE</span>
+      </button>
+    </div>
+
+    {/* Scrollable Content Area */}
+    <div id="defi-architecture-prompt" style={{
+      padding: '24px',
+      maxHeight: '600px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`You are a senior blockchain architect and iOS developer specializing in DeFi protocols, SwiftUI, and privacy-preserving smart contracts. Your task is to create a complete, production-ready DeFi Swap application (similar to Uniswap) that runs on COTI blockchain with full privacy.
+
+====================================================================
+🎯 PROJECT OVERVIEW: PRIVACY-PRESERVING DEX
+====================================================================
+
+Application: Native iOS DEX (Decentralized Exchange) Mobile App
+Smart Contracts: AMM (Automated Market Maker) with Privacy
+Target iOS: iOS 16.0+
+Architecture: Clean Architecture + MVVM + Blockchain Layer
+Blockchain: COTI (EVM-compatible with MPC privacy)
+Key Feature: All balances and swap amounts are ENCRYPTED on-chain
+
+====================================================================
+📐 SYSTEM ARCHITECTURE
+====================================================================
+
+This project has TWO major components:
+
+COMPONENT A: SMART CONTRACTS (Solidity + COTI Privacy)
+├── PrivateERC20Factory.sol    - Deploy new private tokens
+├── PrivateAMM.sol             - Core AMM with x*y=k formula
+├── PrivateLiquidityPool.sol   - LP token management
+├── PrivateRouter.sol          - Swap routing and calculations
+└── PriceOracle.sol            - Price feed aggregator
+
+COMPONENT B: iOS APPLICATION (SwiftUI + Web3)
+├── Domain Layer               - Business logic, entities
+├── Data Layer                 - Blockchain interactions
+├── Presentation Layer         - SwiftUI views
+└── Core                       - DI, utilities, constants
+
+====================================================================
+📁 COMPLETE PROJECT STRUCTURE
+====================================================================
+
+PrivateDEX/
+├── SmartContracts/
+│   ├── contracts/
+│   │   ├── core/
+│   │   │   ├── PrivateAMM.sol
+│   │   │   ├── PrivateLiquidityPool.sol
+│   │   │   └── PrivateRouter.sol
+│   │   ├── tokens/
+│   │   │   ├── PrivateERC20.sol
+│   │   │   ├── PrivateLPToken.sol
+│   │   │   └── PrivateERC20Factory.sol
+│   │   ├── libraries/
+│   │   │   ├── MathLib.sol
+│   │   │   ├── SafeMath.sol
+│   │   │   └── PriceCalculator.sol
+│   │   └── interfaces/
+│   │       ├── IPrivateAMM.sol
+│   │       ├── IPrivateRouter.sol
+│   │       └── IPrivateLiquidityPool.sol
+│   ├── scripts/
+│   │   ├── deploy.js
+│   │   ├── createPool.js
+│   │   └── addLiquidity.js
+│   ├── test/
+│   │   ├── PrivateAMM.test.js
+│   │   ├── LiquidityPool.test.js
+│   │   └── Router.test.js
+│   ├── hardhat.config.js
+│   └── package.json
+│
+└── iOSApp/
+    ├── PrivateDEX/
+    │   ├── App/
+    │   │   ├── PrivateDEXApp.swift
+    │   │   ├── AppCoordinator.swift
+    │   │   └── AppState.swift
+    │   ├── Domain/
+    │   │   ├── Entities/
+    │   │   │   ├── Token.swift
+    │   │   │   ├── Pool.swift
+    │   │   │   ├── LiquidityPosition.swift
+    │   │   │   ├── SwapQuote.swift
+    │   │   │   ├── SwapTransaction.swift
+    │   │   │   └── Wallet.swift
+    │   │   ├── UseCases/
+    │   │   │   ├── Swap/
+    │   │   │   │   ├── GetSwapQuoteUseCase.swift
+    │   │   │   │   ├── ExecuteSwapUseCase.swift
+    │   │   │   │   └── GetSwapHistoryUseCase.swift
+    │   │   │   ├── Liquidity/
+    │   │   │   │   ├── AddLiquidityUseCase.swift
+    │   │   │   │   ├── RemoveLiquidityUseCase.swift
+    │   │   │   │   └── GetPoolsUseCase.swift
+    │   │   │   ├── Tokens/
+    │   │   │   │   ├── GetTokensUseCase.swift
+    │   │   │   │   ├── GetTokenBalanceUseCase.swift
+    │   │   │   │   └── ApproveTokenUseCase.swift
+    │   │   │   └── Wallet/
+    │   │   │       ├── ConnectWalletUseCase.swift
+    │   │   │       ├── GetWalletBalanceUseCase.swift
+    │   │   │       └── SignTransactionUseCase.swift
+    │   │   └── RepositoryProtocols/
+    │   │       ├── SwapRepositoryProtocol.swift
+    │   │       ├── LiquidityRepositoryProtocol.swift
+    │   │       ├── TokenRepositoryProtocol.swift
+    │   │       └── WalletRepositoryProtocol.swift
+    │   ├── Data/
+    │   │   ├── Repositories/
+    │   │   │   ├── SwapRepository.swift
+    │   │   │   ├── LiquidityRepository.swift
+    │   │   │   ├── TokenRepository.swift
+    │   │   │   └── WalletRepository.swift
+    │   │   ├── Blockchain/
+    │   │   │   ├── Web3Manager.swift
+    │   │   │   ├── ContractManager.swift
+    │   │   │   ├── AMMContractService.swift
+    │   │   │   ├── RouterContractService.swift
+    │   │   │   ├── TokenContractService.swift
+    │   │   │   └── WalletConnectManager.swift
+    │   │   ├── Network/
+    │   │   │   ├── PriceAPIClient.swift
+    │   │   │   └── TokenListService.swift
+    │   │   └── Local/
+    │   │       ├── FavoriteTokensStorage.swift
+    │   │       ├── TransactionHistoryCache.swift
+    │   │       └── SettingsStorage.swift
+    │   ├── Presentation/
+    │   │   ├── Screens/
+    │   │   │   ├── Swap/
+    │   │   │   │   ├── SwapView.swift
+    │   │   │   │   ├── SwapViewModel.swift
+    │   │   │   │   ├── TokenSelectorView.swift
+    │   │   │   │   ├── SwapConfirmationSheet.swift
+    │   │   │   │   └── SwapSettingsView.swift
+    │   │   │   ├── Pools/
+    │   │   │   │   ├── PoolsListView.swift
+    │   │   │   │   ├── PoolsViewModel.swift
+    │   │   │   │   ├── PoolDetailView.swift
+    │   │   │   │   ├── AddLiquidityView.swift
+    │   │   │   │   └── RemoveLiquidityView.swift
+    │   │   │   ├── Portfolio/
+    │   │   │   │   ├── PortfolioView.swift
+    │   │   │   │   ├── PortfolioViewModel.swift
+    │   │   │   │   ├── PositionCardView.swift
+    │   │   │   │   └── TokenBalanceRow.swift
+    │   │   │   ├── Wallet/
+    │   │   │   │   ├── WalletView.swift
+    │   │   │   │   ├── WalletViewModel.swift
+    │   │   │   │   └── ConnectWalletSheet.swift
+    │   │   │   └── Analytics/
+    │   │   │       ├── AnalyticsView.swift
+    │   │   │       ├── AnalyticsViewModel.swift
+    │   │   │       ├── PriceChartView.swift
+    │   │   │       └── VolumeChartView.swift
+    │   │   ├── Components/
+    │   │   │   ├── TokenInputField.swift
+    │   │   │   ├── TokenAmountView.swift
+    │   │   │   ├── PriceImpactBadge.swift
+    │   │   │   ├── SlippageSelector.swift
+    │   │   │   ├── PoolStatsCard.swift
+    │   │   │   ├── TransactionStatusView.swift
+    │   │   │   ├── ChartView.swift
+    │   │   │   └── GradientButton.swift
+    │   │   └── Navigation/
+    │   │       ├── MainTabView.swift
+    │   │       └── NavigationCoordinator.swift
+    │   ├── Core/
+    │   │   ├── DependencyInjection/
+    │   │   │   └── DIContainer.swift
+    │   │   ├── Extensions/
+    │   │   │   ├── BigInt+Extensions.swift
+    │   │   │   ├── Decimal+Crypto.swift
+    │   │   │   ├── String+Address.swift
+    │   │   │   └── Color+DeFi.swift
+    │   │   ├── Constants/
+    │   │   │   ├── BlockchainConstants.swift
+    │   │   │   ├── ContractAddresses.swift
+    │   │   │   └── AppConstants.swift
+    │   │   └── Utilities/
+    │   │       ├── PriceCalculator.swift
+    │   │       ├── SlippageCalculator.swift
+    │   │       ├── NumberFormatter+Crypto.swift
+    │   │       └── Logger.swift
+    │   └── Resources/
+    │       ├── Assets.xcassets
+    │       ├── TokenIcons/
+    │       └── Info.plist
+    └── PrivateDEX.xcodeproj
+
+====================================================================
+🔧 SMART CONTRACT SPECIFICATIONS
+====================================================================
+
+CONTRACT 1: PrivateAMM.sol
+--------------------------
+Core AMM implementing constant product formula (x * y = k) with privacy.
+
+Key Features:
+- Uses COTI's ctUint64 for encrypted reserves
+- Private swap amounts (no one sees how much you swap)
+- Encrypted LP token balances
+- MPC-secured price calculations
+
+Required Functions:
+- swap(itUint64 amountIn, address tokenIn, address tokenOut, itUint64 minAmountOut)
+- getReserves() returns (ctUint64, ctUint64) [encrypted]
+- getPrice(address tokenIn, address tokenOut) returns (uint256) [public price ratio]
+
+CONTRACT 2: PrivateLiquidityPool.sol
+------------------------------------
+Manages liquidity positions with encrypted balances.
+
+Required Functions:
+- addLiquidity(itUint64 amount0, itUint64 amount1) returns (ctUint64 lpTokens)
+- removeLiquidity(itUint64 lpAmount) returns (ctUint64, ctUint64)
+- getMyPosition() returns (ctUint64) [caller's encrypted LP balance]
+- getTotalLiquidity() returns (uint256) [public total for calculations]
+
+CONTRACT 3: PrivateRouter.sol
+-----------------------------
+Routes swaps and calculates optimal paths.
+
+Required Functions:
+- swapExactTokensForTokens(itUint64 amountIn, itUint64 amountOutMin, address[] path)
+- getAmountOut(uint256 amountIn, address[] path) returns (uint256)
+- calculatePriceImpact(uint256 amountIn, address[] path) returns (uint256)
+
+====================================================================
+🔐 PRIVACY ARCHITECTURE
+====================================================================
+
+WHAT'S PRIVATE (Encrypted with MPC):
+- Individual wallet balances
+- Swap amounts (input and output)
+- Liquidity positions
+- Transaction values
+
+WHAT'S PUBLIC (For AMM to function):
+- Total pool reserves (needed for price calculation)
+- Price ratios between tokens
+- Pool existence and token pairs
+- Transaction success/failure status
+
+This hybrid approach allows:
+✓ Accurate price discovery
+✓ Slippage calculations
+✓ Yet complete privacy for individual users
+
+====================================================================
+📱 iOS UI/UX REQUIREMENTS
+====================================================================
+
+SCREEN 1: SWAP (Main Screen)
+- Token input/output fields with balance display
+- Real-time price calculation
+- Price impact warning (if > 1%)
+- Slippage tolerance selector
+- "Swap" button with confirmation sheet
+- Transaction status tracking
+
+SCREEN 2: POOLS
+- List of available liquidity pools
+- APY/APR estimates
+- Your positions highlighted
+- Add/Remove liquidity flows
+- Pool statistics (TVL, volume, fees)
+
+SCREEN 3: PORTFOLIO
+- Your token balances (decrypted for owner)
+- Your LP positions
+- Total portfolio value
+- Recent transactions
+- PnL tracking
+
+SCREEN 4: ANALYTICS
+- Price charts (candlestick/line)
+- Volume charts
+- TVL over time
+- Top pools by volume/TVL
+
+Design Theme:
+- Dark mode primary (DeFi standard)
+- Accent colors: Purple (#8B5CF6), Pink (#EC4899)
+- Glassmorphism effects
+- Smooth animations (0.3s standard)
+- Haptic feedback on transactions
+
+====================================================================
+🔧 DEPENDENCIES
+====================================================================
+
+Smart Contracts:
+- @coti-io/coti-contracts (MPC primitives)
+- @openzeppelin/contracts (security patterns)
+- hardhat + ethers.js (development)
+
+iOS App:
+- web3.swift (blockchain interactions)
+- WalletConnectSwiftV2 (wallet connection)
+- BigInt (large number handling)
+- Charts (for analytics)
+
+====================================================================
+📤 DELIVERABLES FOR THIS PHASE
+====================================================================
+
+1. Complete folder structure for both SmartContracts/ and iOSApp/
+2. All interface definitions (IPrivateAMM, IPrivateRouter, etc.)
+3. Domain entities for iOS (Token, Pool, SwapQuote, etc.)
+4. Repository protocols
+5. DIContainer setup
+6. Basic navigation structure (MainTabView)
+7. Blockchain constants file with:
+   - COTI Devnet RPC: https://testnet.coti.io/rpc
+   - Chain ID: 7082400
+   - Block Explorer: https://testnet.cotiscan.io
+
+Generate all the code with detailed comments explaining the DeFi concepts.`}
+    </div>
+
+    {/* Visual Footer */}
+    <div style={{
+        background: '#020617',
+        borderTop: '1px solid #1e293b',
+        padding: '8px 20px',
+        display: 'flex', justifyContent: 'flex-end',
+        alignItems: 'center', gap: '10px'
+    }}>
+        <div style={{width:'8px', height:'8px', background:'#8b5cf6', borderRadius:'50%', animation: 'pulse 2s infinite'}}></div>
+        <span style={{fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'sans-serif', fontWeight: 'bold'}}>
+          SCROLL FOR COMPLETE SPECS ↕
+        </span>
+    </div>
+
+  </div>
+</div>
+
+---
+
+## 🎓 Architecture Deep Dive
+
+### The AMM Formula: x * y = k
+
+This is the heart of Uniswap-style DEXs:
+
+<div style={{
+  background: 'rgba(139, 92, 246, 0.1)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+```
+Reserve A × Reserve B = Constant (k)
+
+Example:
+- Pool has 1000 ETH and 2,000,000 USDC
+- k = 1000 × 2,000,000 = 2,000,000,000
+
+When swapping 10 ETH for USDC:
+- New ETH reserve = 1010
+- New USDC reserve = k / 1010 = 1,980,198 USDC
+- User receives = 2,000,000 - 1,980,198 = 19,802 USDC
+```
+
+</div>
+
+### Privacy Layer
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '10px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>📚 Why Privacy Matters in DeFi:</span>
+  <ul style={{marginTop: '10px', paddingLeft: '20px'}}>
+    <li>Prevents front-running attacks</li>
+    <li>Protects trading strategies</li>
+    <li>Hides wallet wealth from observers</li>
+    <li>Enables confidential OTC-style trades</li>
+  </ul>
+</div>
+
+---
+
+## ✅ Checkpoint
+
+After this phase, you'll have:
+
+- ✅ Complete project structure for smart contracts AND iOS app
+- ✅ Understanding of AMM mathematics
+- ✅ Privacy architecture designed
+- ✅ All interfaces and protocols defined
+- ✅ Navigation and DI ready
+
+**Next Step:** Implement the AMM smart contracts with privacy!

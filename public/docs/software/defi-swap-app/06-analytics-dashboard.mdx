@@ -1,0 +1,843 @@
+# 📊 Phase 6: Analytics Dashboard & Final Integration
+
+The final phase! We'll build a comprehensive analytics dashboard showing pool statistics, price charts, and your portfolio performance.
+
+---
+
+## 📈 What We're Building
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+| Feature | Description |
+|---------|-------------|
+| **Price Charts** | Candlestick and line charts for token pairs |
+| **Volume Charts** | 24h, 7d, 30d trading volume |
+| **Pool Stats** | TVL, APY, fee revenue |
+| **Portfolio View** | Your positions and PnL |
+| **Top Pools** | Ranking by TVL and volume |
+
+</div>
+
+---
+
+## ⚡ ACTION: CREATE ANALYTICS VIEW & VIEWMODEL
+
+<div style={{
+  background: 'linear-gradient(135deg, #8b5cf6, #3b82f6)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 60px -15px rgba(139, 92, 246, 0.6)'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#3b82f6', borderRadius:'50%',
+            boxShadow:'0 0 12px #3b82f6'
+        }}></div>
+        <span style={{color: '#93c5fd', fontWeight: 'bold', fontSize: '0.85rem'}}>
+          ANALYTICS_DASHBOARD.prompt
+        </span>
+        <span style={{
+            background: 'rgba(59, 130, 246, 0.2)', color: '#bfdbfe', fontSize: '0.65rem',
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(59, 130, 246, 0.3)'
+        }}>Charts + Stats</span>
+      </div>
+
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #8b5cf6, #3b82f6)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('analytics-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Analytics Dashboard Prompt Copied! 📊");
+        }}
+      >
+        <span>⚡ COPY PROMPT</span>
+      </button>
+    </div>
+
+    <div id="analytics-prompt" style={{
+      padding: '24px',
+      maxHeight: '600px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Create a comprehensive Analytics Dashboard for the DeFi app using SwiftUI and Charts framework.
+
+====================================================================
+ANALYTICSVIEWMODEL.SWIFT
+====================================================================
+
+@MainActor
+class AnalyticsViewModel: ObservableObject {
+
+    // MARK: - Published Properties
+
+    // Overview Stats
+    @Published var totalValueLocked: String = "$0"
+    @Published var totalVolume24h: String = "$0"
+    @Published var totalFees24h: String = "$0"
+    @Published var numberOfPools: Int = 0
+
+    // Price Data
+    @Published var selectedTokenPair: TokenPair?
+    @Published var priceHistory: [PricePoint] = []
+    @Published var currentPrice: Double = 0
+    @Published var priceChange24h: Double = 0
+    @Published var selectedTimeframe: Timeframe = .day
+
+    // Volume Data
+    @Published var volumeHistory: [VolumePoint] = []
+
+    // Top Pools
+    @Published var topPoolsByTVL: [PoolStats] = []
+    @Published var topPoolsByVolume: [PoolStats] = []
+
+    // Portfolio (if connected)
+    @Published var portfolioValue: String = "$0"
+    @Published var portfolioPnL: String = "$0"
+    @Published var portfolioPnLPercent: Double = 0
+    @Published var positions: [LPPosition] = []
+
+    // Loading States
+    @Published var isLoading: Bool = false
+    @Published var selectedTab: AnalyticsTab = .overview
+
+    // MARK: - Types
+
+    enum Timeframe: String, CaseIterable {
+        case hour = "1H"
+        case day = "1D"
+        case week = "1W"
+        case month = "1M"
+        case year = "1Y"
+    }
+
+    enum AnalyticsTab {
+        case overview
+        case pools
+        case portfolio
+    }
+
+    // MARK: - Dependencies
+    private let analyticsService: AnalyticsService
+    private let portfolioUseCase: GetPortfolioUseCase
+
+    // MARK: - Methods
+
+    func loadOverview() async
+    func loadPriceHistory(for pair: TokenPair, timeframe: Timeframe) async
+    func loadVolumeHistory(timeframe: Timeframe) async
+    func loadTopPools() async
+    func loadPortfolio() async
+    func selectTimeframe(_ timeframe: Timeframe)
+    func selectTokenPair(_ pair: TokenPair)
+}
+
+// MARK: - Data Models
+
+struct PricePoint: Identifiable {
+    let id = UUID()
+    let timestamp: Date
+    let open: Double
+    let high: Double
+    let low: Double
+    let close: Double
+}
+
+struct VolumePoint: Identifiable {
+    let id = UUID()
+    let timestamp: Date
+    let volume: Double
+}
+
+struct PoolStats: Identifiable {
+    let id: String
+    let token0: Token
+    let token1: Token
+    let tvl: Double
+    let volume24h: Double
+    let fees24h: Double
+    let apy: Double
+}
+
+struct LPPosition: Identifiable {
+    let id: String
+    let pool: PoolStats
+    let lpTokens: Double
+    let value: Double
+    let share: Double
+    let pnl: Double
+    let pnlPercent: Double
+}
+
+====================================================================
+ANALYTICSVIEW.SWIFT
+====================================================================
+
+struct AnalyticsView: View {
+    @StateObject private var viewModel: AnalyticsViewModel
+
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 24) {
+                    // Tab Selector
+                    tabSelector
+
+                    switch viewModel.selectedTab {
+                    case .overview:
+                        overviewSection
+                    case .pools:
+                        poolsSection
+                    case .portfolio:
+                        portfolioSection
+                    }
+                }
+                .padding()
+            }
+            .background(Color("Background"))
+            .navigationTitle("Analytics")
+        }
+        .task {
+            await viewModel.loadOverview()
+        }
+    }
+
+    // MARK: - Overview Section
+
+    private var overviewSection: some View {
+        VStack(spacing: 20) {
+            // Stats Cards Row
+            HStack(spacing: 12) {
+                StatCard(title: "TVL", value: viewModel.totalValueLocked, icon: "lock.fill")
+                StatCard(title: "24h Volume", value: viewModel.totalVolume24h, icon: "chart.bar.fill")
+            }
+
+            HStack(spacing: 12) {
+                StatCard(title: "24h Fees", value: viewModel.totalFees24h, icon: "dollarsign.circle.fill")
+                StatCard(title: "Pools", value: "\(viewModel.numberOfPools)", icon: "drop.fill")
+            }
+
+            // Price Chart
+            priceChartSection
+
+            // Volume Chart
+            volumeChartSection
+        }
+    }
+
+    private var priceChartSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            // Header
+            HStack {
+                Text("Price")
+                    .font(.headline)
+                    .foregroundColor(.white)
+
+                Spacer()
+
+                // Token Pair Selector
+                Menu {
+                    // Token pair options
+                } label: {
+                    HStack {
+                        Text(viewModel.selectedTokenPair?.displayName ?? "Select Pair")
+                        Image(systemName: "chevron.down")
+                    }
+                    .font(.subheadline)
+                    .foregroundColor(.purple)
+                }
+            }
+
+            // Current Price & Change
+            HStack(alignment: .firstTextBaseline) {
+                Text("$\(viewModel.currentPrice, specifier: "%.4f")")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+
+                Text("\(viewModel.priceChange24h >= 0 ? "+" : "")\(viewModel.priceChange24h, specifier: "%.2f")%")
+                    .font(.subheadline)
+                    .foregroundColor(viewModel.priceChange24h >= 0 ? .green : .red)
+            }
+
+            // Timeframe Selector
+            timeframeSelector
+
+            // Chart
+            PriceChartView(data: viewModel.priceHistory)
+                .frame(height: 200)
+        }
+        .padding()
+        .background(Color("CardBackground"))
+        .cornerRadius(16)
+    }
+
+    private var timeframeSelector: some View {
+        HStack(spacing: 8) {
+            ForEach(AnalyticsViewModel.Timeframe.allCases, id: \.self) { timeframe in
+                Button(action: { viewModel.selectTimeframe(timeframe) }) {
+                    Text(timeframe.rawValue)
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(
+                            viewModel.selectedTimeframe == timeframe
+                                ? Color.purple
+                                : Color.clear
+                        )
+                        .foregroundColor(
+                            viewModel.selectedTimeframe == timeframe
+                                ? .white
+                                : .gray
+                        )
+                        .cornerRadius(8)
+                }
+            }
+        }
+    }
+
+    // MARK: - Pools Section
+
+    private var poolsSection: some View {
+        VStack(spacing: 20) {
+            // Top by TVL
+            poolListSection(title: "Top Pools by TVL", pools: viewModel.topPoolsByTVL)
+
+            // Top by Volume
+            poolListSection(title: "Top Pools by Volume", pools: viewModel.topPoolsByVolume)
+        }
+    }
+
+    // MARK: - Portfolio Section
+
+    private var portfolioSection: some View {
+        VStack(spacing: 20) {
+            // Portfolio Summary Card
+            VStack(spacing: 16) {
+                Text("Portfolio Value")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+
+                Text(viewModel.portfolioValue)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+
+                HStack {
+                    Text(viewModel.portfolioPnL)
+                    Text("(\(viewModel.portfolioPnLPercent, specifier: "%.2f")%)")
+                }
+                .font(.headline)
+                .foregroundColor(viewModel.portfolioPnLPercent >= 0 ? .green : .red)
+            }
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(
+                LinearGradient(
+                    colors: [Color.purple.opacity(0.3), Color.blue.opacity(0.3)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
+            .cornerRadius(16)
+
+            // Positions List
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Your Positions")
+                    .font(.headline)
+                    .foregroundColor(.white)
+
+                ForEach(viewModel.positions) { position in
+                    PositionCard(position: position)
+                }
+            }
+        }
+    }
+}
+
+====================================================================
+CHART COMPONENTS
+====================================================================
+
+Create these chart views using Swift Charts:
+
+1. PriceChartView - Candlestick or line chart
+2. VolumeChartView - Bar chart for volume
+3. StatCard - Glassmorphism stat display
+4. PoolRowView - Pool info row for lists
+5. PositionCard - LP position display
+
+Use animations for data updates and smooth transitions.`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## ⚡ ACTION: CREATE CHART COMPONENTS
+
+<div style={{
+  background: 'linear-gradient(135deg, #10b981, #06b6d4)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+    }}>
+      <span style={{color: '#6ee7b7', fontWeight: 'bold', fontSize: '0.85rem'}}>
+        CHART_COMPONENTS.prompt
+      </span>
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #10b981, #06b6d4)',
+            border: 'none', color: 'white', padding: '8px 16px',
+            borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('charts-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Chart Components Prompt Copied! 📈");
+        }}
+      >
+        ⚡ COPY PROMPT
+      </button>
+    </div>
+
+    <div id="charts-prompt" style={{
+      padding: '24px',
+      maxHeight: '400px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Create SwiftUI chart components using the Charts framework (iOS 16+):
+
+====================================================================
+PRICECHARTVIEW.SWIFT
+====================================================================
+
+import Charts
+
+struct PriceChartView: View {
+    let data: [PricePoint]
+    @State private var selectedPoint: PricePoint?
+
+    var body: some View {
+        Chart {
+            ForEach(data) { point in
+                // Line for closing price
+                LineMark(
+                    x: .value("Time", point.timestamp),
+                    y: .value("Price", point.close)
+                )
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [.purple, .cyan],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+
+                // Area under the line
+                AreaMark(
+                    x: .value("Time", point.timestamp),
+                    y: .value("Price", point.close)
+                )
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [.purple.opacity(0.3), .clear],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+            }
+
+            // Selection indicator
+            if let selected = selectedPoint {
+                RuleMark(x: .value("Time", selected.timestamp))
+                    .foregroundStyle(.white.opacity(0.5))
+
+                PointMark(
+                    x: .value("Time", selected.timestamp),
+                    y: .value("Price", selected.close)
+                )
+                .foregroundStyle(.white)
+            }
+        }
+        .chartXAxis {
+            AxisMarks(values: .automatic) { _ in
+                AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5))
+                    .foregroundStyle(.gray.opacity(0.3))
+                AxisValueLabel()
+                    .foregroundStyle(.gray)
+            }
+        }
+        .chartYAxis {
+            AxisMarks(position: .trailing) { _ in
+                AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5))
+                    .foregroundStyle(.gray.opacity(0.3))
+                AxisValueLabel()
+                    .foregroundStyle(.gray)
+            }
+        }
+        .chartOverlay { proxy in
+            // Gesture handling for selection
+        }
+    }
+}
+
+====================================================================
+VOLUMECHARTVIEW.SWIFT
+====================================================================
+
+struct VolumeChartView: View {
+    let data: [VolumePoint]
+
+    var body: some View {
+        Chart {
+            ForEach(data) { point in
+                BarMark(
+                    x: .value("Time", point.timestamp),
+                    y: .value("Volume", point.volume)
+                )
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [.blue, .purple],
+                        startPoint: .bottom,
+                        endPoint: .top
+                    )
+                )
+                .cornerRadius(4)
+            }
+        }
+        // Same axis styling as price chart
+    }
+}
+
+====================================================================
+STATCARD.SWIFT
+====================================================================
+
+struct StatCard: View {
+    let title: String
+    let value: String
+    let icon: String
+    var change: Double? = nil
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: icon)
+                    .foregroundColor(.purple)
+                Text(title)
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+
+            Text(value)
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+
+            if let change = change {
+                Text("\(change >= 0 ? "+" : "")\(change, specifier: "%.1f")%")
+                    .font(.caption)
+                    .foregroundColor(change >= 0 ? .green : .red)
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color("CardBackground"))
+        .cornerRadius(12)
+    }
+}
+
+Add smooth animations and haptic feedback for interactions.`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## ⚡ ACTION: FINAL INTEGRATION - MAIN TAB VIEW
+
+<div style={{
+  background: 'linear-gradient(135deg, #ec4899, #f59e0b)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+    }}>
+      <span style={{color: '#fcd34d', fontWeight: 'bold', fontSize: '0.85rem'}}>
+        MAIN_TAB_VIEW.prompt
+      </span>
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #ec4899, #f59e0b)',
+            border: 'none', color: 'white', padding: '8px 16px',
+            borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('main-tab-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Main Tab View Prompt Copied! 🏠");
+        }}
+      >
+        ⚡ COPY PROMPT
+      </button>
+    </div>
+
+    <div id="main-tab-prompt" style={{
+      padding: '24px',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Create the MainTabView that ties all screens together:
+
+struct MainTabView: View {
+    @State private var selectedTab: Tab = .swap
+    @StateObject private var walletManager = WalletConnectManager()
+
+    enum Tab {
+        case swap
+        case pools
+        case portfolio
+        case analytics
+    }
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            SwapView()
+                .tabItem {
+                    Image(systemName: "arrow.left.arrow.right")
+                    Text("Swap")
+                }
+                .tag(Tab.swap)
+
+            PoolsListView()
+                .tabItem {
+                    Image(systemName: "drop.fill")
+                    Text("Pools")
+                }
+                .tag(Tab.pools)
+
+            PortfolioView()
+                .tabItem {
+                    Image(systemName: "chart.pie.fill")
+                    Text("Portfolio")
+                }
+                .tag(Tab.portfolio)
+
+            AnalyticsView()
+                .tabItem {
+                    Image(systemName: "chart.line.uptrend.xyaxis")
+                    Text("Analytics")
+                }
+                .tag(Tab.analytics)
+        }
+        .tint(.purple)
+        .environmentObject(walletManager)
+        .onAppear {
+            // Custom tab bar appearance
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = UIColor(Color("Background"))
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+    }
+}
+
+Also update PrivateDEXApp.swift:
+
+@main
+struct PrivateDEXApp: App {
+    @StateObject private var diContainer = DIContainer()
+
+    var body: some Scene {
+        WindowGroup {
+            MainTabView()
+                .environmentObject(diContainer)
+                .preferredColorScheme(.dark)
+        }
+    }
+}`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## 🎉 Congratulations! You Built a DeFi App!
+
+<div style={{
+  background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2))',
+  border: '2px solid rgba(139, 92, 246, 0.5)',
+  borderRadius: '16px',
+  padding: '30px',
+  margin: '30px 0',
+  textAlign: 'center'
+}}>
+
+### 🏆 What You've Accomplished
+
+You've built a **production-grade DeFi application** featuring:
+
+- ✅ **AMM Smart Contracts** with constant product formula
+- ✅ **Privacy-Preserving Swaps** using COTI's MPC
+- ✅ **Liquidity Pools** with LP token mechanics
+- ✅ **iOS App** with SwiftUI and MVVM architecture
+- ✅ **WalletConnect Integration** for secure signing
+- ✅ **Analytics Dashboard** with real-time charts
+- ✅ **Clean Architecture** ready for production
+
+</div>
+
+---
+
+## 🚀 Next Steps & Challenges
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+### Ideas to Extend Your App
+
+1. **Limit Orders** - Add order book functionality
+2. **Yield Farming** - Stake LP tokens for rewards
+3. **Governance** - Token holder voting
+4. **Cross-Chain** - Bridge to other networks
+5. **NFT Trading** - Add NFT marketplace
+6. **Social Features** - Copy trading, leaderboards
+
+### Production Checklist
+
+- [ ] Security audit of smart contracts
+- [ ] Mainnet deployment
+- [ ] App Store submission
+- [ ] Marketing website
+- [ ] Documentation
+- [ ] Community building
+
+</div>
+
+---
+
+## 📚 Resources
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+### COTI Documentation
+- [COTI Docs](https://docs.coti.io)
+- [MPC Core](https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/mpc-core)
+- [Private ERC20](https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/tokens/private-erc20)
+
+### DeFi Learning
+- [Uniswap V2 Whitepaper](https://uniswap.org/whitepaper.pdf)
+- [Constant Product AMM Math](https://medium.com/phoenix-finance/understanding-the-xyk-model-of-pooled-liquidity-7340fdc20d9c)
+
+### iOS Development
+- [SwiftUI Documentation](https://developer.apple.com/xcode/swiftui/)
+- [Swift Charts](https://developer.apple.com/documentation/charts)
+- [WalletConnect Swift](https://docs.walletconnect.com/2.0/swift/sign/installation)
+
+</div>
+
+---
+
+<div style={{
+  background: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    padding: '30px',
+    textAlign: 'center'
+  }}>
+    <h2 style={{color: 'white', marginBottom: '10px'}}>🎓 Tutorial Complete!</h2>
+    <p style={{color: '#94a3b8'}}>
+      You've mastered building a privacy-preserving DeFi application.<br/>
+      Now go build the future of private finance!
+    </p>
+  </div>
+</div>

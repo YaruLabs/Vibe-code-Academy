@@ -182,6 +182,28 @@ export const courses: Course[] = [
           title: "Build a Production-Ready Crypto E-Commerce Platform",
           description: "Master the complete development of a professional iOS e-commerce app with COTI blockchain payments, smart contracts, and enterprise-grade architecture."
         }
+      },
+      {
+        id: 3,
+        title: "DeFi Swap Mobile App (Uniswap-Style)",
+        image: "/images/image3.jpg",
+        mdxPages: [
+          "/docs/software/defi-swap-app/01-project-architecture.mdx",
+          "/docs/software/defi-swap-app/02-amm-smart-contracts.mdx",
+          "/docs/software/defi-swap-app/03-liquidity-pools.mdx",
+          "/docs/software/defi-swap-app/04-swap-interface.mdx",
+          "/docs/software/defi-swap-app/05-wallet-integration.mdx",
+          "/docs/software/defi-swap-app/06-analytics-dashboard.mdx"
+        ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io/coti-contracts",
+        demoUrl: "https://docs.coti.io",
+        recommendedAI: ["cotiMcp", "claude"],
+        difficulty: "advance",
+        welcome: {
+          title: "Build a Privacy-Preserving DEX Mobile App",
+          description: "Master DeFi development by building a complete Uniswap-style decentralized exchange with privacy features. Create AMM smart contracts, liquidity pools, and a professional iOS app with WalletConnect integration, all powered by COTI's MPC technology for encrypted swaps and balances."
+        }
       }
     ]
   }

@@ -1,0 +1,808 @@
+# 🔐 Phase 5: Wallet Integration & Transaction Signing
+
+Now we'll connect real wallets to our DeFi app using WalletConnect. This enables users to sign transactions securely without exposing their private keys.
+
+---
+
+## 🔑 Wallet Connection Flow
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+```
+1. User taps "Connect Wallet"
+         ↓
+2. App generates WalletConnect URI
+         ↓
+3. User scans QR or deep links to wallet app
+         ↓
+4. Wallet app shows connection request
+         ↓
+5. User approves connection
+         ↓
+6. App receives wallet address + session
+         ↓
+7. User can now sign transactions!
+```
+
+</div>
+
+---
+
+## ⚡ ACTION: CREATE WALLET CONNECT MANAGER
+
+<div style={{
+  background: 'linear-gradient(135deg, #8b5cf6, #06b6d4)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 60px -15px rgba(139, 92, 246, 0.6)'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#06b6d4', borderRadius:'50%',
+            boxShadow:'0 0 12px #06b6d4'
+        }}></div>
+        <span style={{color: '#67e8f9', fontWeight: 'bold', fontSize: '0.85rem'}}>
+          WALLET_CONNECT_MANAGER.prompt
+        </span>
+        <span style={{
+            background: 'rgba(6, 182, 212, 0.2)', color: '#a5f3fc', fontSize: '0.65rem',
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(6, 182, 212, 0.3)'
+        }}>WalletConnect V2</span>
+      </div>
+
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #8b5cf6, #06b6d4)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('wallet-connect-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Wallet Connect Prompt Copied! 🔐");
+        }}
+      >
+        <span>⚡ COPY PROMPT</span>
+      </button>
+    </div>
+
+    <div id="wallet-connect-prompt" style={{
+      padding: '24px',
+      maxHeight: '600px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Create a WalletConnectManager class for iOS that handles wallet connections using WalletConnect Swift V2.
+
+====================================================================
+WALLETCONNECTMANAGER.SWIFT
+====================================================================
+
+import Foundation
+import WalletConnectSwiftV2
+import Combine
+
+@MainActor
+class WalletConnectManager: ObservableObject {
+
+    // MARK: - Published Properties
+    @Published var isConnected: Bool = false
+    @Published var connectedAddress: String?
+    @Published var chainId: Int?
+    @Published var connectionURI: String?
+    @Published var isConnecting: Bool = false
+    @Published var error: WalletError?
+
+    // MARK: - Private Properties
+    private var session: Session?
+    private var cancellables = Set<AnyCancellable>()
+
+    // MARK: - Configuration
+    private let projectId = "YOUR_WALLETCONNECT_PROJECT_ID"
+    private let metadata = AppMetadata(
+        name: "Private DEX",
+        description: "Privacy-Preserving Decentralized Exchange",
+        url: "https://privatedex.app",
+        icons: ["https://privatedex.app/icon.png"]
+    )
+
+    // COTI Chain Configuration
+    private let cotiChain = Blockchain(
+        namespace: "eip155",
+        reference: "7082400"  // COTI Devnet Chain ID
+    )!
+
+    // MARK: - Initialization
+
+    init() {
+        configure()
+        subscribeToEvents()
+    }
+
+    private func configure() {
+        // Initialize WalletConnect with project ID
+        Networking.configure(projectId: projectId, socketFactory: DefaultSocketFactory())
+
+        // Configure Sign client
+        let signConfig = Sign.Config(metadata: metadata)
+        Sign.configure(config: signConfig)
+    }
+
+    private func subscribeToEvents() {
+        // Subscribe to session events
+        Sign.instance.sessionSettlePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] session in
+                self?.handleSessionSettled(session)
+            }
+            .store(in: &cancellables)
+
+        Sign.instance.sessionDeletePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.handleSessionDeleted()
+            }
+            .store(in: &cancellables)
+
+        Sign.instance.sessionResponsePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] response in
+                self?.handleSessionResponse(response)
+            }
+            .store(in: &cancellables)
+    }
+
+    // MARK: - Public Methods
+
+    func connect() async throws -> String {
+        isConnecting = true
+        error = nil
+
+        do {
+            // Create session namespaces
+            let methods: Set<String> = [
+                "eth_sendTransaction",
+                "eth_signTransaction",
+                "eth_sign",
+                "personal_sign",
+                "eth_signTypedData"
+            ]
+
+            let events: Set<String> = [
+                "chainChanged",
+                "accountsChanged"
+            ]
+
+            let namespaces: [String: ProposalNamespace] = [
+                "eip155": ProposalNamespace(
+                    chains: [cotiChain],
+                    methods: methods,
+                    events: events
+                )
+            ]
+
+            // Generate URI
+            let uri = try await Sign.instance.connect(
+                requiredNamespaces: namespaces
+            )
+
+            connectionURI = uri.absoluteString
+            return uri.absoluteString
+
+        } catch {
+            isConnecting = false
+            self.error = .connectionFailed(error.localizedDescription)
+            throw error
+        }
+    }
+
+    func disconnect() async throws {
+        guard let session = session else { return }
+
+        try await Sign.instance.disconnect(topic: session.topic)
+        handleSessionDeleted()
+    }
+
+    func signTransaction(_ transaction: EthereumTransaction) async throws -> String {
+        guard let session = session else {
+            throw WalletError.notConnected
+        }
+
+        guard let address = connectedAddress else {
+            throw WalletError.noAddress
+        }
+
+        let params = AnyCodable([
+            "from": address,
+            "to": transaction.to,
+            "data": transaction.data,
+            "value": transaction.value,
+            "gas": transaction.gas,
+            "gasPrice": transaction.gasPrice
+        ])
+
+        let request = Request(
+            topic: session.topic,
+            method: "eth_sendTransaction",
+            params: params,
+            chainId: cotiChain
+        )
+
+        try await Sign.instance.request(params: request)
+
+        // Wait for response (handled by subscriber)
+        // Return transaction hash from response
+        return "pending"
+    }
+
+    func personalSign(message: String) async throws -> String {
+        guard let session = session else {
+            throw WalletError.notConnected
+        }
+
+        guard let address = connectedAddress else {
+            throw WalletError.noAddress
+        }
+
+        let params = AnyCodable([message, address])
+
+        let request = Request(
+            topic: session.topic,
+            method: "personal_sign",
+            params: params,
+            chainId: cotiChain
+        )
+
+        try await Sign.instance.request(params: request)
+        return "pending"
+    }
+
+    // MARK: - Private Handlers
+
+    private func handleSessionSettled(_ session: Session) {
+        self.session = session
+        self.isConnected = true
+        self.isConnecting = false
+
+        // Extract address from session
+        if let account = session.namespaces["eip155"]?.accounts.first {
+            self.connectedAddress = account.address
+            self.chainId = Int(account.blockchain.reference)
+        }
+    }
+
+    private func handleSessionDeleted() {
+        self.session = nil
+        self.isConnected = false
+        self.connectedAddress = nil
+        self.chainId = nil
+        self.connectionURI = nil
+    }
+
+    private func handleSessionResponse(_ response: Response) {
+        // Handle transaction response
+        // Parse result or error
+    }
+
+    // MARK: - Restore Session
+
+    func restoreSessionIfAvailable() {
+        let sessions = Sign.instance.getSessions()
+        if let lastSession = sessions.last {
+            handleSessionSettled(lastSession)
+        }
+    }
+}
+
+// MARK: - Supporting Types
+
+enum WalletError: Error, LocalizedError {
+    case notConnected
+    case noAddress
+    case connectionFailed(String)
+    case transactionFailed(String)
+    case signatureFailed(String)
+
+    var errorDescription: String? {
+        switch self {
+        case .notConnected: return "Wallet not connected"
+        case .noAddress: return "No wallet address available"
+        case .connectionFailed(let msg): return "Connection failed: \(msg)"
+        case .transactionFailed(let msg): return "Transaction failed: \(msg)"
+        case .signatureFailed(let msg): return "Signature failed: \(msg)"
+        }
+    }
+}
+
+struct EthereumTransaction {
+    let to: String
+    let data: String
+    let value: String
+    let gas: String
+    let gasPrice: String
+}
+
+====================================================================
+SETUP INSTRUCTIONS
+====================================================================
+
+1. Add WalletConnectSwiftV2 via SPM:
+   https://github.com/WalletConnect/WalletConnectSwiftV2
+
+2. Get Project ID from https://cloud.walletconnect.com
+
+3. Add to Info.plist for deep linking:
+   <key>CFBundleURLTypes</key>
+   <array>
+     <dict>
+       <key>CFBundleURLSchemes</key>
+       <array>
+         <string>privatedex</string>
+       </array>
+     </dict>
+   </array>
+
+4. Add LSApplicationQueriesSchemes for wallet apps`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## ⚡ ACTION: CREATE WALLET VIEW & VIEWMODEL
+
+<div style={{
+  background: 'linear-gradient(135deg, #10b981, #3b82f6)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+    }}>
+      <span style={{color: '#6ee7b7', fontWeight: 'bold', fontSize: '0.85rem'}}>
+        WALLET_VIEW.prompt
+      </span>
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #10b981, #3b82f6)',
+            border: 'none', color: 'white', padding: '8px 16px',
+            borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('wallet-view-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Wallet View Prompt Copied! 👛");
+        }}
+      >
+        ⚡ COPY PROMPT
+      </button>
+    </div>
+
+    <div id="wallet-view-prompt" style={{
+      padding: '24px',
+      maxHeight: '450px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Create a WalletView and WalletViewModel for managing wallet connection and displaying balances.
+
+====================================================================
+WALLETVIEWMODEL.SWIFT
+====================================================================
+
+@MainActor
+class WalletViewModel: ObservableObject {
+    @Published var isConnected: Bool = false
+    @Published var walletAddress: String?
+    @Published var shortAddress: String?
+    @Published var nativeBalance: String = "0.00"
+    @Published var tokenBalances: [TokenBalance] = []
+    @Published var recentTransactions: [Transaction] = []
+    @Published var isLoading: Bool = false
+    @Published var showQRCode: Bool = false
+    @Published var connectionURI: String?
+
+    private let walletManager: WalletConnectManager
+    private let getBalanceUseCase: GetWalletBalanceUseCase
+    private let getTransactionsUseCase: GetTransactionsUseCase
+
+    func connect() async
+    func disconnect() async
+    func refreshBalances() async
+    func copyAddress()
+}
+
+====================================================================
+WALLETVIEW.SWIFT
+====================================================================
+
+struct WalletView: View {
+    @StateObject private var viewModel: WalletViewModel
+
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 24) {
+                    if viewModel.isConnected {
+                        // Connected State
+                        connectedWalletCard
+                        balancesSection
+                        recentTransactionsSection
+                    } else {
+                        // Disconnected State
+                        connectWalletCard
+                    }
+                }
+                .padding()
+            }
+            .background(Color("Background"))
+            .navigationTitle("Wallet")
+        }
+        .sheet(isPresented: $viewModel.showQRCode) {
+            QRCodeSheet(uri: viewModel.connectionURI ?? "")
+        }
+    }
+
+    // Connected wallet card showing:
+    // - Wallet icon/avatar
+    // - Shortened address (0x1234...5678)
+    // - Copy button
+    // - Disconnect button
+
+    // Balances section:
+    // - Native COTI balance
+    // - Token balances list
+    // - Each with icon, symbol, amount, USD value
+
+    // Recent transactions:
+    // - Swap/Add Liquidity/Remove icons
+    // - Token symbols
+    // - Amounts
+    // - Status (success/pending/failed)
+    // - Timestamp
+}
+
+====================================================================
+CONNECT WALLET SHEET
+====================================================================
+
+struct ConnectWalletSheet: View {
+    Features:
+    - QR Code display for WalletConnect
+    - Deep link buttons for popular wallets (MetaMask, Rainbow, Trust)
+    - "Copy Link" button
+    - Loading state while connecting
+    - Error handling with retry
+}
+
+Style: Dark theme, glassmorphism cards, purple/cyan accents`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## 🔐 Transaction Signing Flow
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+### How Transactions Are Signed
+
+```
+1. User confirms swap in app
+         ↓
+2. App builds transaction data:
+   - Contract address (Router)
+   - Function call (swapExactTokensForTokens)
+   - Encrypted amounts (from MPC)
+   - Gas estimation
+         ↓
+3. WalletConnect sends to wallet app
+         ↓
+4. User reviews & signs in wallet
+         ↓
+5. Signed TX broadcast to COTI
+         ↓
+6. App monitors TX status
+         ↓
+7. Show success/failure to user
+```
+
+### Privacy During Signing
+
+The wallet sees:
+- Contract being called
+- Raw encoded data (not readable amounts)
+- Gas to pay
+
+The wallet does NOT see:
+- Actual swap amounts (encrypted)
+- Your token balances
+- Trade details
+
+</div>
+
+---
+
+## ⚡ ACTION: CREATE TRANSACTION SERVICE
+
+<div style={{
+  background: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+    }}>
+      <span style={{color: '#fcd34d', fontWeight: 'bold', fontSize: '0.85rem'}}>
+        TRANSACTION_SERVICE.prompt
+      </span>
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #f59e0b, #ef4444)',
+            border: 'none', color: 'white', padding: '8px 16px',
+            borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('tx-service-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Transaction Service Prompt Copied! 📝");
+        }}
+      >
+        ⚡ COPY PROMPT
+      </button>
+    </div>
+
+    <div id="tx-service-prompt" style={{
+      padding: '24px',
+      maxHeight: '400px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Create a TransactionService that builds and monitors blockchain transactions:
+
+class TransactionService {
+    private let web3: Web3Manager
+    private let walletConnect: WalletConnectManager
+
+    // Build swap transaction
+    func buildSwapTransaction(
+        amountIn: BigUInt,
+        amountOutMin: BigUInt,
+        path: [String],
+        to: String,
+        deadline: UInt64
+    ) async throws -> EthereumTransaction
+
+    // Build approve transaction
+    func buildApproveTransaction(
+        token: String,
+        spender: String,
+        amount: BigUInt
+    ) async throws -> EthereumTransaction
+
+    // Build add liquidity transaction
+    func buildAddLiquidityTransaction(
+        tokenA: String,
+        tokenB: String,
+        amountA: BigUInt,
+        amountB: BigUInt,
+        minA: BigUInt,
+        minB: BigUInt,
+        to: String,
+        deadline: UInt64
+    ) async throws -> EthereumTransaction
+
+    // Estimate gas
+    func estimateGas(for transaction: EthereumTransaction) async throws -> BigUInt
+
+    // Send transaction via WalletConnect
+    func sendTransaction(_ transaction: EthereumTransaction) async throws -> String
+
+    // Monitor transaction status
+    func waitForConfirmation(txHash: String) async throws -> TransactionReceipt
+
+    // Get transaction by hash
+    func getTransaction(hash: String) async throws -> TransactionDetails?
+}
+
+struct TransactionReceipt {
+    let transactionHash: String
+    let blockNumber: UInt64
+    let status: TransactionStatus
+    let gasUsed: BigUInt
+}
+
+enum TransactionStatus {
+    case pending
+    case confirmed
+    case failed
+}`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## ⚡ ACTION: INTEGRATE WALLET WITH SWAP
+
+<div style={{
+  background: 'linear-gradient(135deg, #ec4899, #8b5cf6)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+    }}>
+      <span style={{color: '#f9a8d4', fontWeight: 'bold', fontSize: '0.85rem'}}>
+        SWAP_WALLET_INTEGRATION.prompt
+      </span>
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #ec4899, #8b5cf6)',
+            border: 'none', color: 'white', padding: '8px 16px',
+            borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('swap-wallet-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Integration Prompt Copied! 🔗");
+        }}
+      >
+        ⚡ COPY PROMPT
+      </button>
+    </div>
+
+    <div id="swap-wallet-prompt" style={{
+      padding: '24px',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Update SwapViewModel to integrate wallet connection and transaction signing:
+
+// Add to SwapViewModel:
+
+@Published var walletConnected: Bool = false
+@Published var transactionHash: String?
+@Published var transactionStatus: TransactionStatus = .idle
+
+private let walletManager: WalletConnectManager
+private let transactionService: TransactionService
+
+func swapTokens() async {
+    // 1. Check wallet connected
+    guard walletManager.isConnected else {
+        swapState = .needsWalletConnection
+        return
+    }
+
+    // 2. Check token approval
+    let allowance = try await checkAllowance()
+    if allowance < inputAmount {
+        swapState = .awaitingApproval
+        try await approveToken()
+    }
+
+    // 3. Build swap transaction
+    swapState = .building
+    let transaction = try await transactionService.buildSwapTransaction(...)
+
+    // 4. Send via WalletConnect
+    swapState = .awaitingSignature
+    let txHash = try await transactionService.sendTransaction(transaction)
+    transactionHash = txHash
+
+    // 5. Wait for confirmation
+    swapState = .confirming
+    let receipt = try await transactionService.waitForConfirmation(txHash: txHash)
+
+    // 6. Update state
+    if receipt.status == .confirmed {
+        swapState = .success(txHash: txHash)
+        await refreshBalances()
+    } else {
+        swapState = .failed(error: "Transaction reverted")
+    }
+}
+
+Add UI feedback for each state with appropriate animations.`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## ✅ Checkpoint
+
+After this phase, you should have:
+
+- ✅ WalletConnectManager for wallet connections
+- ✅ WalletView with connection UI
+- ✅ TransactionService for building/sending TXs
+- ✅ Integration between Swap and Wallet
+- ✅ Transaction status monitoring
+
+**Next Step:** Build the Analytics Dashboard to visualize pool data!

@@ -1,0 +1,755 @@
+# 📱 Phase 4: iOS Swap Interface
+
+Time to build the mobile interface! In this phase, we'll create a beautiful SwiftUI swap interface that connects to our smart contracts.
+
+---
+
+## 🎨 What We're Building
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+### Swap Screen Features
+
+| Component | Description |
+|-----------|-------------|
+| Token Input | Amount field with token selector |
+| Token Output | Calculated output with price |
+| Price Info | Exchange rate, price impact |
+| Settings | Slippage tolerance, deadline |
+| Swap Button | Execute with confirmation |
+
+</div>
+
+---
+
+## ⚡ ACTION: CREATE SWAP VIEW & VIEWMODEL
+
+<div style={{
+  background: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 60px -15px rgba(139, 92, 246, 0.6)'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#ec4899', borderRadius:'50%',
+            boxShadow:'0 0 12px #ec4899'
+        }}></div>
+        <span style={{color: '#f9a8d4', fontWeight: 'bold', fontSize: '0.85rem'}}>
+          SWAP_SCREEN_IOS.prompt
+        </span>
+        <span style={{
+            background: 'rgba(236, 72, 153, 0.2)', color: '#fbcfe8', fontSize: '0.65rem',
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(236, 72, 153, 0.3)'
+        }}>SwiftUI</span>
+      </div>
+
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #ec4899, #8b5cf6)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('swap-screen-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Swap Screen Prompt Copied! 📱");
+        }}
+      >
+        <span>⚡ COPY PROMPT</span>
+      </button>
+    </div>
+
+    <div id="swap-screen-prompt" style={{
+      padding: '24px',
+      maxHeight: '600px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Create a complete SwiftUI Swap screen for the DeFi app with ViewModel following MVVM pattern.
+
+====================================================================
+SWAPVIEWMODEL.SWIFT
+====================================================================
+
+@MainActor
+class SwapViewModel: ObservableObject {
+
+    // MARK: - Published Properties (UI State)
+    @Published var inputToken: Token?
+    @Published var outputToken: Token?
+    @Published var inputAmount: String = ""
+    @Published var outputAmount: String = ""
+    @Published var isLoading: Bool = false
+    @Published var error: SwapError?
+    @Published var priceImpact: Double = 0.0
+    @Published var exchangeRate: Double = 0.0
+    @Published var minimumReceived: String = ""
+    @Published var slippageTolerance: Double = 0.5  // 0.5%
+    @Published var deadline: Int = 20  // 20 minutes
+    @Published var showTokenSelector: Bool = false
+    @Published var selectingInput: Bool = true
+    @Published var swapState: SwapState = .idle
+    @Published var availableTokens: [Token] = []
+    @Published var inputBalance: String = "0.00"
+    @Published var outputBalance: String = "0.00"
+
+    // MARK: - Dependencies
+    private let getSwapQuoteUseCase: GetSwapQuoteUseCase
+    private let executeSwapUseCase: ExecuteSwapUseCase
+    private let getTokenBalanceUseCase: GetTokenBalanceUseCase
+    private let getTokensUseCase: GetTokensUseCase
+
+    // MARK: - State Enum
+    enum SwapState {
+        case idle
+        case fetchingQuote
+        case readyToSwap
+        case awaitingApproval
+        case swapping
+        case success(txHash: String)
+        case failed(error: String)
+    }
+
+    // MARK: - Initialization
+    init(/* inject use cases */)
+
+    // MARK: - Public Methods
+
+    func loadTokens() async
+    // Fetch available tokens from contract/API
+
+    func updateInputAmount(_ amount: String)
+    // Called when user types in input field
+    // Debounce and fetch quote
+
+    func fetchQuote() async
+    // Get swap quote from router contract
+    // Update outputAmount, priceImpact, exchangeRate
+
+    func swapTokens() async
+    // 1. Check approval
+    // 2. If needed, request approval
+    // 3. Execute swap
+    // 4. Update state
+
+    func switchTokens()
+    // Swap input/output tokens
+    // Recalculate quote
+
+    func setMaxInput()
+    // Set input to full balance
+
+    func selectToken(_ token: Token)
+    // Set selected token (input or output based on selectingInput)
+
+    func updateSlippage(_ value: Double)
+    // Update slippage tolerance
+
+    // MARK: - Private Methods
+
+    private func calculateMinimumReceived() -> String
+    // outputAmount * (1 - slippage/100)
+
+    private func validateSwap() -> Bool
+    // Check: tokens selected, amount > 0, balance sufficient
+
+    private func fetchBalance(for token: Token) async -> String
+    // Get decrypted balance from blockchain
+}
+
+====================================================================
+SWAPVIEW.SWIFT
+====================================================================
+
+struct SwapView: View {
+    @StateObject private var viewModel: SwapViewModel
+    @State private var showSettings: Bool = false
+    @State private var showConfirmation: Bool = false
+
+    var body: some View {
+        ZStack {
+            // Background gradient
+            LinearGradient(
+                colors: [Color("BackgroundTop"), Color("BackgroundBottom")],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+
+            ScrollView {
+                VStack(spacing: 16) {
+                    // Header with settings button
+                    headerView
+
+                    // Input Token Card
+                    TokenInputCard(
+                        title: "You Pay",
+                        token: viewModel.inputToken,
+                        amount: $viewModel.inputAmount,
+                        balance: viewModel.inputBalance,
+                        onTokenTap: {
+                            viewModel.selectingInput = true
+                            viewModel.showTokenSelector = true
+                        },
+                        onMaxTap: { viewModel.setMaxInput() }
+                    )
+
+                    // Switch Button
+                    switchButton
+
+                    // Output Token Card
+                    TokenInputCard(
+                        title: "You Receive",
+                        token: viewModel.outputToken,
+                        amount: .constant(viewModel.outputAmount),
+                        balance: viewModel.outputBalance,
+                        isOutput: true,
+                        onTokenTap: {
+                            viewModel.selectingInput = false
+                            viewModel.showTokenSelector = true
+                        }
+                    )
+
+                    // Price Info
+                    if viewModel.inputToken != nil && viewModel.outputToken != nil {
+                        priceInfoView
+                    }
+
+                    // Swap Button
+                    swapButton
+                }
+                .padding()
+            }
+        }
+        .sheet(isPresented: $viewModel.showTokenSelector) {
+            TokenSelectorView(
+                tokens: viewModel.availableTokens,
+                selectedToken: viewModel.selectingInput ? viewModel.inputToken : viewModel.outputToken,
+                onSelect: { token in
+                    viewModel.selectToken(token)
+                }
+            )
+        }
+        .sheet(isPresented: $showSettings) {
+            SwapSettingsView(
+                slippage: $viewModel.slippageTolerance,
+                deadline: $viewModel.deadline
+            )
+        }
+        .sheet(isPresented: $showConfirmation) {
+            SwapConfirmationSheet(
+                viewModel: viewModel,
+                onConfirm: {
+                    Task { await viewModel.swapTokens() }
+                }
+            )
+        }
+        .task {
+            await viewModel.loadTokens()
+        }
+    }
+
+    // MARK: - Subviews
+
+    private var headerView: some View {
+        HStack {
+            Text("Swap")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+
+            Spacer()
+
+            Button(action: { showSettings = true }) {
+                Image(systemName: "gearshape.fill")
+                    .font(.title2)
+                    .foregroundColor(.gray)
+            }
+        }
+    }
+
+    private var switchButton: some View {
+        Button(action: { viewModel.switchTokens() }) {
+            ZStack {
+                Circle()
+                    .fill(Color("CardBackground"))
+                    .frame(width: 44, height: 44)
+                    .shadow(color: .purple.opacity(0.3), radius: 8)
+
+                Image(systemName: "arrow.up.arrow.down")
+                    .font(.title3)
+                    .foregroundColor(.purple)
+            }
+        }
+        .offset(y: -8)
+    }
+
+    private var priceInfoView: some View {
+        VStack(spacing: 12) {
+            // Exchange Rate
+            HStack {
+                Text("Rate")
+                    .foregroundColor(.gray)
+                Spacer()
+                Text("1 \(viewModel.inputToken?.symbol ?? "") = \(viewModel.exchangeRate, specifier: "%.4f") \(viewModel.outputToken?.symbol ?? "")")
+                    .foregroundColor(.white)
+            }
+
+            // Price Impact
+            HStack {
+                Text("Price Impact")
+                    .foregroundColor(.gray)
+                Spacer()
+                Text("\(viewModel.priceImpact, specifier: "%.2f")%")
+                    .foregroundColor(priceImpactColor)
+            }
+
+            // Minimum Received
+            HStack {
+                Text("Minimum Received")
+                    .foregroundColor(.gray)
+                Spacer()
+                Text("\(viewModel.minimumReceived) \(viewModel.outputToken?.symbol ?? "")")
+                    .foregroundColor(.white)
+            }
+        }
+        .padding()
+        .background(Color("CardBackground").opacity(0.5))
+        .cornerRadius(12)
+    }
+
+    private var priceImpactColor: Color {
+        if viewModel.priceImpact < 1 { return .green }
+        if viewModel.priceImpact < 3 { return .yellow }
+        return .red
+    }
+
+    private var swapButton: some View {
+        Button(action: { showConfirmation = true }) {
+            HStack {
+                if viewModel.isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                } else {
+                    Text(swapButtonTitle)
+                        .fontWeight(.semibold)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(swapButtonBackground)
+            .foregroundColor(.white)
+            .cornerRadius(16)
+        }
+        .disabled(!isSwapEnabled)
+    }
+
+    private var swapButtonTitle: String {
+        if viewModel.inputToken == nil || viewModel.outputToken == nil {
+            return "Select Tokens"
+        }
+        if viewModel.inputAmount.isEmpty {
+            return "Enter Amount"
+        }
+        return "Swap"
+    }
+
+    private var isSwapEnabled: Bool {
+        viewModel.inputToken != nil &&
+        viewModel.outputToken != nil &&
+        !viewModel.inputAmount.isEmpty &&
+        !viewModel.isLoading
+    }
+
+    private var swapButtonBackground: some View {
+        Group {
+            if isSwapEnabled {
+                LinearGradient(
+                    colors: [.purple, .pink],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            } else {
+                Color.gray.opacity(0.3)
+            }
+        }
+    }
+}
+
+====================================================================
+ADDITIONAL COMPONENTS NEEDED
+====================================================================
+
+1. TokenInputCard.swift - Reusable token input component
+2. TokenSelectorView.swift - Token selection sheet
+3. SwapConfirmationSheet.swift - Confirmation before swap
+4. SwapSettingsView.swift - Slippage & deadline settings
+
+Create all with modern SwiftUI, dark theme, purple/pink accents.`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## ⚡ ACTION: CREATE TOKEN INPUT CARD COMPONENT
+
+<div style={{
+  background: 'linear-gradient(135deg, #3b82f6, #10b981)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+    }}>
+      <span style={{color: '#6ee7b7', fontWeight: 'bold', fontSize: '0.85rem'}}>
+        TOKEN_INPUT_CARD.prompt
+      </span>
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #3b82f6, #10b981)',
+            border: 'none', color: 'white', padding: '8px 16px',
+            borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('token-card-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Token Card Prompt Copied! 💳");
+        }}
+      >
+        ⚡ COPY PROMPT
+      </button>
+    </div>
+
+    <div id="token-card-prompt" style={{
+      padding: '24px',
+      maxHeight: '400px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Create a TokenInputCard SwiftUI component for the swap interface:
+
+struct TokenInputCard: View {
+    let title: String
+    let token: Token?
+    @Binding var amount: String
+    let balance: String
+    var isOutput: Bool = false
+    let onTokenTap: () -> Void
+    var onMaxTap: (() -> Void)? = nil
+
+    var body: some View {
+        // Card with glassmorphism effect
+        // Dark background with subtle border
+
+        VStack(alignment: .leading, spacing: 12) {
+            // Top row: Title + Balance
+            HStack {
+                Text(title)
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                Spacer()
+                Text("Balance: \(balance)")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+
+                // MAX button (only for input)
+                if !isOutput, let onMax = onMaxTap {
+                    Button("MAX") {
+                        onMax()
+                    }
+                    .font(.caption)
+                    .fontWeight(.bold)
+                    .foregroundColor(.purple)
+                }
+            }
+
+            // Bottom row: Amount + Token Selector
+            HStack {
+                // Amount TextField (or Text for output)
+                if isOutput {
+                    Text(amount.isEmpty ? "0.0" : amount)
+                        .font(.system(size: 32, weight: .medium))
+                        .foregroundColor(.white)
+                } else {
+                    TextField("0.0", text: $amount)
+                        .font(.system(size: 32, weight: .medium))
+                        .foregroundColor(.white)
+                        .keyboardType(.decimalPad)
+                }
+
+                Spacer()
+
+                // Token Selector Button
+                Button(action: onTokenTap) {
+                    HStack(spacing: 8) {
+                        if let token = token {
+                            // Token icon (AsyncImage or SF Symbol)
+                            Circle()
+                                .fill(Color.purple.opacity(0.3))
+                                .frame(width: 28, height: 28)
+                                .overlay(
+                                    Text(String(token.symbol.prefix(1)))
+                                        .font(.caption)
+                                        .fontWeight(.bold)
+                                )
+
+                            Text(token.symbol)
+                                .fontWeight(.semibold)
+                        } else {
+                            Text("Select")
+                                .fontWeight(.semibold)
+                        }
+
+                        Image(systemName: "chevron.down")
+                            .font(.caption)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(Color("CardBackground"))
+                    .cornerRadius(20)
+                    .foregroundColor(.white)
+                }
+            }
+
+            // USD Value (optional)
+            if !amount.isEmpty {
+                Text("≈ $\(calculateUSDValue())")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color("CardBackground"))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color.purple.opacity(0.2), lineWidth: 1)
+                )
+        )
+    }
+}
+
+Add smooth animations and haptic feedback on interactions.`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## ⚡ ACTION: CREATE TOKEN SELECTOR
+
+<div style={{
+  background: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+    }}>
+      <span style={{color: '#fcd34d', fontWeight: 'bold', fontSize: '0.85rem'}}>
+        TOKEN_SELECTOR_VIEW.prompt
+      </span>
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #f59e0b, #ef4444)',
+            border: 'none', color: 'white', padding: '8px 16px',
+            borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('token-selector-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Token Selector Prompt Copied! 🎯");
+        }}
+      >
+        ⚡ COPY PROMPT
+      </button>
+    </div>
+
+    <div id="token-selector-prompt" style={{
+      padding: '24px',
+      maxHeight: '350px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Create a TokenSelectorView as a sheet for selecting tokens:
+
+struct TokenSelectorView: View {
+    let tokens: [Token]
+    let selectedToken: Token?
+    let onSelect: (Token) -> Void
+
+    @Environment(\\.dismiss) private var dismiss
+    @State private var searchText: String = ""
+
+    var filteredTokens: [Token] {
+        if searchText.isEmpty { return tokens }
+        return tokens.filter {
+            $0.name.localizedCaseInsensitiveContains(searchText) ||
+            $0.symbol.localizedCaseInsensitiveContains(searchText)
+        }
+    }
+
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 0) {
+                // Search Bar
+                searchBar
+
+                // Common tokens (quick select)
+                commonTokensSection
+
+                Divider()
+                    .background(Color.gray.opacity(0.3))
+
+                // All tokens list
+                tokenList
+            }
+            .background(Color("Background"))
+            .navigationTitle("Select Token")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Close") { dismiss() }
+                }
+            }
+        }
+    }
+
+    // Search bar with magnifying glass icon
+    // Common tokens as horizontal scroll chips
+    // Token list with: icon, name, symbol, balance
+    // Checkmark on selected token
+    // Smooth selection animation
+}
+
+Token model should have:
+- address: String
+- symbol: String
+- name: String
+- decimals: Int
+- logoURL: URL?
+- balance: String (user's balance)`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## 🔗 Connecting UI to Smart Contracts
+
+<div style={{
+  background: 'rgba(139, 92, 246, 0.1)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+### The Data Flow
+
+```
+User enters amount
+      ↓
+ViewModel.updateInputAmount()
+      ↓
+GetSwapQuoteUseCase.execute()
+      ↓
+SwapRepository.getQuote()
+      ↓
+RouterContractService.getAmountsOut()
+      ↓
+Web3 call to blockchain
+      ↓
+Return quote to UI
+      ↓
+Update outputAmount, priceImpact, etc.
+```
+
+### Privacy in the Flow
+
+- `getAmountsOut()` uses public reserves (OK - just for estimation)
+- Actual swap uses encrypted amounts (private)
+- User balance is decrypted only for the owner
+
+</div>
+
+---
+
+## ✅ Checkpoint
+
+After this phase, you should have:
+
+- ✅ SwapView with complete UI
+- ✅ SwapViewModel with business logic
+- ✅ TokenInputCard component
+- ✅ TokenSelectorView sheet
+- ✅ Settings and confirmation sheets
+- ✅ Understanding of MVVM data flow
+
+**Next Step:** Integrate wallet connection for signing transactions!

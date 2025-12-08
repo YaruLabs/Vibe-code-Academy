@@ -1,0 +1,613 @@
+# 💧 Phase 3: Liquidity Pools & LP Tokens
+
+Liquidity pools are the backbone of any DEX. In this phase, we'll implement private liquidity pools where users can deposit tokens, receive LP tokens, and earn fees from trades.
+
+---
+
+## 🏊 Understanding Liquidity Pools
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+### How Liquidity Providers Earn
+
+```
+1. LP deposits 10 ETH + 20,000 USDC into pool
+2. LP receives LP tokens representing their share
+3. Traders swap, paying 0.3% fee each time
+4. Fees accumulate in the pool
+5. When LP withdraws, they get original + fees
+```
+
+### LP Token Value
+
+```
+Your Share = Your LP Tokens / Total LP Tokens
+
+If you own 10% of LP tokens:
+- Pool has 100 ETH + 200,000 USDC
+- You can claim 10 ETH + 20,000 USDC
+- Plus your share of accumulated fees!
+```
+
+</div>
+
+---
+
+## ⚡ ACTION: CREATE LIQUIDITY POOL CONTRACT
+
+<div style={{
+  background: 'linear-gradient(135deg, #06b6d4, #8b5cf6)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0',
+  boxShadow: '0 0 60px -15px rgba(6, 182, 212, 0.6)'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace',
+    position: 'relative'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        <div style={{
+            width:'12px', height:'12px', background:'#06b6d4', borderRadius:'50%',
+            boxShadow:'0 0 12px #06b6d4'
+        }}></div>
+        <span style={{color: '#67e8f9', fontWeight: 'bold', fontSize: '0.85rem'}}>
+          PRIVATE_LIQUIDITY_POOL.prompt
+        </span>
+        <span style={{
+            background: 'rgba(6, 182, 212, 0.2)', color: '#a5f3fc', fontSize: '0.65rem',
+            padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(6, 182, 212, 0.3)'
+        }}>LP TOKENS</span>
+      </div>
+
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #06b6d4, #8b5cf6)',
+            border: 'none',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('liquidity-pool-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Liquidity Pool Prompt Copied! 💧");
+        }}
+      >
+        <span>⚡ COPY PROMPT</span>
+      </button>
+    </div>
+
+    <div id="liquidity-pool-prompt" style={{
+      padding: '24px',
+      maxHeight: '550px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Create a PrivateLiquidityPool.sol contract that manages liquidity with privacy-preserving LP tokens.
+
+====================================================================
+CONTRACT REQUIREMENTS
+====================================================================
+
+1. INHERITANCE & IMPORTS
+- Inherit from PrivateERC20 (LP token IS the pool contract)
+- Import MpcCore for encrypted operations
+- Import IERC20 for token interactions
+- Import ReentrancyGuard from OpenZeppelin
+
+2. STATE VARIABLES
+
+address public token0;
+address public token1;
+uint256 public reserve0;           // Public for pricing
+uint256 public reserve1;           // Public for pricing
+uint256 public totalLiquidity;     // Total LP tokens minted
+uint256 public constant MINIMUM_LIQUIDITY = 1000;  // Locked forever
+
+// Private fee tracking
+ctUint64 private accumulatedFees0;
+ctUint64 private accumulatedFees1;
+
+// User positions (private)
+mapping(address => ctUint64) private userLiquidity;
+
+3. ADD LIQUIDITY FUNCTION
+
+function addLiquidity(
+    itUint64 calldata amount0Desired,
+    itUint64 calldata amount1Desired,
+    itUint64 calldata amount0Min,
+    itUint64 calldata amount1Min,
+    address to,
+    uint256 deadline
+) external nonReentrant returns (
+    ctUint64 amount0,
+    ctUint64 amount1,
+    ctUint64 liquidity
+)
+
+Logic:
+a) If first deposit (totalLiquidity == 0):
+   - liquidity = sqrt(amount0 * amount1) - MINIMUM_LIQUIDITY
+   - Mint MINIMUM_LIQUIDITY to address(0) (locked forever to prevent division by zero)
+
+b) If subsequent deposit:
+   - Calculate optimal amounts to maintain price ratio
+   - liquidity = min(
+       amount0 * totalLiquidity / reserve0,
+       amount1 * totalLiquidity / reserve1
+     )
+
+c) Transfer tokens from user to pool
+d) Mint LP tokens to user (encrypted balance)
+e) Update reserves
+f) Emit LiquidityAdded event
+
+4. REMOVE LIQUIDITY FUNCTION
+
+function removeLiquidity(
+    itUint64 calldata liquidity,
+    itUint64 calldata amount0Min,
+    itUint64 calldata amount1Min,
+    address to,
+    uint256 deadline
+) external nonReentrant returns (
+    ctUint64 amount0,
+    ctUint64 amount1
+)
+
+Logic:
+a) Calculate share: amount0 = liquidity * reserve0 / totalLiquidity
+b) Calculate share: amount1 = liquidity * reserve1 / totalLiquidity
+c) Verify amounts >= minimums
+d) Burn LP tokens from user
+e) Transfer tokens to user (private transfer)
+f) Update reserves
+g) Emit LiquidityRemoved event
+
+5. VIEW FUNCTIONS
+
+function getReserves() external view returns (
+    uint256 _reserve0,
+    uint256 _reserve1,
+    uint256 _blockTimestamp
+)
+
+function getMyLiquidity() external view returns (ctUint64)
+// Returns caller's encrypted LP balance
+
+function quoteAddLiquidity(
+    uint256 amount0,
+    uint256 amount1
+) external view returns (
+    uint256 optimalAmount0,
+    uint256 optimalAmount1,
+    uint256 expectedLiquidity
+)
+// Helps UI show expected LP tokens before transaction
+
+function quoteRemoveLiquidity(
+    uint256 liquidity
+) external view returns (
+    uint256 amount0,
+    uint256 amount1
+)
+// Helps UI show expected tokens when removing liquidity
+
+6. INTERNAL HELPERS
+
+function _quote(
+    uint256 amountA,
+    uint256 reserveA,
+    uint256 reserveB
+) internal pure returns (uint256 amountB)
+// amountB = amountA * reserveB / reserveA
+
+function _sqrt(uint256 y) internal pure returns (uint256 z)
+// Babylonian method for square root
+
+function _update(
+    uint256 balance0,
+    uint256 balance1
+) internal
+// Update reserves and emit Sync event
+
+7. EVENTS
+
+event LiquidityAdded(
+    address indexed provider,
+    uint256 timestamp
+);
+
+event LiquidityRemoved(
+    address indexed provider,
+    uint256 timestamp
+);
+
+event Sync(uint256 reserve0, uint256 reserve1);
+
+8. MODIFIERS
+
+modifier ensure(uint256 deadline) {
+    require(deadline >= block.timestamp, 'EXPIRED');
+    _;
+}
+
+====================================================================
+PRIVACY NOTES
+====================================================================
+
+- LP token balances are PRIVATE (using PrivateERC20)
+- Amount deposited/withdrawn is PRIVATE
+- Only public data: total reserves (for pricing)
+- User can only see their own position
+
+This prevents:
+- Others knowing how much liquidity you provide
+- Tracking whale LP movements
+- Front-running LP additions/removals`}
+    </div>
+
+    <div style={{
+        background: '#020617',
+        borderTop: '1px solid #1e293b',
+        padding: '8px 20px',
+        display: 'flex', justifyContent: 'flex-end',
+        alignItems: 'center'
+    }}>
+        <span style={{fontSize: '0.7rem', color: '#94a3b8'}}>
+          SCROLL FOR COMPLETE SPECS ↕
+        </span>
+    </div>
+
+  </div>
+</div>
+
+---
+
+## 📊 LP Token Mathematics
+
+<div style={{
+  background: 'rgba(139, 92, 246, 0.1)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+### Initial Liquidity
+
+When the first LP deposits:
+```
+liquidity = sqrt(amount0 * amount1) - MINIMUM_LIQUIDITY
+
+Example:
+- Deposit: 10 ETH + 20,000 USDC
+- liquidity = sqrt(10 * 20000) - 1000
+- liquidity = sqrt(200000) - 1000
+- liquidity = 447.21 - 1000 (would be negative!)
+
+Actually using wei:
+- 10 ETH = 10 * 10^18 wei
+- 20000 USDC = 20000 * 10^6 (USDC has 6 decimals)
+- liquidity = sqrt(10^19 * 2*10^10) - 1000
+- liquidity ≈ 1.41 * 10^14 LP tokens
+```
+
+### Subsequent Liquidity
+
+```
+liquidity = min(
+    amount0 * totalLiquidity / reserve0,
+    amount1 * totalLiquidity / reserve1
+)
+
+This ensures:
+- You can't manipulate your share
+- Price ratio must be maintained
+- Fair distribution of LP tokens
+```
+
+</div>
+
+---
+
+## ⚡ ACTION: CREATE POOL FACTORY
+
+<div style={{
+  background: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+    }}>
+      <span style={{color: '#fcd34d', fontWeight: 'bold', fontSize: '0.85rem'}}>
+        POOL_FACTORY.prompt
+      </span>
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #f59e0b, #ef4444)',
+            border: 'none', color: 'white', padding: '8px 16px',
+            borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('factory-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Factory Prompt Copied! 🏭");
+        }}
+      >
+        ⚡ COPY PROMPT
+      </button>
+    </div>
+
+    <div id="factory-prompt" style={{
+      padding: '24px',
+      maxHeight: '400px',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Create a PoolFactory.sol contract that deploys and tracks liquidity pools.
+
+REQUIREMENTS:
+
+1. STATE VARIABLES
+- allPools: address[] (list of all pools)
+- getPool: mapping(address => mapping(address => address)) (token pair to pool)
+- feeTo: address (protocol fee recipient)
+- feeToSetter: address (can change feeTo)
+
+2. CREATE POOL FUNCTION
+
+function createPool(
+    address tokenA,
+    address tokenB
+) external returns (address pool)
+
+Logic:
+- Require tokenA != tokenB
+- Sort tokens (token0 < token1 for consistency)
+- Require pool doesn't exist
+- Deploy new PrivateLiquidityPool using CREATE2
+- Initialize pool with token addresses
+- Store pool address in mapping (both directions)
+- Push to allPools array
+- Emit PoolCreated event
+
+3. DETERMINISTIC ADDRESSES
+
+Use CREATE2 for deterministic pool addresses:
+- salt = keccak256(abi.encodePacked(token0, token1))
+- Allows calculating pool address without querying
+
+function poolFor(
+    address tokenA,
+    address tokenB
+) external view returns (address)
+
+4. ADMIN FUNCTIONS
+
+function setFeeTo(address _feeTo) external
+function setFeeToSetter(address _feeToSetter) external
+
+5. VIEW FUNCTIONS
+
+function allPoolsLength() external view returns (uint256)
+function getAllPools() external view returns (address[] memory)
+
+6. EVENTS
+
+event PoolCreated(
+    address indexed token0,
+    address indexed token1,
+    address pool,
+    uint256 poolIndex
+);
+
+SECURITY:
+- Only allow one pool per pair
+- Prevent creating pools with same token
+- Validate token addresses`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## 💰 Understanding Impermanent Loss
+
+<div style={{
+  background: 'rgba(239, 68, 68, 0.1)',
+  border: '1px solid rgba(239, 68, 68, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+### What is Impermanent Loss?
+
+When token prices change, LP value can be less than just holding:
+
+```
+Initial Deposit:
+- 1 ETH ($2000) + 2000 USDC = $4000 total
+- Pool ratio: 1 ETH = 2000 USDC
+
+Price Changes (ETH goes to $4000):
+- Arbitrageurs rebalance pool
+- New pool ratio: 0.707 ETH + 2828 USDC
+- Your share value: $2828 + $2828 = $5656
+
+If you had just held:
+- 1 ETH ($4000) + 2000 USDC = $6000
+
+Impermanent Loss = $6000 - $5656 = $344 (5.7%)
+```
+
+### Why Provide Liquidity Anyway?
+
+- Trading fees can offset IL
+- Works best with stable pairs
+- COTI privacy adds value (confidential LP positions)
+
+</div>
+
+---
+
+## ⚡ ACTION: ADD LIQUIDITY HELPER FUNCTIONS
+
+<div style={{
+  background: 'linear-gradient(135deg, #10b981, #3b82f6)',
+  padding: '3px',
+  borderRadius: '16px',
+  margin: '30px 0'
+}}>
+  <div style={{
+    background: '#0a0f1e',
+    borderRadius: '13px',
+    color: '#e2e8f0',
+    fontFamily: 'Menlo, Monaco, Consolas, monospace'
+  }}>
+
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderBottom: '1px solid #334155',
+      padding: '12px 20px',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+    }}>
+      <span style={{color: '#6ee7b7', fontWeight: 'bold', fontSize: '0.85rem'}}>
+        LIQUIDITY_HELPERS.prompt
+      </span>
+      <button
+        style={{
+            background: 'linear-gradient(90deg, #10b981, #3b82f6)',
+            border: 'none', color: 'white', padding: '8px 16px',
+            borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 'bold'
+        }}
+        onClick={() => {
+            const promptText = document.getElementById('helpers-prompt').innerText;
+            navigator.clipboard.writeText(promptText);
+            alert("Helpers Prompt Copied! 🛠️");
+        }}
+      >
+        ⚡ COPY PROMPT
+      </button>
+    </div>
+
+    <div id="helpers-prompt" style={{
+      padding: '24px',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.85rem',
+      lineHeight: '1.6',
+      color: '#cbd5e1'
+    }}>
+{`Add these helper functions to PrivateRouter.sol for liquidity management:
+
+1. ADD LIQUIDITY THROUGH ROUTER
+
+function addLiquidity(
+    address tokenA,
+    address tokenB,
+    itUint64 calldata amountADesired,
+    itUint64 calldata amountBDesired,
+    itUint64 calldata amountAMin,
+    itUint64 calldata amountBMin,
+    address to,
+    uint256 deadline
+) external returns (ctUint64 amountA, ctUint64 amountB, ctUint64 liquidity)
+
+- Get or create pool
+- Calculate optimal amounts
+- Transfer tokens to pool
+- Call pool.mint()
+
+2. REMOVE LIQUIDITY THROUGH ROUTER
+
+function removeLiquidity(
+    address tokenA,
+    address tokenB,
+    itUint64 calldata liquidity,
+    itUint64 calldata amountAMin,
+    itUint64 calldata amountBMin,
+    address to,
+    uint256 deadline
+) external returns (ctUint64 amountA, ctUint64 amountB)
+
+- Find pool
+- Transfer LP tokens to pool
+- Call pool.burn()
+- Transfer underlying tokens to user
+
+3. ESTIMATE FUNCTIONS FOR UI
+
+function estimateLiquidityOutput(
+    address tokenA,
+    address tokenB,
+    uint256 amountA,
+    uint256 amountB
+) external view returns (uint256 liquidity, uint256 sharePercent)
+
+function estimateWithdrawalAmounts(
+    address tokenA,
+    address tokenB,
+    uint256 liquidity
+) external view returns (uint256 amountA, uint256 amountB)`}
+    </div>
+
+  </div>
+</div>
+
+---
+
+## ✅ Checkpoint
+
+After this phase, you should have:
+
+- ✅ PrivateLiquidityPool.sol with LP token functionality
+- ✅ PoolFactory.sol for creating new pools
+- ✅ Add/Remove liquidity functions in Router
+- ✅ Understanding of LP token mathematics
+- ✅ Knowledge of impermanent loss
+
+**Next Step:** Build the iOS Swap Interface to interact with these contracts!
