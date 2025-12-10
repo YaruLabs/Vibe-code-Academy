@@ -1,0 +1,425 @@
+# Deploy and Verify Your NFT Royalties System
+
+Congratulations! You've built a complete privacy-preserving NFT royalties system. Now let's deploy it to COTI devnet and verify the contracts.
+
+---
+
+## 1. Create the Deployment Script
+
+**Action Required:** Use COTI MCP to generate the deployment script:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a deployment script for the NFT royalties system. The script should: 1) Deploy the PrivateRoyaltyNFT contract with a name, symbol, and default royalty percentage, 2) Deploy the PrivateRoyaltyMarketplace contract, 3) Set up the marketplace to recognize the NFT contract, 4) Log all deployed contract addresses, 5) Save the addresses to a deployments.json file for reference. Use ethers.js and Hardhat's deployment utilities."
+    </div>
+  </div>
+</div>
+
+---
+
+## 2. Configure Hardhat for COTI
+
+**Action Required:** Ensure your Hardhat config is ready for deployment:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Update the hardhat.config.js file to include COTI devnet configuration. Add the network with URL https://devnet.coti.io/rpc, chainId 13068200, and accounts from the PRIVATE_KEY environment variable. Also configure the etherscan/sourcify verification settings for COTI's block explorer at https://explorer-devnet.coti.io."
+    </div>
+  </div>
+</div>
+
+---
+
+## 3. Fund Your Deployment Wallet
+
+Before deploying, you need devnet COTI tokens:
+
+<div style={{
+  background: 'rgba(245, 158, 11, 0.1)',
+  border: '1px solid rgba(245, 158, 11, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '20px 0'
+}}>
+  <span style={{color: '#f59e0b', fontWeight: 'bold'}}>Get Devnet Tokens:</span>
+  <ol style={{color: '#e2e8f0', marginTop: '10px', paddingLeft: '20px'}}>
+    <li>Visit the COTI Devnet Faucet</li>
+    <li>Enter your wallet address</li>
+    <li>Request test COTI tokens</li>
+    <li>Wait for the transaction to confirm</li>
+  </ol>
+</div>
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '10px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>Reference:</span>
+  <a href="https://faucet.coti.io"
+     style={{color: '#60a5fa', marginLeft: '8px'}}
+     target="_blank">
+    COTI Devnet Faucet
+  </a>
+</div>
+
+---
+
+## 4. Deploy to COTI Devnet
+
+**Action Required:** Run the deployment:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Run the deployment script to deploy both the PrivateRoyaltyNFT and PrivateRoyaltyMarketplace contracts to COTI devnet. Use the command: npx hardhat run scripts/deploy.js --network coti-devnet. Show me the expected output format with contract addresses."
+    </div>
+  </div>
+</div>
+
+---
+
+## 5. Expected Deployment Output
+
+After successful deployment, you should see:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`Deploying NFT Royalties System to COTI Devnet...
+
+Deploying PrivateRoyaltyNFT...
+  Name: PrivateRoyaltyNFT
+  Symbol: PRNFT
+  Default Royalty: 5%
+  ✓ PrivateRoyaltyNFT deployed to: 0x1234...abcd
+
+Deploying PrivateRoyaltyMarketplace...
+  Marketplace Fee: 2.5%
+  ✓ PrivateRoyaltyMarketplace deployed to: 0x5678...efgh
+
+Deployment Summary:
+├── NFT Contract: 0x1234...abcd
+├── Marketplace: 0x5678...efgh
+└── Network: COTI Devnet (13068200)
+
+Addresses saved to: deployments/coti-devnet.json`}</pre>
+</div>
+
+---
+
+## 6. Verify Contracts on Explorer
+
+**Action Required:** Verify your contracts for transparency:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create verification commands for both contracts on COTI's block explorer. Use Hardhat's verify task with the correct constructor arguments. For PrivateRoyaltyNFT include the name, symbol, and default royalty. For PrivateRoyaltyMarketplace include any constructor arguments. Show the full commands to run."
+    </div>
+  </div>
+</div>
+
+---
+
+## 7. Test the Deployed System
+
+**Action Required:** Create a test script to verify everything works:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create an interaction script that tests the full royalty flow on the deployed contracts: 1) Mint an NFT with 5% royalty, 2) Approve the marketplace to transfer the NFT, 3) List the NFT for sale at 1 COTI, 4) Have a second account buy the NFT, 5) Verify the royalty was paid and recorded, 6) Check the creator's encrypted accumulated royalties. Use ethers.js and load the contract addresses from deployments.json."
+    </div>
+  </div>
+</div>
+
+---
+
+## 8. View on Block Explorer
+
+After deployment, you can view your contracts:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0'
+}}>
+
+### COTI Devnet Explorer
+https://explorer-devnet.coti.io
+
+### What You Can See:
+- Contract source code (after verification)
+- All transactions
+- Token transfers
+- Event logs
+- Read/Write contract functions
+
+### What Remains Private:
+- Encrypted royalty amounts (ctUint64 values appear as ciphertext)
+- Individual creator earnings
+- Withdrawal amounts
+
+</div>
+
+---
+
+## 9. System Architecture Summary
+
+Your complete NFT royalties system:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '13px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`┌─────────────────────────────────────────────────────────────┐
+│                    NFT ROYALTIES SYSTEM                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌─────────────────────┐    ┌─────────────────────┐         │
+│  │  PrivateRoyaltyNFT  │    │ PrivateRoyalty      │         │
+│  │                     │    │ Marketplace         │         │
+│  │  • ERC721 Tokens    │◄───│                     │         │
+│  │  • ERC2981 Royalty  │    │  • List NFTs        │         │
+│  │  • Creator Tracking │    │  • Buy with Royalty │         │
+│  │  • Encrypted        │    │  • Fee Distribution │         │
+│  │    Earnings (MPC)   │    │                     │         │
+│  └─────────────────────┘    └─────────────────────┘         │
+│           │                           │                      │
+│           └───────────┬───────────────┘                      │
+│                       │                                      │
+│              ┌────────▼────────┐                            │
+│              │  COTI Privacy   │                            │
+│              │    Layer        │                            │
+│              │                 │                            │
+│              │  • MPC Core     │                            │
+│              │  • Encrypted    │                            │
+│              │    Storage      │                            │
+│              │  • Secure       │                            │
+│              │    Computation  │                            │
+│              └─────────────────┘                            │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘`}</pre>
+</div>
+
+---
+
+## Congratulations!
+
+You've successfully built and deployed a **Privacy-Preserving NFT Royalties System** on COTI!
+
+### What You Learned:
+- ERC721 NFT implementation with OpenZeppelin
+- ERC2981 royalty standard integration
+- COTI's MPC technology for encrypted values
+- Privacy-preserving balance tracking
+- Marketplace integration with automatic royalty enforcement
+- Smart contract deployment and verification
+
+### Key Features:
+- Creators earn royalties on every secondary sale
+- Royalty amounts are completely private
+- Only creators can see their accumulated earnings
+- Automatic enforcement through marketplace
+- Standard-compliant (ERC721 + ERC2981)
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '20px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>Next Steps:</span>
+  <ul style={{color: '#e2e8f0', marginTop: '10px', paddingLeft: '20px'}}>
+    <li>Build a frontend to interact with your contracts</li>
+    <li>Add more NFT metadata (attributes, collections)</li>
+    <li>Implement auction functionality</li>
+    <li>Deploy to COTI mainnet for production</li>
+  </ul>
+</div>
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '10px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>Documentation:</span>
+  <a href="https://docs.coti.io"
+     style={{color: '#60a5fa', marginLeft: '8px'}}
+     target="_blank">
+    COTI Official Documentation
+  </a>
+</div>

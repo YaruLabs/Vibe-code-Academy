@@ -1,0 +1,374 @@
+# Implementing Privacy-Preserving Royalty Logic
+
+Now comes the exciting part - adding **privacy-preserving royalty tracking** using COTI's MPC technology. Creators will be able to accumulate royalties from secondary sales while keeping their earnings completely private!
+
+---
+
+## 1. Add Encrypted Royalty Tracking
+
+**Action Required:** Use COTI MCP to add private royalty accumulation:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add privacy-preserving royalty tracking to the PrivateRoyaltyNFT contract. Create a mapping from creator addresses to encrypted accumulated royalties using ctUint64. Add a function _recordRoyaltyPayment that takes a creator address and an encrypted royalty amount (itUint64), then adds it to the creator's accumulated royalties using MPC.add. The accumulated amount should remain encrypted and only decryptable by the creator."
+    </div>
+  </div>
+</div>
+
+---
+
+## 2. Understanding Private Royalty Flow
+
+Here's how the privacy-preserving royalty system works:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### 1. Sale Occurs
+Marketplace executes a sale and calls `payRoyalty()`
+
+### 2. Royalty Calculated
+Contract calculates royalty amount based on ERC2981
+
+### 3. Encrypted Recording
+Royalty amount is encrypted and added to creator's balance using MPC
+
+### 4. Private Accumulation
+Total earnings remain encrypted - only creator can decrypt
+
+### 5. Withdrawal
+Creator can claim their encrypted balance privately
+
+</div>
+
+---
+
+## 3. Implement the Pay Royalty Function
+
+**Action Required:** Create the main royalty payment handler:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a payRoyalty function that accepts a tokenId and encrypted payment amount (itUint64). The function should verify the token exists, look up the original creator from the tokenCreators mapping, convert the input to a garbled type using MPC.validateCiphertext, add the amount to the creator's accumulated royalties using MPC.add with the existing ctUint64 balance, save the new encrypted balance, and emit an encrypted event. Make the function payable to also accept native token royalties."
+    </div>
+  </div>
+</div>
+
+---
+
+## 4. Encrypted Data Types Recap
+
+Remember these COTI types for royalty tracking:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`// Storage: Encrypted on-chain
+mapping(address => ctUint64) private accumulatedRoyalties;
+
+// Input: User provides encrypted amount
+function payRoyalty(uint256 tokenId, itUint64 calldata amount)
+
+// Runtime: Secure computation
+gtUint64 newBalance = MPC.add(currentBalance, paymentAmount);
+
+// Convert back to storage format
+accumulatedRoyalties[creator] = MPC.offboardToUser(newBalance, creator);`}</pre>
+</div>
+
+---
+
+## 5. Add Creator Balance View Function
+
+**Action Required:** Let creators securely view their earnings:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a getMyAccumulatedRoyalties function that allows a creator to view their encrypted royalty balance. The function should return the caller's ctUint64 accumulated royalties, which they can decrypt client-side using their private key. Only the creator themselves should be able to decrypt this value. Also add a hasAccumulatedRoyalties function that returns an encrypted boolean indicating if the balance is greater than zero."
+    </div>
+  </div>
+</div>
+
+---
+
+## 6. Implement Royalty Withdrawal
+
+**Action Required:** Allow creators to claim their earnings:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add a withdrawRoyalties function that allows creators to withdraw their accumulated royalties. The function should accept an encrypted amount (itUint64) to withdraw, verify the creator has sufficient balance using MPC.lte comparison, subtract the amount from their encrypted balance using MPC.sub, transfer the corresponding tokens or native currency to the creator, and reset their balance to the new encrypted value. Include protection against reentrancy attacks."
+    </div>
+  </div>
+</div>
+
+---
+
+## 7. Add Royalty Statistics (Public Metrics)
+
+**Action Required:** Provide aggregate stats without revealing individual amounts:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add public statistics tracking for the NFT royalties system. Create a counter for total royalty payments made (uint256), total withdrawals processed (uint256), and active creators count (uint256). These are public aggregate metrics that don't reveal individual creator earnings. Add view functions getTotalRoyaltiesPaid, getTotalWithdrawals, and getActiveCreatorsCount."
+    </div>
+  </div>
+</div>
+
+---
+
+## 8. Privacy Architecture Overview
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### What's Public
+- Total royalty payments count
+- Token ownership (standard ERC721)
+- Royalty percentage per token (ERC2981)
+- Creator addresses
+
+### What's Private (Encrypted)
+- Individual accumulated royalty amounts
+- Withdrawal amounts
+- Creator earnings history
+- Balance comparisons
+
+</div>
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '10px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>Privacy Guarantee:</span>
+  <span style={{color: '#e2e8f0', marginLeft: '8px'}}>
+    Only the creator can decrypt their own royalty balance. Not even the contract owner or COTI network validators can see individual earnings.
+  </span>
+</div>
+
+---
+
+## 9. Contract Structure Update
+
+Your contract now includes:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`contract PrivateRoyaltyNFT is ... {
+
+    // Privacy State (Encrypted)
+    mapping(address => ctUint64) private accumulatedRoyalties;
+
+    // Public Statistics
+    uint256 public totalRoyaltiesPaidCount;
+    uint256 public totalWithdrawalsCount;
+    uint256 public activeCreatorsCount;
+
+    // Royalty Functions
+    payRoyalty(uint256 tokenId, itUint64 amount)
+    getMyAccumulatedRoyalties() → ctUint64
+    hasAccumulatedRoyalties() → gtBool
+    withdrawRoyalties(itUint64 amount)
+
+    // Statistics
+    getTotalRoyaltiesPaid()
+    getTotalWithdrawals()
+    getActiveCreatorsCount()
+}`}</pre>
+</div>
+
+---
+
+## Checkpoint
+
+You now have:
+- Encrypted royalty accumulation using ctUint64
+- Private balance queries for creators
+- Secure withdrawal with balance verification
+- Public aggregate statistics
+- Full privacy for individual earnings
+
+**Next Step:** Integrate with a marketplace for automatic royalty enforcement!

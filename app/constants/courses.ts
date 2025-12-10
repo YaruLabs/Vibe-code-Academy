@@ -66,6 +66,27 @@ export const courses: Course[] = [
           title: "Build Your First Private Token Faucet",
           description: "Perfect for beginners! Learn blockchain privacy fundamentals by building a token faucet that distributes tokens with encrypted amounts. Understand MPC basics, encrypted data types, and deploy your first privacy-preserving smart contract on COTI."
         }
+      },
+      {
+        id: 4,
+        title: "NFT Royalties System (ERC721)",
+        image: "/images/image1.jpg",
+        mdxPages: [
+          "/docs/blockchain/nft-royalties/01-setup-project.mdx",
+          "/docs/blockchain/nft-royalties/02-implement-erc721.mdx",
+          "/docs/blockchain/nft-royalties/03-royalties-logic.mdx",
+          "/docs/blockchain/nft-royalties/04-marketplace-integration.mdx",
+          "/docs/blockchain/nft-royalties/05-deploy-verify.mdx"
+        ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io/coti-contracts",
+        demoUrl: "https://docs.coti.io",
+        recommendedAI: ["cotiMcp", "claude"],
+        difficulty: "advance",
+        welcome: {
+          title: "Build a Privacy-Preserving NFT Royalties System",
+          description: "Learn to create a complete ERC721-based NFT royalties system with COTI's privacy features. Implement on-chain royalty tracking, automatic creator payments on secondary sales, and encrypted royalty amounts using MPC technology."
+        }
       }
     ]
   },

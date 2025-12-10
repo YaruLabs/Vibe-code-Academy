@@ -1,0 +1,381 @@
+# Marketplace Integration for Royalty Enforcement
+
+The royalty system is only effective if marketplaces actually pay the royalties. In this step, we'll create a **simple marketplace contract** that demonstrates how to enforce royalty payments on every sale.
+
+---
+
+## 1. Create the Marketplace Contract
+
+**Action Required:** Use COTI MCP to generate a basic NFT marketplace:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a PrivateRoyaltyMarketplace smart contract for COTI that inherits from MpcCore and AccountOnboard. The marketplace should allow sellers to list NFTs with a price, buyers to purchase listed NFTs, and automatically handle royalty payments using ERC2981's royaltyInfo function. Include a Listing struct with seller, price, and active status. Use mappings to track listings by NFT contract address and tokenId."
+    </div>
+  </div>
+</div>
+
+---
+
+## 2. Implement the Listing Function
+
+**Action Required:** Add the ability to list NFTs for sale:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add a listNFT function to the marketplace that takes an NFT contract address, tokenId, and price in native tokens. The function should verify the caller owns the NFT using IERC721.ownerOf, require the marketplace to be approved for the token transfer using IERC721.getApproved or isApprovedForAll, create a new Listing with the seller address and price, emit a Listed event, and store the listing in the mappings."
+    </div>
+  </div>
+</div>
+
+---
+
+## 3. Implement Purchase with Automatic Royalties
+
+**Action Required:** Create the buy function that enforces royalty payments:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add a buyNFT function that handles the purchase flow with royalty enforcement. The function should: 1) Verify the listing exists and is active, 2) Require msg.value equals the listing price, 3) Query the NFT's royaltyInfo(tokenId, salePrice) to get the royalty receiver and amount, 4) Calculate the seller's payment as (price - royaltyAmount), 5) Transfer the NFT from seller to buyer using IERC721.safeTransferFrom, 6) Send the royalty amount to the royalty receiver, 7) Send the remaining amount to the seller, 8) Mark the listing as inactive, 9) Emit a Sale event with all details."
+    </div>
+  </div>
+</div>
+
+---
+
+## 4. Understanding the Sale Flow
+
+Here's how a purchase with royalties works:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### Example: 1 COTI Sale with 5% Royalty
+
+| Step | Action | Amount |
+|------|--------|--------|
+| 1 | Buyer sends payment | 1.0 COTI |
+| 2 | Query royaltyInfo | 5% = 0.05 COTI |
+| 3 | Send to creator | 0.05 COTI |
+| 4 | Send to seller | 0.95 COTI |
+| 5 | Transfer NFT | Token #123 |
+
+</div>
+
+---
+
+## 5. Add Privacy-Preserving Royalty Recording
+
+**Action Required:** Integrate with the NFT contract's encrypted royalty tracking:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Enhance the buyNFT function to also record the royalty payment in the NFT contract's encrypted tracking system. After sending the royalty payment, call the NFT contract's payRoyalty function with the tokenId and an encrypted version of the royalty amount. This ensures the creator's accumulated earnings are tracked privately using COTI's MPC. Use MPC.encryptValue to encrypt the royalty amount before passing it."
+    </div>
+  </div>
+</div>
+
+---
+
+## 6. Add Listing Management Functions
+
+**Action Required:** Enable sellers to manage their listings:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add listing management functions: 1) cancelListing - allows the seller to cancel their listing and mark it inactive, 2) updatePrice - allows the seller to change the listing price, 3) getListing - view function that returns the listing details for a given NFT, 4) getActiveListings - returns an array of all active listing keys. Include proper access control so only the original seller can modify their listings."
+    </div>
+  </div>
+</div>
+
+---
+
+## 7. Add Marketplace Fee (Optional)
+
+**Action Required:** Implement a marketplace fee that works alongside royalties:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+      <span style={{fontSize: '0.8rem', background: '#334155', padding: '4px 8px', borderRadius: '4px', color: '#cbd5e1'}}>
+        Ctrl + C
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add an optional marketplace fee to the contract. Include a marketplaceFeeBps variable (default 250 = 2.5%), a feeRecipient address set to the contract owner, and update the buyNFT function to calculate and deduct the marketplace fee before the royalty calculation. The payment distribution should be: 1) Marketplace fee to feeRecipient, 2) Royalty to creator, 3) Remainder to seller. Add an onlyOwner function to update the fee percentage and recipient."
+    </div>
+  </div>
+</div>
+
+---
+
+## 8. Payment Distribution Breakdown
+
+With both marketplace fee and royalties:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`Sale Price: 1.0 COTI
+
+Deductions:
+├── Marketplace Fee (2.5%): 0.025 COTI → feeRecipient
+├── Creator Royalty (5%):   0.050 COTI → original creator
+└── Seller Receives:        0.925 COTI → seller
+
+Total: 0.025 + 0.050 + 0.925 = 1.0 COTI ✓`}</pre>
+</div>
+
+---
+
+## 9. Marketplace Contract Structure
+
+Your marketplace contract:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`contract PrivateRoyaltyMarketplace is MpcCore, AccountOnboard, Ownable {
+
+    struct Listing {
+        address seller;
+        uint256 price;
+        bool active;
+    }
+
+    // State
+    mapping(address => mapping(uint256 => Listing)) public listings;
+    uint256 public marketplaceFeeBps = 250; // 2.5%
+    address public feeRecipient;
+
+    // Events
+    event Listed(address nft, uint256 tokenId, address seller, uint256 price);
+    event Sale(address nft, uint256 tokenId, address buyer, uint256 price, uint256 royalty);
+    event ListingCancelled(address nft, uint256 tokenId);
+
+    // Core Functions
+    listNFT(address nft, uint256 tokenId, uint256 price)
+    buyNFT(address nft, uint256 tokenId) payable
+    cancelListing(address nft, uint256 tokenId)
+    updatePrice(address nft, uint256 tokenId, uint256 newPrice)
+
+    // View Functions
+    getListing(address nft, uint256 tokenId)
+
+    // Admin
+    setMarketplaceFee(uint256 newFeeBps) onlyOwner
+    setFeeRecipient(address newRecipient) onlyOwner
+}`}</pre>
+</div>
+
+---
+
+## Checkpoint
+
+You now have:
+- A functional NFT marketplace contract
+- Automatic royalty payment on every sale
+- Integration with encrypted royalty tracking
+- Marketplace fee support
+- Listing management functions
+
+**Next Step:** Deploy both contracts and verify on COTI explorer!
