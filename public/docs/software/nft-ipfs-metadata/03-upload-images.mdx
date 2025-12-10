@@ -1,0 +1,351 @@
+# Uploading NFT Images to IPFS
+
+Now let's upload your NFT artwork to IPFS using Pinata. We'll cover both single file and batch uploads.
+
+---
+
+## 1. Prepare Your Images
+
+Place your NFT images in the `/images` folder:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`images/
+├── 1.png    (NFT #1 artwork)
+├── 2.png    (NFT #2 artwork)
+├── 3.png    (NFT #3 artwork)
+└── ...
+
+Naming Convention:
+- Use sequential numbers: 1.png, 2.png, 3.png
+- Or descriptive: cool-cat-001.png
+- Keep consistent format (all .png or all .jpg)`}</pre>
+</div>
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '20px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>Tip:</span>
+  <span style={{color: '#e2e8f0', marginLeft: '8px'}}>
+    Compress images before uploading. Use tools like TinyPNG or ImageOptim to reduce file size without losing quality.
+  </span>
+</div>
+
+---
+
+## 2. Create Single Image Upload Script
+
+**Action Required:** Create the upload script:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create scripts/upload-single-image.js that uploads a single image file to Pinata IPFS. Use fs.createReadStream to read the file, call pinata.pinFileToIPFS with options including a name for the pin. Return and log the IPFS hash (CID). Accept the filename as a command line argument. Include the full ipfs:// URL in the output."
+    </div>
+  </div>
+</div>
+
+---
+
+## 3. Expected Single Upload Code
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`// scripts/upload-single-image.js
+const fs = require('fs');
+const path = require('path');
+const { pinata } = require('./pinata-client');
+
+async function uploadImage(filename) {
+  const filePath = path.join(__dirname, '../images', filename);
+
+  if (!fs.existsSync(filePath)) {
+    throw new Error(\`File not found: \${filePath}\`);
+  }
+
+  const readableStream = fs.createReadStream(filePath);
+
+  const options = {
+    pinataMetadata: {
+      name: filename,
+    },
+    pinataOptions: {
+      cidVersion: 1
+    }
+  };
+
+  const result = await pinata.pinFileToIPFS(readableStream, options);
+
+  console.log('Upload successful!');
+  console.log('IPFS Hash:', result.IpfsHash);
+  console.log('IPFS URL:', \`ipfs://\${result.IpfsHash}\`);
+  console.log('Gateway URL:', \`https://gateway.pinata.cloud/ipfs/\${result.IpfsHash}\`);
+
+  return result;
+}
+
+// Run from command line
+const filename = process.argv[2];
+if (!filename) {
+  console.log('Usage: node upload-single-image.js <filename>');
+  process.exit(1);
+}
+
+uploadImage(filename).catch(console.error);`}</pre>
+</div>
+
+---
+
+## 4. Test Single Image Upload
+
+Run the upload:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`$ node scripts/upload-single-image.js 1.png
+
+Upload successful!
+IPFS Hash: bafkreihdwdcefgh4dqkjv67uzcmw7ojee6xedzdetojuzjevtenxquvyku
+IPFS URL: ipfs://bafkreihdwdcefgh4dqkjv67uzcmw7ojee6xedzdetojuzjevtenxquvyku
+Gateway URL: https://gateway.pinata.cloud/ipfs/bafkreihdwdcefgh...`}</pre>
+</div>
+
+---
+
+## 5. Create Batch Upload Script
+
+**Action Required:** For uploading multiple images:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create scripts/upload-all-images.js that reads all image files from the /images directory, uploads each one to Pinata sequentially (with a small delay to avoid rate limits), stores the results in an array mapping filename to IPFS hash, saves the results to a image-cids.json file, and logs progress for each upload. Handle errors gracefully so one failure doesn't stop the whole batch."
+    </div>
+  </div>
+</div>
+
+---
+
+## 6. Expected Batch Upload Output
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`$ node scripts/upload-all-images.js
+
+Starting batch upload of 10 images...
+
+[1/10] Uploading 1.png...
+  ✓ ipfs://bafkreihdwdcefgh4dqkjv67uzcmw7ojee6xedzdetojuzjevtenxquvyku
+
+[2/10] Uploading 2.png...
+  ✓ ipfs://bafkreiabcdefgh1234567890abcdefghijklmnopqrstuvwxyz
+
+[3/10] Uploading 3.png...
+  ✓ ipfs://bafkreixyzabcdefgh0987654321zyxwvutsrqponmlkjihgfedcba
+
+...
+
+Batch upload complete!
+Results saved to: image-cids.json
+
+Summary:
+- Successful: 10
+- Failed: 0`}</pre>
+</div>
+
+---
+
+## 7. The image-cids.json Output
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`// image-cids.json
+{
+  "1": "ipfs://bafkreihdwdcefgh4dqkjv67uzcmw7ojee6xedzdetojuzjevtenxquvyku",
+  "2": "ipfs://bafkreiabcdefgh1234567890abcdefghijklmnopqrstuvwxyz",
+  "3": "ipfs://bafkreixyzabcdefgh0987654321zyxwvutsrqponmlkjihgfedcba",
+  "4": "ipfs://bafkreiqwertyuiopasdfghjklzxcvbnm123456789",
+  "5": "ipfs://bafkreimnbvcxzlkjhgfdsapoiuytrewq987654321"
+}`}</pre>
+</div>
+
+---
+
+## 8. Alternative: Upload Folder Method
+
+For large collections, upload the entire folder at once:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create scripts/upload-folder.js that uses pinata.pinFromFS to upload the entire /images directory as a single IPFS folder. This creates one CID for the folder, and individual images are accessible via folderCID/filename.png. Log the folder CID and example URLs for accessing images."
+    </div>
+  </div>
+</div>
+
+---
+
+## 9. Folder Upload Benefits
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### Individual vs Folder Upload
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| **Individual** | Each file has unique CID | More API calls, slower |
+| **Folder** | One CID for all, faster | Change one file = new folder CID |
+
+### Folder Access Pattern
+```
+Folder CID: ipfs://QmFolderHash/
+├── 1.png → ipfs://QmFolderHash/1.png
+├── 2.png → ipfs://QmFolderHash/2.png
+└── 3.png → ipfs://QmFolderHash/3.png
+```
+
+</div>
+
+---
+
+## Checkpoint
+
+You now have:
+- Images prepared in correct format
+- Single image upload script
+- Batch upload script
+- image-cids.json with all IPFS hashes
+- Understanding of folder uploads
+
+**Next Step:** Create the metadata JSON files!

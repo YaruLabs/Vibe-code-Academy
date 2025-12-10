@@ -1,0 +1,256 @@
+# Understanding NFT Metadata & IPFS
+
+Before uploading anything, let's understand **what NFT metadata is**, **why IPFS matters**, and **how it all connects** to your ERC721 smart contract.
+
+---
+
+## 1. What is NFT Metadata?
+
+NFT metadata is the information that describes your NFT - the name, description, image, and attributes that make each token unique.
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### Components of NFT Metadata
+
+| Component | Description | Example |
+|-----------|-------------|---------|
+| **name** | Token name | "Cool Cat #1234" |
+| **description** | Token description | "A unique digital collectible" |
+| **image** | URL to the image | "ipfs://Qm..." |
+| **attributes** | Token traits | `[{trait_type: "Background", value: "Blue"}]` |
+| **external_url** | Link to more info | "https://yourcollection.com/1234" |
+
+</div>
+
+---
+
+## 2. Why IPFS Instead of Regular URLs?
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`Traditional URL (Centralized):
+https://myserver.com/images/nft-1.png
+└─ Problem: Server goes down = Image gone forever
+└─ Problem: Owner can change the image
+
+IPFS URL (Decentralized):
+ipfs://QmXoypizjW3WknFiJnKLwHCnL72vedxjQkDDP1mXWo6uco
+└─ Content-addressed: URL is hash of content
+└─ If content changes, URL changes
+└─ Anyone can host it = Redundancy`}</pre>
+</div>
+
+---
+
+## 3. Understanding the Metadata Flow
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### Step-by-Step Flow
+
+```
+1. Create your NFT artwork (PNG, JPG, MP4, etc.)
+         ↓
+2. Upload image to IPFS via Pinata
+         ↓
+3. Get image CID: ipfs://QmImageHash...
+         ↓
+4. Create metadata.json with image CID
+         ↓
+5. Upload metadata.json to IPFS via Pinata
+         ↓
+6. Get metadata CID: ipfs://QmMetadataHash...
+         ↓
+7. Use metadata CID as tokenURI in ERC721
+```
+
+</div>
+
+---
+
+## 4. The OpenSea Metadata Standard
+
+Most marketplaces follow OpenSea's metadata standard:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`{
+  "name": "My Awesome NFT #1",
+  "description": "This is an amazing digital collectible",
+  "image": "ipfs://QmXxx...xxx",
+  "external_url": "https://mycollection.com/1",
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Purple"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Legendary"
+    },
+    {
+      "display_type": "number",
+      "trait_type": "Power",
+      "value": 95
+    },
+    {
+      "display_type": "boost_percentage",
+      "trait_type": "Speed Boost",
+      "value": 25
+    }
+  ],
+  "animation_url": "ipfs://QmYyy...yyy",
+  "background_color": "1a1a2e"
+}`}</pre>
+</div>
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '10px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>Reference:</span>
+  <a href="https://docs.opensea.io/docs/metadata-standards"
+     style={{color: '#60a5fa', marginLeft: '8px'}}
+     target="_blank">
+    OpenSea Metadata Standards
+  </a>
+</div>
+
+---
+
+## 5. What is Pinata?
+
+Pinata is an **IPFS pinning service** that makes it easy to upload and keep your content available on IPFS.
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### Why Use Pinata?
+
+- **Easy API** - Simple REST API for uploads
+- **Pinning** - Keeps your files always available
+- **Gateway** - Fast CDN for serving IPFS content
+- **Free Tier** - 500 files, 100MB storage free
+- **SDK** - JavaScript/TypeScript libraries
+
+### Alternatives
+- NFT.Storage (free, backed by Protocol Labs)
+- Infura IPFS
+- Web3.Storage
+- Self-hosted IPFS node
+
+</div>
+
+---
+
+## 6. How tokenURI Works in ERC721
+
+The ERC721 standard includes a `tokenURI` function that returns the metadata URL:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`// ERC721 tokenURI function
+function tokenURI(uint256 tokenId) public view returns (string memory) {
+    return string(abi.encodePacked(baseURI, tokenId.toString(), ".json"));
+}
+
+// Example:
+// baseURI = "ipfs://QmBaseHash/"
+// tokenId = 42
+// Result: "ipfs://QmBaseHash/42.json"
+
+// Marketplace fetches this URL and displays:
+// - Image from metadata.image
+// - Name from metadata.name
+// - Attributes from metadata.attributes`}</pre>
+</div>
+
+---
+
+## 7. Project Structure We'll Build
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`nft-metadata-project/
+├── images/
+│   ├── 1.png
+│   ├── 2.png
+│   └── 3.png
+├── metadata/
+│   ├── 1.json
+│   ├── 2.json
+│   └── 3.json
+├── scripts/
+│   ├── upload-images.js
+│   ├── generate-metadata.js
+│   └── upload-metadata.js
+├── contracts/
+│   └── MyNFT.sol
+├── .env
+└── package.json`}</pre>
+</div>
+
+---
+
+## Checkpoint
+
+You now understand:
+- What NFT metadata contains
+- Why IPFS is better than centralized storage
+- OpenSea metadata standard
+- How tokenURI connects to metadata
+- What Pinata does
+
+**Next Step:** Set up your Pinata account and get API keys!

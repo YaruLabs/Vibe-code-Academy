@@ -1,0 +1,311 @@
+# Setting Up Pinata for IPFS
+
+Let's set up your Pinata account and configure the project to upload files to IPFS.
+
+---
+
+## 1. Create a Pinata Account
+
+**Action Required:** Follow these steps to set up Pinata:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### Step 1: Sign Up
+1. Go to [pinata.cloud](https://pinata.cloud)
+2. Click "Start Building Free"
+3. Create account with email or GitHub
+
+### Step 2: Get API Keys
+1. Go to **API Keys** in the sidebar
+2. Click **+ New Key**
+3. Name it "NFT Metadata Project"
+4. Select permissions: **pinFileToIPFS**, **pinJSONToIPFS**
+5. Click **Create Key**
+6. **Save both keys immediately** (shown only once!)
+
+</div>
+
+<div style={{
+  background: 'rgba(245, 158, 11, 0.1)',
+  border: '1px solid rgba(245, 158, 11, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '20px 0'
+}}>
+  <span style={{color: '#f59e0b', fontWeight: 'bold'}}>Important:</span>
+  <span style={{color: '#e2e8f0', marginLeft: '8px'}}>
+    Copy your API Key and Secret Key immediately. The Secret Key is only shown once!
+  </span>
+</div>
+
+---
+
+## 2. Initialize the Project
+
+**Action Required:** Use your AI assistant to set up the project:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a new Node.js project for NFT metadata management with IPFS. Initialize with npm, install @pinata/sdk, dotenv, and fs-extra packages. Create the folder structure with /images, /metadata, /scripts, and /contracts directories. Set up a .env.example file with PINATA_API_KEY and PINATA_SECRET_KEY placeholders."
+    </div>
+  </div>
+</div>
+
+---
+
+## 3. Configure Environment Variables
+
+Create your `.env` file with your Pinata credentials:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`# .env file
+PINATA_API_KEY=your_api_key_here
+PINATA_SECRET_KEY=your_secret_key_here
+
+# Optional: Your Pinata Gateway (for faster access)
+PINATA_GATEWAY=https://gateway.pinata.cloud`}</pre>
+</div>
+
+<div style={{
+  background: 'rgba(239, 68, 68, 0.1)',
+  border: '1px solid rgba(239, 68, 68, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '20px 0'
+}}>
+  <span style={{color: '#ef4444', fontWeight: 'bold'}}>Security:</span>
+  <span style={{color: '#e2e8f0', marginLeft: '8px'}}>
+    Never commit your .env file! Add it to .gitignore immediately.
+  </span>
+</div>
+
+---
+
+## 4. Create Pinata Client Configuration
+
+**Action Required:** Set up the Pinata SDK:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a scripts/pinata-client.js file that initializes the Pinata SDK with credentials from environment variables. Export a configured pinata instance and a testConnection function that calls pinata.testAuthentication() to verify the API keys work. Include error handling for missing credentials."
+    </div>
+  </div>
+</div>
+
+---
+
+## 5. Expected Pinata Client Code
+
+Your pinata-client.js should look like this:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`// scripts/pinata-client.js
+require('dotenv').config();
+const pinataSDK = require('@pinata/sdk');
+
+const PINATA_API_KEY = process.env.PINATA_API_KEY;
+const PINATA_SECRET_KEY = process.env.PINATA_SECRET_KEY;
+
+if (!PINATA_API_KEY || !PINATA_SECRET_KEY) {
+  throw new Error('Pinata API keys not found in environment variables');
+}
+
+const pinata = new pinataSDK(PINATA_API_KEY, PINATA_SECRET_KEY);
+
+async function testConnection() {
+  try {
+    const result = await pinata.testAuthentication();
+    console.log('Pinata connection successful!', result);
+    return true;
+  } catch (error) {
+    console.error('Pinata connection failed:', error);
+    return false;
+  }
+}
+
+module.exports = { pinata, testConnection };`}</pre>
+</div>
+
+---
+
+## 6. Test Your Connection
+
+**Action Required:** Create a test script:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a scripts/test-pinata.js file that imports testConnection from pinata-client.js and runs it. Add a package.json script called 'test-pinata' that runs this file. Show the expected successful output."
+    </div>
+  </div>
+</div>
+
+---
+
+## 7. Expected Test Output
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`$ npm run test-pinata
+
+> nft-metadata@1.0.0 test-pinata
+> node scripts/test-pinata.js
+
+Pinata connection successful! { authenticated: true }`}</pre>
+</div>
+
+---
+
+## 8. Understanding Pinata Limits
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### Free Tier Limits
+| Resource | Limit |
+|----------|-------|
+| Storage | 500MB |
+| Files | 500 files |
+| API Requests | 200 requests/min |
+| Bandwidth | 1GB/month |
+
+### Tips for Staying Under Limits
+- Compress images before uploading
+- Use batch uploads when possible
+- Delete test uploads you don't need
+- Consider paid plan for production ($20/mo)
+
+</div>
+
+---
+
+## Checkpoint
+
+You now have:
+- Pinata account created
+- API keys configured
+- Project initialized with dependencies
+- Pinata SDK configured
+- Connection tested successfully
+
+**Next Step:** Upload your NFT images to IPFS!

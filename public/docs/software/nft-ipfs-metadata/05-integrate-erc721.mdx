@@ -1,0 +1,400 @@
+# Integrating IPFS Metadata with ERC721
+
+Now let's connect your IPFS metadata to an ERC721 smart contract on COTI. We'll create a contract that uses your uploaded metadata as the tokenURI.
+
+---
+
+## 1. Understanding tokenURI
+
+The ERC721 standard uses `tokenURI` to return metadata location:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`// How marketplaces fetch metadata:
+
+1. Contract has baseURI: "ipfs://QmMetadataFolder/"
+
+2. User calls tokenURI(42)
+
+3. Contract returns: "ipfs://QmMetadataFolder/42.json"
+
+4. Marketplace fetches that URL
+
+5. Gets JSON with name, image, attributes
+
+6. Displays the NFT with all info`}</pre>
+</div>
+
+---
+
+## 2. Create the ERC721 Contract
+
+**Action Required:** Generate the smart contract:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create an ERC721 smart contract for COTI called IPFSMetadataNFT that inherits from OpenZeppelin's ERC721, ERC721URIStorage, and Ownable. Include a baseURI state variable that stores the IPFS folder CID. Add setBaseURI(string) function for owner to update it. Override tokenURI to return baseURI + tokenId + '.json'. Add a mint function that takes a recipient address and mints the next sequential token ID. Include maxSupply limit."
+    </div>
+  </div>
+</div>
+
+---
+
+## 3. Expected Contract Code
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '13px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+
+contract IPFSMetadataNFT is ERC721, Ownable {
+    using Strings for uint256;
+
+    string private _baseTokenURI;
+    uint256 private _tokenIdCounter;
+    uint256 public maxSupply;
+
+    constructor(
+        string memory name,
+        string memory symbol,
+        string memory baseURI,
+        uint256 _maxSupply
+    ) ERC721(name, symbol) Ownable(msg.sender) {
+        _baseTokenURI = baseURI;
+        maxSupply = _maxSupply;
+    }
+
+    function mint(address to) public onlyOwner {
+        require(_tokenIdCounter < maxSupply, "Max supply reached");
+        _tokenIdCounter++;
+        _safeMint(to, _tokenIdCounter);
+    }
+
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+        require(tokenId > 0 && tokenId <= _tokenIdCounter, "Token does not exist");
+        return string(abi.encodePacked(_baseTokenURI, tokenId.toString(), ".json"));
+    }
+
+    function setBaseURI(string memory newBaseURI) public onlyOwner {
+        _baseTokenURI = newBaseURI;
+    }
+
+    function totalSupply() public view returns (uint256) {
+        return _tokenIdCounter;
+    }
+}`}</pre>
+</div>
+
+---
+
+## 4. Create Deployment Script
+
+**Action Required:** Set up deployment with your IPFS CID:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a Hardhat deployment script that reads the metadata CID from metadata-cid.json, deploys the IPFSMetadataNFT contract with the IPFS base URI (ipfs://CID/), collection name, symbol, and max supply. Log the deployed contract address and save to deployments.json. Configure for COTI devnet."
+    </div>
+  </div>
+</div>
+
+---
+
+## 5. Deploy to COTI Devnet
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`$ npx hardhat run scripts/deploy.js --network coti-devnet
+
+Deploying IPFSMetadataNFT to COTI Devnet...
+
+Collection: COTI Privacy Punks
+Symbol: CPP
+Base URI: ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi/
+Max Supply: 1000
+
+✓ Contract deployed to: 0x1234...abcd
+
+Saved to: deployments.json`}</pre>
+</div>
+
+---
+
+## 6. Mint Your First NFT
+
+**Action Required:** Create a minting script:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create scripts/mint-nft.js that connects to the deployed contract, calls the mint function with a recipient address (from command line or deployer), logs the minted token ID and its tokenURI. Include a batch mint option that mints multiple tokens sequentially."
+    </div>
+  </div>
+</div>
+
+---
+
+## 7. Verify Metadata Integration
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`$ node scripts/mint-nft.js 0xYourAddress
+
+Minting NFT to 0xYourAddress...
+
+✓ Minted Token ID: 1
+  Transaction: 0xabc...123
+
+Token URI: ipfs://bafybeigdyrzt5sfp.../1.json
+
+Verify at:
+https://gateway.pinata.cloud/ipfs/bafybeigdyrzt5sfp.../1.json
+
+COTI Explorer:
+https://explorer-devnet.coti.io/token/0x1234...abcd`}</pre>
+</div>
+
+---
+
+## 8. Complete Integration Flow
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### End-to-End Flow Summary
+
+```
+1. Images uploaded to IPFS
+   └─ ipfs://QmImageHash1, ipfs://QmImageHash2...
+
+2. Metadata JSON created with image links
+   └─ 1.json → { image: "ipfs://QmImageHash1", ... }
+
+3. Metadata folder uploaded to IPFS
+   └─ ipfs://QmMetadataFolder/
+
+4. Smart contract deployed with baseURI
+   └─ baseURI = "ipfs://QmMetadataFolder/"
+
+5. NFT minted (token ID 1)
+   └─ tokenURI(1) → "ipfs://QmMetadataFolder/1.json"
+
+6. Marketplace fetches metadata
+   └─ Displays image, name, attributes
+```
+
+</div>
+
+---
+
+## 9. Updating Metadata (If Needed)
+
+If you need to update metadata after deployment:
+
+<div style={{
+  background: 'rgba(245, 158, 11, 0.1)',
+  border: '1px solid rgba(245, 158, 11, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '20px 0'
+}}>
+  <span style={{color: '#f59e0b', fontWeight: 'bold'}}>Important:</span>
+  <span style={{color: '#e2e8f0', marginLeft: '8px'}}>
+    IPFS content is immutable! To update metadata, you must upload new files and call setBaseURI with the new CID.
+  </span>
+</div>
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`// To update metadata:
+
+1. Modify your metadata JSON files
+2. Re-upload folder to IPFS → New CID
+3. Call setBaseURI("ipfs://NewCID/")
+4. All tokenURIs now point to new metadata`}</pre>
+</div>
+
+---
+
+## Congratulations!
+
+You've built a complete NFT metadata pipeline!
+
+### What You Learned:
+- NFT metadata structure (OpenSea standard)
+- IPFS fundamentals and content addressing
+- Pinata setup and API usage
+- Image and metadata uploads
+- ERC721 tokenURI integration
+- Deployment to COTI blockchain
+
+### Your Pipeline:
+1. Create artwork
+2. Upload images → Get CIDs
+3. Generate metadata JSON with image CIDs
+4. Upload metadata folder → Get base URI
+5. Deploy ERC721 with base URI
+6. Mint NFTs → Metadata automatically linked!
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '20px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>Next Steps:</span>
+  <ul style={{color: '#e2e8f0', marginTop: '10px', paddingLeft: '20px'}}>
+    <li>Add public minting with payment</li>
+    <li>Implement reveal mechanism for blind mints</li>
+    <li>Add COTI privacy features to your NFT</li>
+    <li>Build a minting dApp frontend</li>
+  </ul>
+</div>
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '10px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>Resources:</span>
+  <div style={{marginTop: '8px'}}>
+    <a href="https://docs.pinata.cloud" style={{color: '#60a5fa', display: 'block', marginBottom: '4px'}} target="_blank">Pinata Documentation</a>
+    <a href="https://docs.openzeppelin.com/contracts/4.x/erc721" style={{color: '#60a5fa', display: 'block', marginBottom: '4px'}} target="_blank">OpenZeppelin ERC721</a>
+    <a href="https://docs.coti.io" style={{color: '#60a5fa', display: 'block'}} target="_blank">COTI Documentation</a>
+  </div>
+</div>

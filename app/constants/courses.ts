@@ -247,6 +247,27 @@ export const courses: Course[] = [
           title: "Build a Privacy-Preserving DEX Mobile App",
           description: "Master DeFi development by building a complete Uniswap-style decentralized exchange with privacy features. Create AMM smart contracts, liquidity pools, and a professional iOS app with WalletConnect integration, all powered by COTI's MPC technology for encrypted swaps and balances."
         }
+      },
+      {
+        id: 4,
+        title: "NFT Metadata with IPFS & Pinata",
+        image: "/images/image3.jpg",
+        mdxPages: [
+          "/docs/software/nft-ipfs-metadata/01-understanding-nft-metadata.mdx",
+          "/docs/software/nft-ipfs-metadata/02-pinata-setup.mdx",
+          "/docs/software/nft-ipfs-metadata/03-upload-images.mdx",
+          "/docs/software/nft-ipfs-metadata/04-create-metadata-json.mdx",
+          "/docs/software/nft-ipfs-metadata/05-integrate-erc721.mdx"
+        ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io/coti-contracts",
+        demoUrl: "https://docs.coti.io",
+        recommendedAI: ["cotiMcp", "claude"],
+        difficulty: "beginner",
+        welcome: {
+          title: "Master NFT Metadata Storage with IPFS & Pinata",
+          description: "Learn the complete workflow for storing NFT metadata permanently on IPFS using Pinata. Upload images, create JSON metadata following OpenSea standards, pin content for persistence, and integrate with ERC721 smart contracts on COTI."
+        }
       }
     ]
   }

@@ -1,0 +1,375 @@
+# Creating & Uploading Metadata JSON
+
+Now that your images are on IPFS, let's create the metadata JSON files that describe each NFT and upload them.
+
+---
+
+## 1. Understanding Metadata Structure
+
+Each NFT needs a JSON file following the OpenSea standard:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`// Example: metadata/1.json
+{
+  "name": "My NFT Collection #1",
+  "description": "A unique digital collectible from My NFT Collection",
+  "image": "ipfs://bafkreihdwdcefgh4dqkjv67uzcmw7ojee...",
+  "external_url": "https://mycollection.com/nft/1",
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Purple Gradient"
+    },
+    {
+      "trait_type": "Character",
+      "value": "Robot"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Legendary"
+    },
+    {
+      "display_type": "number",
+      "trait_type": "Generation",
+      "value": 1
+    }
+  ]
+}`}</pre>
+</div>
+
+---
+
+## 2. Create Collection Configuration
+
+**Action Required:** Set up your collection config:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a collection-config.json file that contains: collectionName, collectionDescription, externalUrlBase, and an attributes array defining all possible trait_types with their possible values. This will be used to generate metadata. Example traits: Background (colors), Character (types), Accessory (items), Rarity (common/rare/legendary)."
+    </div>
+  </div>
+</div>
+
+---
+
+## 3. Example Collection Config
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`// collection-config.json
+{
+  "collectionName": "COTI Privacy Punks",
+  "collectionDescription": "A collection of 1000 unique privacy-focused characters on COTI blockchain",
+  "externalUrlBase": "https://cotiprivacypunks.com/nft",
+  "attributes": {
+    "Background": ["Blue", "Purple", "Green", "Orange", "Black"],
+    "Character": ["Human", "Robot", "Alien", "Ghost"],
+    "Eyes": ["Normal", "Laser", "Heart", "Diamond"],
+    "Accessory": ["None", "Hat", "Glasses", "Crown", "Mask"],
+    "Rarity": ["Common", "Uncommon", "Rare", "Legendary"]
+  }
+}`}</pre>
+</div>
+
+---
+
+## 4. Create Metadata Generator Script
+
+**Action Required:** Generate metadata from config:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create scripts/generate-metadata.js that: 1) Reads image-cids.json to get image IPFS URLs, 2) Reads collection-config.json for collection info, 3) Reads a traits-mapping.json that maps each token ID to its specific attributes, 4) Generates a JSON file for each token in /metadata folder with name, description, image (from image-cids), external_url, and attributes array. Save each as {tokenId}.json."
+    </div>
+  </div>
+</div>
+
+---
+
+## 5. Create Traits Mapping
+
+Define each NFT's specific traits:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`// traits-mapping.json
+{
+  "1": {
+    "Background": "Purple",
+    "Character": "Robot",
+    "Eyes": "Laser",
+    "Accessory": "Crown",
+    "Rarity": "Legendary"
+  },
+  "2": {
+    "Background": "Blue",
+    "Character": "Human",
+    "Eyes": "Normal",
+    "Accessory": "Hat",
+    "Rarity": "Common"
+  },
+  "3": {
+    "Background": "Green",
+    "Character": "Alien",
+    "Eyes": "Diamond",
+    "Accessory": "Glasses",
+    "Rarity": "Rare"
+  }
+}`}</pre>
+</div>
+
+---
+
+## 6. Run Metadata Generation
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`$ node scripts/generate-metadata.js
+
+Generating metadata for 10 NFTs...
+
+✓ Generated metadata/1.json
+✓ Generated metadata/2.json
+✓ Generated metadata/3.json
+...
+
+All metadata files generated!
+Output directory: ./metadata/`}</pre>
+</div>
+
+---
+
+## 7. Upload Metadata to IPFS
+
+**Action Required:** Create the metadata upload script:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create scripts/upload-metadata.js that uploads the entire /metadata folder to Pinata as a single IPFS directory using pinata.pinFromFS. This way, all metadata files are under one CID and accessible as baseURI/{tokenId}.json. Save the folder CID to metadata-cid.json. Log the base URI that will be used in the smart contract."
+    </div>
+  </div>
+</div>
+
+---
+
+## 8. Expected Upload Output
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`$ node scripts/upload-metadata.js
+
+Uploading metadata folder to IPFS...
+
+✓ Folder uploaded successfully!
+
+Metadata Folder CID: bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi
+
+Base URI for Smart Contract:
+ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi/
+
+Example Token URIs:
+- Token 1: ipfs://bafybei.../1.json
+- Token 2: ipfs://bafybei.../2.json
+- Token 3: ipfs://bafybei.../3.json
+
+Gateway URLs for testing:
+https://gateway.pinata.cloud/ipfs/bafybei.../1.json
+
+Saved to: metadata-cid.json`}</pre>
+</div>
+
+---
+
+## 9. Verify Metadata on Gateway
+
+Test your metadata is accessible:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### Check in Browser
+1. Open the gateway URL for any token
+2. Verify JSON structure is correct
+3. Click the image URL to ensure it loads
+4. Check attributes display properly
+
+### Verify with curl
+```bash
+curl https://gateway.pinata.cloud/ipfs/YOUR_CID/1.json
+```
+
+</div>
+
+---
+
+## 10. Final File Structure
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`project/
+├── images/           ← Your artwork
+├── metadata/         ← Generated JSON files
+│   ├── 1.json
+│   ├── 2.json
+│   └── ...
+├── scripts/
+│   ├── pinata-client.js
+│   ├── upload-all-images.js
+│   ├── generate-metadata.js
+│   └── upload-metadata.js
+├── collection-config.json
+├── traits-mapping.json
+├── image-cids.json      ← Generated: image IPFS hashes
+└── metadata-cid.json    ← Generated: metadata folder CID`}</pre>
+</div>
+
+---
+
+## Checkpoint
+
+You now have:
+- Collection configuration set up
+- Traits mapping for each NFT
+- Metadata JSON files generated
+- All metadata uploaded to IPFS
+- Base URI ready for smart contract
+
+**Next Step:** Integrate with your ERC721 smart contract!
