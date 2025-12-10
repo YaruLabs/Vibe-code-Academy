@@ -1,0 +1,163 @@
+# Privacy-Preserving Dividend Distribution
+
+Real-world assets generate yields - rental income, commodity sales, interest. Let's build a **Private Dividend Distributor** that pays investors proportionally while keeping amounts confidential.
+
+---
+
+## 1. Create the Dividend Distributor
+
+**Action Required:** Use COTI MCP to generate the contract:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create DividendDistributor contract on COTI inheriting MpcCore, AccountOnboard, AccessControl. Define DISTRIBUTOR_ROLE. Create DividendRound struct with roundId, totalAmount, distributionDate, snapshotBlock, distributed status. Store claimable dividends in encrypted mapping (address to ctUint64) for privacy."
+    </div>
+  </div>
+</div>
+
+---
+
+## 2. Dividend Distribution Flow
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`Example: 10,000 COTI dividend, 1M token supply
+
+Investor A: 50,000 tokens (5%)  → 500 COTI (encrypted)
+Investor B: 150,000 tokens (15%) → 1,500 COTI (encrypted)
+Investor C: 800,000 tokens (80%) → 8,000 COTI (encrypted)
+
+Public: Total distributed = 10,000 COTI
+Private: Individual amounts encrypted`}</pre>
+</div>
+
+---
+
+## 3. Implement Round Creation and Distribution
+
+**Action Required:** Add core functions:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add createDividendRound (payable, DISTRIBUTOR_ROLE) that receives funds, creates DividendRound with unique ID, records snapshotBlock, emits DividendRoundCreated. Add distributeDividends(roundId, address[]) that calculates pro-rata shares, encrypts amounts using MPC, stores in claimableDividends mapping, tracks processed investors to prevent double distribution."
+    </div>
+  </div>
+</div>
+
+---
+
+## 4. Implement Claiming and DRIP
+
+**Action Required:** Add claim and reinvestment:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add claimDividend() that verifies claimable amount using MPC.gt, transfers funds, resets balance to encrypted zero, emits DividendClaimed with reentrancy protection. Add getMyClaimableDividends() returning ctUint64. Implement DRIP: enrollInDRIP(), withdrawFromDRIP(), modify distribution to mint tokens instead of storing claimable for DRIP investors."
+    </div>
+  </div>
+</div>
+
+---
+
+## Checkpoint
+
+You now have:
+- Dividend round management
+- Pro-rata distribution
+- Private dividend amounts
+- Secure claiming
+- DRIP reinvestment
+
+**Next Step:** Build the RWA Marketplace!

@@ -1,0 +1,180 @@
+# Implementing the RWA Token Contract
+
+Now let's build the core RWA Token contract - a privacy-preserving ERC20 that represents fractional ownership of real-world assets with **transfer restrictions** and **encrypted balances**.
+
+---
+
+## 1. Create the Base RWA Token Contract
+
+**Action Required:** Use COTI MCP to generate the foundational RWA token:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create an RWAToken smart contract on COTI that represents fractional ownership of a real-world asset. Inherit from COTI's MpcCore and AccountOnboard for privacy, plus OpenZeppelin's ERC20, ERC20Pausable, and AccessControl. Define roles for ASSET_MANAGER_ROLE and COMPLIANCE_OFFICER_ROLE. Include asset metadata: assetName, assetDescription, assetLocation, totalAssetValue, and assetDocumentHash. Use a mapping with ctUint64 for encrypted private balances."
+    </div>
+  </div>
+</div>
+
+---
+
+## 2. Add Asset Metadata Functions
+
+**Action Required:** Implement asset information management:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add asset metadata management functions: getAssetInfo() returning all details in a struct, updateAssetValue(uint256) restricted to ASSET_MANAGER_ROLE, updateAssetDocuments(bytes32) for document updates, and getTokenPrice() calculating price per token based on totalAssetValue divided by totalSupply. Emit events for all updates."
+    </div>
+  </div>
+</div>
+
+---
+
+## 3. Implement Compliant Transfers
+
+**Action Required:** Override transfer to enforce KYC:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Override the _update function to enforce transfer restrictions. Check that both sender and receiver are KYC-verified via KYCRegistry. If either is not verified or frozen, revert. Track transfers in the investor's private balance mapping using MPC operations. Allow minting only to KYC-verified addresses."
+    </div>
+  </div>
+</div>
+
+---
+
+## 4. Add Investor Functions and Emergency Controls
+
+**Action Required:** Complete the token contract:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add: 1) getMyPrivateBalance() returning encrypted balance (ctUint64), 2) mintToInvestor(address, uint256) for ASSET_MANAGER_ROLE, 3) batchMint for multiple investors, 4) pause/unpause for emergencies, 5) freezeAccount/unfreezeAccount for COMPLIANCE_OFFICER_ROLE, 6) maxSupply cap representing 100% ownership."
+    </div>
+  </div>
+</div>
+
+---
+
+## Checkpoint
+
+You now have:
+- ERC20 token representing asset shares
+- Role-based access control
+- Compliant transfer restrictions
+- Private balance tracking
+- Emergency controls
+
+**Next Step:** Implement the KYC Registry!

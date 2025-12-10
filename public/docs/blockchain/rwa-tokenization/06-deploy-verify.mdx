@@ -1,0 +1,296 @@
+# Deploy and Verify Your RWA Platform
+
+Congratulations! You've built a complete privacy-preserving RWA tokenization platform. Let's deploy everything to COTI devnet.
+
+---
+
+## 1. Create the Deployment Script
+
+**Action Required:** Use COTI MCP to generate the deployment:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a deployment script that: 1) Deploys KYCRegistry first, 2) Deploys RWAToken with asset details and KYCRegistry address, 3) Deploys DividendDistributor with RWAToken reference, 4) Deploys RWAMarketplace with RWAToken and KYCRegistry, 5) Grants roles (VERIFIER_ROLE, ASSET_MANAGER_ROLE, DISTRIBUTOR_ROLE) to deployer, 6) Logs all addresses and saves to deployments.json."
+    </div>
+  </div>
+</div>
+
+---
+
+## 2. Deployment Order
+
+The contracts must be deployed in this order due to dependencies:
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`Deployment Order:
+
+1. KYCRegistry
+   └─ No dependencies
+
+2. RWAToken
+   └─ Requires: KYCRegistry address
+
+3. DividendDistributor
+   └─ Requires: RWAToken address
+
+4. RWAMarketplace
+   └─ Requires: RWAToken, KYCRegistry addresses
+
+5. Role Setup
+   └─ Grant roles on all contracts`}</pre>
+</div>
+
+---
+
+## 3. Deploy to COTI Devnet
+
+**Action Required:** Run deployment:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Run the deployment to COTI devnet with: npx hardhat run scripts/deploy.js --network coti-devnet. Then verify all contracts on the explorer. Show the expected output and verification commands for each contract."
+    </div>
+  </div>
+</div>
+
+---
+
+## 4. Expected Deployment Output
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '14px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`Deploying RWA Platform to COTI Devnet...
+
+1. Deploying KYCRegistry...
+   ✓ KYCRegistry: 0x1111...aaaa
+
+2. Deploying RWAToken...
+   Asset: "Downtown Office Building"
+   Value: $5,000,000
+   ✓ RWAToken: 0x2222...bbbb
+
+3. Deploying DividendDistributor...
+   ✓ DividendDistributor: 0x3333...cccc
+
+4. Deploying RWAMarketplace...
+   ✓ RWAMarketplace: 0x4444...dddd
+
+5. Configuring roles...
+   ✓ Roles granted
+
+Deployment Complete!
+Addresses saved to: deployments/coti-devnet.json`}</pre>
+</div>
+
+---
+
+## 5. Test the Complete Flow
+
+**Action Required:** Create an interaction script:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create a test script that: 1) KYC verifies two test accounts, 2) Mints RWA tokens to first account, 3) Creates a sell order on marketplace, 4) Second account buys tokens, 5) Creates and distributes a dividend round, 6) Both accounts claim dividends, 7) Verify all encrypted balances. Log each step."
+    </div>
+  </div>
+</div>
+
+---
+
+## 6. Platform Architecture Summary
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '12px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`┌────────────────────────────────────────────────────────────────┐
+│                    RWA TOKENIZATION PLATFORM                    │
+├────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐            │
+│  │ KYCRegistry │  │  RWAToken   │  │  Dividend   │            │
+│  │             │  │             │  │ Distributor │            │
+│  │ • Verify    │  │ • Shares    │  │             │            │
+│  │ • Levels    │◄─│ • Transfer  │─►│ • Rounds    │            │
+│  │ • Countries │  │   restrict  │  │ • Pro-rata  │            │
+│  │ • Audit     │  │ • Private   │  │ • Private   │            │
+│  └──────┬──────┘  │   balances  │  │   claims    │            │
+│         │         └──────┬──────┘  └─────────────┘            │
+│         │                │                                     │
+│         └────────┬───────┘                                     │
+│                  │                                             │
+│         ┌────────▼────────┐                                    │
+│         │  RWAMarketplace │                                    │
+│         │                 │                                    │
+│         │ • Compliant     │                                    │
+│         │   trading       │                                    │
+│         │ • Private       │                                    │
+│         │   orders        │                                    │
+│         │ • Escrow        │                                    │
+│         └─────────────────┘                                    │
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │                    COTI PRIVACY LAYER                    │   │
+│  │  MPC Core • Encrypted Types • Secure Computation        │   │
+│  └─────────────────────────────────────────────────────────┘   │
+└────────────────────────────────────────────────────────────────┘`}</pre>
+</div>
+
+---
+
+## Congratulations!
+
+You've built a complete **Privacy-Preserving RWA Tokenization Platform**!
+
+### What You Learned:
+- ERC20 tokens with transfer restrictions
+- Role-based access control for compliance
+- KYC verification with encrypted data
+- Pro-rata dividend distribution
+- Compliant secondary marketplace
+- COTI MPC for privacy
+
+### Key Privacy Features:
+- Encrypted investor balances
+- Private country codes for compliance
+- Hidden dividend amounts
+- Optional private sell orders
+- Only owners can decrypt their data
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '20px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>Next Steps:</span>
+  <ul style={{color: '#e2e8f0', marginTop: '10px', paddingLeft: '20px'}}>
+    <li>Build a frontend dashboard for investors</li>
+    <li>Add price oracle integration</li>
+    <li>Implement automated dividend scheduling</li>
+    <li>Deploy to COTI mainnet for production</li>
+  </ul>
+</div>
+
+<div style={{
+  background: 'rgba(16, 185, 129, 0.1)',
+  border: '1px solid rgba(16, 185, 129, 0.3)',
+  borderRadius: '8px',
+  padding: '16px',
+  margin: '10px 0'
+}}>
+  <span style={{color: '#10b981', fontWeight: 'bold'}}>Documentation:</span>
+  <a href="https://docs.coti.io"
+     style={{color: '#60a5fa', marginLeft: '8px'}}
+     target="_blank">
+    COTI Official Documentation
+  </a>
+</div>

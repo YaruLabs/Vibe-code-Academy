@@ -87,6 +87,28 @@ export const courses: Course[] = [
           title: "Build a Privacy-Preserving NFT Royalties System",
           description: "Learn to create a complete ERC721-based NFT royalties system with COTI's privacy features. Implement on-chain royalty tracking, automatic creator payments on secondary sales, and encrypted royalty amounts using MPC technology."
         }
+      },
+      {
+        id: 5,
+        title: "Real World Assets (RWA) Tokenization",
+        image: "/images/image1.jpg",
+        mdxPages: [
+          "/docs/blockchain/rwa-tokenization/01-setup-project.mdx",
+          "/docs/blockchain/rwa-tokenization/02-asset-token-contract.mdx",
+          "/docs/blockchain/rwa-tokenization/03-compliance-kyc.mdx",
+          "/docs/blockchain/rwa-tokenization/04-dividend-distribution.mdx",
+          "/docs/blockchain/rwa-tokenization/05-marketplace-trading.mdx",
+          "/docs/blockchain/rwa-tokenization/06-deploy-verify.mdx"
+        ],
+        tutorialUrl: "https://www.youtube.com/@COTIGroup",
+        repositoryUrl: "https://github.com/coti-io/coti-contracts",
+        demoUrl: "https://docs.coti.io",
+        recommendedAI: ["cotiMcp", "claude"],
+        difficulty: "advance",
+        welcome: {
+          title: "Build a Privacy-Preserving RWA Tokenization Platform",
+          description: "Master real-world asset tokenization by building a complete RWA platform with COTI's privacy features. Learn to tokenize physical assets (real estate, commodities, art), implement compliant transfers with encrypted KYC, distribute dividends privately, and enable secure secondary market trading."
+        }
       }
     ]
   },

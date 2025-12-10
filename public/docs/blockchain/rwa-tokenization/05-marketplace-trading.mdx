@@ -1,0 +1,288 @@
+# RWA Marketplace for Secondary Trading
+
+Liquidity is essential for RWA tokens. Let's build a **Compliant RWA Marketplace** that enables secondary trading while enforcing KYC requirements and maintaining price privacy options.
+
+---
+
+## 1. Create the RWA Marketplace Contract
+
+**Action Required:** Use COTI MCP to generate the marketplace:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Create RWAMarketplace contract on COTI inheriting MpcCore, AccountOnboard, AccessControl. Create Order struct with seller, tokenAmount (can be encrypted ctUint64 for privacy), pricePerToken, createdAt, isActive. Reference IRWAToken and IKYCRegistry contracts. Add mappings for orders by ID and by seller address. Include marketplace fee configuration."
+    </div>
+  </div>
+</div>
+
+---
+
+## 2. Understanding Compliant Trading
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.9)',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '20px 0',
+  border: '1px solid rgba(139, 92, 246, 0.3)'
+}}>
+
+### Trade Validation Flow
+
+1. **Seller creates order** - Must be KYC verified, tokens locked
+2. **Buyer places bid** - Must be KYC verified, payment locked
+3. **Compliance check** - Both parties verified, countries allowed
+4. **Atomic swap** - Tokens and payment exchange simultaneously
+5. **Fee distribution** - Marketplace fee deducted
+
+</div>
+
+---
+
+## 3. Implement Order Creation
+
+**Action Required:** Add sell order functionality:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add createSellOrder(uint256 tokenAmount, uint256 pricePerToken) that verifies seller is KYC valid via kycRegistry.isKYCValid, checks seller has sufficient RWA token balance, transfers tokens to marketplace escrow, creates Order struct with unique orderId, emits OrderCreated event. Add cancelOrder(orderId) that returns tokens to seller if order is active and caller is seller."
+    </div>
+  </div>
+</div>
+
+---
+
+## 4. Implement Order Execution
+
+**Action Required:** Add buy/fill order functionality:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add fillOrder(orderId) payable that: 1) Verifies order is active, 2) Checks buyer KYC status, 3) Requires msg.value equals order total price, 4) Calculates marketplace fee (e.g., 1%), 5) Transfers fee to feeRecipient, 6) Transfers remaining payment to seller, 7) Transfers RWA tokens from escrow to buyer, 8) Marks order inactive, 9) Emits OrderFilled event with all details."
+    </div>
+  </div>
+</div>
+
+---
+
+## 5. Add Private Order Options
+
+**Action Required:** Enable privacy for order amounts:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add createPrivateOrder(itUint64 encryptedAmount, uint256 pricePerToken) for sellers who want to hide their sell quantity. Store amount as ctUint64. Buyer must use fillPrivateOrder(orderId, itUint64 expectedAmount) where the encrypted amounts are compared using MPC.eq to ensure agreement. This hides large sell orders that might signal insider knowledge."
+    </div>
+  </div>
+</div>
+
+---
+
+## 6. Add Order Book Queries
+
+**Action Required:** Enable order discovery:
+
+<div style={{
+  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+  padding: '2px',
+  borderRadius: '12px',
+  margin: '20px 0',
+  boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)'
+}}>
+  <div style={{
+    background: '#0f172a',
+    borderRadius: '11px',
+    padding: '24px',
+    color: '#e2e8f0',
+    position: 'relative'
+  }}>
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'
+    }}>
+      <span style={{color: '#94a3b8', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '1px', fontWeight: 'bold'}}>
+        COPY THIS EXACT PROMPT
+      </span>
+    </div>
+
+    <div style={{
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      borderLeft: '4px solid #8b5cf6',
+      paddingLeft: '16px',
+      color: '#fff'
+    }}>
+      "Add query functions: getOrder(orderId) returning Order struct, getActiveOrders(offset, limit) returning paginated active orders, getOrdersBySeller(address) for seller's order history, getMarketStats() returning total volume traded, number of active orders, and average price. Track these metrics in state variables updated on each trade."
+    </div>
+  </div>
+</div>
+
+---
+
+## 7. Marketplace Contract Structure
+
+<div style={{
+  background: 'rgba(15, 23, 42, 0.8)',
+  border: '1px solid rgba(139, 92, 246, 0.3)',
+  borderRadius: '12px',
+  padding: '20px',
+  margin: '20px 0',
+  fontFamily: 'monospace',
+  fontSize: '13px',
+  color: '#e2e8f0'
+}}>
+<pre style={{margin: 0}}>{`contract RWAMarketplace is MpcCore, AccountOnboard, AccessControl {
+
+    struct Order {
+        address seller;
+        uint256 tokenAmount;      // or ctUint64 for private
+        uint256 pricePerToken;
+        uint256 createdAt;
+        bool isActive;
+        bool isPrivate;
+    }
+
+    IRWAToken public rwaToken;
+    IKYCRegistry public kycRegistry;
+    uint256 public marketplaceFeeBps = 100; // 1%
+
+    mapping(uint256 => Order) public orders;
+    uint256 public totalVolume;
+    uint256 public activeOrderCount;
+
+    // Order Management
+    createSellOrder(uint256 amount, uint256 price)
+    createPrivateOrder(itUint64 amount, uint256 price)
+    cancelOrder(uint256 orderId)
+    fillOrder(uint256 orderId) payable
+
+    // Queries
+    getActiveOrders(uint256 offset, uint256 limit)
+    getMarketStats()
+}`}</pre>
+</div>
+
+---
+
+## Checkpoint
+
+You now have:
+- Compliant order creation
+- KYC-enforced trading
+- Private order amounts
+- Marketplace fees
+- Order book queries
+
+**Next Step:** Deploy and verify all contracts!
